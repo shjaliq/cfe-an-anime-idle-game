@@ -1,0 +1,4445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>动漫放置领域 - Anime Idle Realm</title>
+<style>
+/* ========== CSS Variables & Theme ========== */
+:root {
+  --bg-primary: #0d1117;
+  --bg-secondary: #161b22;
+  --bg-tertiary: #21262d;
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted: #6e7681;
+  --border: #30363d;
+  --accent: #ff6ba0;
+
+  --fire: #ff6b6b;
+  --water: #4ecdc4;
+  --wind: #7bed9f;
+  --light: #feca57;
+  --dark: #a55eea;
+
+  --rarity-n: #9e9e9e;
+  --rarity-r: #4fc3f7;
+  --rarity-sr: #ce93d8;
+  --rarity-ssr: #ffd54f;
+
+  --danger: #ff4757;
+  --success: #2ed573;
+  --warning: #ffa502;
+  --info: #1e90ff;
+
+  --nav-height: 64px;
+  --topbar-height: 48px;
+  --font-main: 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font-main);
+  background: #000;
+  color: var(--text-primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+#app {
+  width: 100%;
+  max-width: 480px;
+  height: 100vh;
+  max-height: 900px;
+  background: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 60px rgba(255, 107, 160, 0.15);
+}
+
+/* ========== Top Bar ========== */
+#topbar {
+  height: var(--topbar-height);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 12px;
+  flex-shrink: 0;
+  z-index: 10;
+}
+#topbar .title {
+  font-size: 15px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), #ffb347);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  flex: 1;
+}
+.resource { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; }
+.resource .icon { font-size: 16px; }
+.resource.gold { color: var(--warning); }
+.resource.gems { color: var(--info); }
+.resource.stamina { color: var(--success); }
+.resource.exp { color: #e8b84b; }
+
+/* ========== Screen Container ========== */
+#screen-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+#screen-container::-webkit-scrollbar { width: 4px; }
+#screen-container::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ========== Bottom Nav ========== */
+#bottom-nav {
+  height: var(--nav-height);
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-shrink: 0;
+  z-index: 10;
+}
+.nav-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-main);
+}
+.nav-btn .nav-icon { font-size: 22px; transition: transform 0.2s; }
+.nav-btn.active { color: var(--accent); }
+.nav-btn.active .nav-icon { transform: scale(1.15); }
+.nav-btn:hover { color: var(--text-primary); }
+
+/* ========== Cards ========== */
+.card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 8px;
+  transition: border-color 0.2s, transform 0.15s;
+}
+.card:active { transform: scale(0.98); }
+.card.rarity-N { border-color: var(--rarity-n); }
+.card.rarity-R { border-color: var(--rarity-r); }
+.card.rarity-SR { border-color: var(--rarity-sr); }
+.card.rarity-SSR { border-color: var(--rarity-ssr); box-shadow: 0 0 12px rgba(255, 213, 79, 0.2); }
+
+.section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 16px 0 8px;
+  padding-left: 8px;
+  border-left: 3px solid var(--accent);
+}
+
+/* ========== Character Grid ========== */
+.char-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.char-card {
+  background: var(--bg-tertiary);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.char-card:active { transform: scale(0.95); }
+.char-card .char-img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 6px;
+  background: var(--bg-secondary);
+  margin-bottom: 4px;
+}
+.char-card .char-placeholder {
+  width: 100%;
+  aspect-ratio: 1/1;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 4px;
+}
+.char-card .char-name { font-size: 11px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.char-card .char-level { font-size: 10px; color: var(--text-muted); }
+.char-card .rarity-badge {
+  position: absolute; top: 4px; right: 4px;
+  font-size: 9px; font-weight: 700; padding: 1px 5px;
+  border-radius: 4px; background: var(--bg-primary);
+}
+.char-card .element-icon {
+  position: absolute; top: 4px; left: 4px;
+  width: 18px; height: 18px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700;
+}
+
+/* ========== Buttons ========== */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 4px; padding: 8px 16px; border: none; border-radius: 8px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  font-family: var(--font-main);
+  transition: all 0.2s;
+}
+.btn:active { transform: scale(0.95); }
+.btn-primary { background: linear-gradient(135deg, var(--accent), #ff4080); color: #fff; }
+.btn-secondary { background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border); }
+.btn-success { background: var(--success); color: #000; }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-warning { background: var(--warning); color: #000; }
+.btn-block { width: 100%; }
+.btn-sm { padding: 4px 10px; font-size: 11px; border-radius: 6px; }
+.btn:disabled { opacity: 0.4; pointer-events: none; }
+
+/* ========== Idle Rewards Card ========== */
+.idle-rewards-card {
+  background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(255,107,160,0.08));
+  border: 1px solid var(--warning); border-radius: 10px; padding: 10px; margin-bottom: 10px;
+}
+
+/* ========== Stage List ========== */
+.stage-card {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px; cursor: pointer;
+}
+.stage-card.cleared { opacity: 0.6; }
+.stage-card.locked { opacity: 0.35; pointer-events: none; }
+.stage-card .stage-num {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--bg-tertiary); display: flex;
+  align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 700; flex-shrink: 0;
+}
+.stage-card.cleared .stage-num { background: var(--success); color: #000; width: auto; padding: 0 6px; font-size: 12px; white-space: nowrap; }
+.stage-card .stage-info { flex: 1; }
+.stage-card .stage-name { font-size: 13px; font-weight: 600; }
+.stage-card .stage-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.stage-card .stage-reward { font-size: 10px; color: var(--warning); }
+.stage-sweep-btn { flex-shrink: 0; margin-left: auto; font-size: 10px !important; padding: 4px 10px !important; }
+
+.chapter-stars-section {
+  margin-top: 12px; padding: 10px;
+  background: var(--bg-tertiary); border-radius: 10px;
+}
+.chapter-star-bar { display: flex; gap: 4px; justify-content: space-between; }
+.star-milestone {
+  flex: 1; text-align: center; padding: 6px 2px;
+  background: var(--bg-secondary); border-radius: 8px;
+  font-size: 9px; opacity: 0.35; transition: all 0.3s;
+}
+.star-milestone.achieved { opacity: 0.7; }
+.star-milestone.claimed { opacity: 1; background: var(--success); color: #000; }
+.star-milestone.claimable { opacity: 1; border: 2px solid var(--warning); cursor: pointer; animation: pulse-border 1.5s ease-in-out infinite; }
+.star-milestone.claimable:hover { background: var(--warning); color: #000; }
+.star-milestone .milestone-dot { font-size: 12px; font-weight: 700; }
+.star-milestone .milestone-reward { font-size: 8px; margin-top: 2px; line-height: 1.2; }
+@keyframes pulse-border {
+  0%, 100% { border-color: var(--warning); }
+  50% { border-color: transparent; }
+}
+
+/* ========== Gacha ========== */
+.gacha-banner {
+  background: linear-gradient(135deg, #1a0533, #0d0330, #1a0533);
+  border: 2px solid var(--rarity-ssr);
+  border-radius: 14px;
+  padding: 24px;
+  text-align: center;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.gacha-banner::before {
+  content: ''; position: absolute; top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle, rgba(255,213,79,0.08) 0%, transparent 70%);
+  animation: bannerGlow 3s ease-in-out infinite;
+}
+@keyframes bannerGlow {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(5%, 5%); }
+}
+.gacha-banner h3 { font-size: 18px; margin-bottom: 4px; position: relative; }
+.gacha-banner .banner-sub { font-size: 12px; color: var(--text-muted); position: relative; }
+.gacha-rates { display: flex; gap: 8px; justify-content: center; margin: 12px 0; font-size: 11px; position: relative; }
+.gacha-rates span { padding: 2px 8px; border-radius: 4px; background: var(--bg-tertiary); }
+.gacha-buttons { display: flex; gap: 10px; justify-content: center; position: relative; }
+
+.gacha-result-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.9); z-index: 100;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+}
+.gacha-orb {
+  width: 120px; height: 120px; border-radius: 50%;
+  animation: orbPulse 1s ease-in-out infinite;
+  display: flex; align-items: center; justify-content: center;
+}
+@keyframes orbPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 40px rgba(255,255,255,0.3); }
+  50% { transform: scale(1.1); box-shadow: 0 0 80px rgba(255,255,255,0.6); }
+}
+.gacha-character-reveal {
+  text-align: center; animation: revealUp 0.6s ease-out;
+}
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(40px) scale(0.8); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.gacha-character-reveal .reveal-img {
+  width: 160px; height: 160px; border-radius: 50%; object-fit: cover; object-position: top;
+  border: 4px solid var(--rarity-ssr); margin-bottom: 12px;
+  background: var(--bg-tertiary);
+}
+.gacha-character-reveal .reveal-placeholder {
+  width: 160px; height: 160px; border-radius: 50%; border: 4px solid var(--rarity-ssr);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 60px; margin: 0 auto 12px;
+}
+.gacha-character-reveal .reveal-name { font-size: 22px; font-weight: 700; }
+.gacha-character-reveal .reveal-rarity { font-size: 14px; margin: 4px 0; }
+
+.gacha-multi-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
+  max-width: 480px; width: 100%; padding: 16px; animation: revealUp 0.5s ease-out;
+}
+.gacha-multi-card {
+  background: var(--bg-tertiary); border-radius: 10px; padding: 8px 4px;
+  text-align: center; border: 2px solid transparent;
+}
+.gacha-multi-card.rarity-SSR { border-color: var(--rarity-ssr); }
+.gacha-multi-card.rarity-SR { border-color: var(--rarity-sr); }
+.gacha-multi-card.rarity-R { border-color: var(--rarity-r); }
+.gacha-multi-card .multi-img {
+  width: 56px; height: 56px; border-radius: 50%; object-fit: cover; object-position: top;
+  background: var(--bg-tertiary);
+}
+.gacha-multi-card .multi-placeholder {
+  width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; font-weight: 700;
+}
+.gacha-multi-card .multi-name { font-size: 10px; font-weight: 600; margin-top: 2px; }
+.gacha-multi-card .multi-rarity { font-size: 9px; }
+.gacha-multi-card .multi-tag { font-size: 9px; margin-top: 2px; }
+.gacha-multi-title { text-align: center; font-size: 18px; font-weight: 700; margin-bottom: 12px; color: var(--warning); }
+.gacha-multi-ok { margin-top: 14px; }
+
+/* ========== Battle ========== */
+#battle-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(180deg, #0a0a1a 0%, #0d1117 100%);
+  z-index: 50; display: none; flex-direction: column;
+}
+#battle-overlay.active { display: flex; }
+
+.battle-scene {
+  flex: 1; display: flex; flex-direction: column; padding: 8px;
+  position: relative; overflow-y: auto; overflow-x: hidden;
+}
+.battle-enemies {
+  display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+  align-items: flex-end; min-height: 0;
+}
+.battle-allies {
+  display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+  align-items: flex-end; min-height: 0; margin-top: auto; padding-top: 8px;
+}
+.battle-unit {
+  text-align: center; position: relative;
+  display: flex; flex-direction: column; align-items: center;
+}
+.battle-unit.attacking { animation: unitAttack 0.5s ease-out; }
+.battle-unit.hit { animation: unitHit 0.3s ease-out; }
+.battle-unit.dead { opacity: 0.3; filter: grayscale(1); }
+@keyframes unitAttack {
+  0% { transform: translateY(0) scale(1); }
+  30% { transform: translateY(-40px) scale(1.08); }
+  100% { transform: translateY(0) scale(1); }
+}
+@keyframes unitHit {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-10px); }
+  40% { transform: translateX(10px); }
+  60% { transform: translateX(-6px); }
+  100% { transform: translateX(0); }
+}
+.battle-unit .unit-img {
+  width: 100px; height: 180px; border-radius: 8px;
+  object-fit: contain; object-position: center;
+  border: 2px solid var(--border); background: var(--bg-tertiary);
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+}
+.battle-unit .unit-img.boss {
+  width: 280px; height: 170px;
+}
+.battle-unit .unit-placeholder {
+  width: 100px; height: 180px; border-radius: 8px; border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px; font-weight: 700;
+}
+.battle-unit .unit-placeholder.boss {
+  width: 280px; height: 170px;
+}
+.battle-unit .unit-name {
+  font-size: 11px; font-weight: 600; margin-top: 3px;
+  max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.battle-unit .hp-bar-outer {
+  width: 100px; height: 7px; background: rgba(255,255,255,0.08);
+  border-radius: 3px; margin-top: 3px; overflow: hidden;
+}
+.battle-unit .hp-bar-inner {
+  height: 100%; background: var(--success); border-radius: 3px;
+  transition: width 0.4s;
+}
+.battle-unit .hp-bar-inner.low { background: var(--danger); }
+.battle-unit .hp-bar-inner.mid { background: var(--warning); }
+
+.damage-number {
+  position: absolute; font-weight: 900; font-size: 20px;
+  pointer-events: none; z-index: 60;
+  animation: dmgFloat 1s ease-out forwards;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+.damage-number.heal { color: var(--success); }
+.damage-number.crit { font-size: 28px; }
+@keyframes dmgFloat {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-60px); }
+}
+
+/* ---- Particle Effects ---- */
+.particle {
+  position: absolute; pointer-events: none; z-index: 55;
+  border-radius: 50%; animation: particleBurst 0.7s ease-out forwards;
+}
+@keyframes particleBurst {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0); }
+}
+.particle.slash {
+  border-radius: 2px; animation: particleSlash 0.6s ease-out forwards;
+}
+@keyframes particleSlash {
+  0% { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0.2); }
+}
+
+.battle-log-wrap {
+  border: 1px solid var(--border); border-radius: 8px;
+  background: var(--bg-secondary); margin: 6px 0; overflow: hidden;
+}
+.battle-log-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 4px 8px; cursor: pointer; user-select: none;
+  font-size: 11px; color: var(--text-muted); background: var(--bg-tertiary);
+}
+.battle-log-header:hover { color: var(--text-primary); }
+.battle-log-header .arrow { transition: transform 0.2s; font-size: 10px; }
+.battle-log-header .arrow.open { transform: rotate(180deg); }
+.battle-log {
+  overflow-y: auto; padding: 4px 8px;
+  font-size: 10px; color: var(--text-muted);
+  max-height: 120px; transition: max-height 0.25s, padding 0.25s;
+}
+.battle-log.collapsed { max-height: 0; padding: 0 8px; overflow: hidden; }
+.battle-log .log-entry { padding: 1px 0; border-bottom: 1px solid rgba(255,255,255,0.02); }
+.battle-log .log-entry.damage { color: var(--danger); }
+.battle-log .log-entry.heal { color: var(--success); }
+.battle-log .log-entry.buff { color: var(--info); }
+.battle-log .log-entry.info { color: var(--text-muted); }
+
+.battle-controls {
+  display: flex; gap: 8px; padding: 8px 12px;
+  background: var(--bg-secondary); border-top: 1px solid var(--border);
+  align-items: center;
+}
+.battle-controls .speed-badge {
+  font-size: 10px; padding: 3px 8px; border-radius: 4px;
+  background: var(--bg-tertiary); color: var(--text-secondary);
+}
+
+.battle-result {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.85); z-index: 70;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 16px;
+}
+.battle-result .result-title { font-size: 32px; font-weight: 900; }
+.battle-result .result-title.win { color: var(--success); }
+.battle-result .result-title.lose { color: var(--danger); }
+.battle-result .rewards { font-size: 14px; color: var(--warning); text-align: center; }
+
+/* ========== Modal / Detail ========== */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.8); z-index: 80;
+  display: flex; align-items: center; justify-content: center;
+}
+.modal {
+  background: var(--bg-secondary); border: 1px solid var(--border);
+  border-radius: 14px; padding: 20px; width: 90%; max-width: 400px;
+  max-height: 80vh; overflow-y: auto;
+}
+.modal h3 { font-size: 18px; margin-bottom: 12px; }
+.modal .close-btn {
+  float: right; background: none; border: none; color: var(--text-muted);
+  font-size: 22px; cursor: pointer; line-height: 1;
+}
+.stat-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+.stat-row .stat-label { color: var(--text-muted); }
+.stat-row .stat-value { font-weight: 600; }
+
+.equip-slot {
+  display: flex; align-items: center; gap: 8px; padding: 6px 8px;
+  background: var(--bg-tertiary); border-radius: 8px; margin: 4px 0;
+  font-size: 12px; cursor: pointer;
+}
+.equip-slot .slot-label { color: var(--text-muted); width: 50px; flex-shrink: 0; }
+.equip-slot .slot-item { flex: 1; }
+.equip-slot .slot-empty { color: var(--text-muted); font-style: italic; }
+
+/* ========== Item Grid ========== */
+.item-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+
+/* Redeem Code */
+.redeem-box { display: flex; gap: 6px; margin-top: 6px; }
+.redeem-box input {
+  flex: 1; padding: 6px 10px; font-size: 13px; font-family: var(--font-main);
+  background: var(--bg-tertiary); color: var(--text-primary);
+  border: 1px solid var(--border); border-radius: 6px; outline: none;
+}
+.redeem-box input:focus { border-color: var(--accent); }
+.redeem-box input::placeholder { color: var(--text-muted); }
+.item-card {
+  background: var(--bg-tertiary); border: 1px solid var(--border);
+  border-radius: 8px; padding: 6px; text-align: center; cursor: pointer;
+  transition: all 0.15s; position: relative;
+}
+.item-card:active { transform: scale(0.95); }
+.item-card .item-icon-box {
+  width: 48px; height: 48px; margin: 0 auto 4px;
+  border-radius: 8px; background: var(--bg-secondary);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+}
+.item-card .item-icon-img {
+  width: 48px; height: 48px; object-fit: cover; border-radius: 8px;
+}
+.item-card .item-name { font-size: 10px; font-weight: 600; }
+.item-card .item-qty {
+  position: absolute; top: 2px; right: 4px;
+  font-size: 10px; font-weight: 700; color: var(--text-primary);
+  background: var(--bg-primary); padding: 0 4px; border-radius: 4px;
+}
+.item-categories { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+.item-cat { padding: 4px 12px; border-radius: 6px; font-size: 11px; border: 1px solid var(--border); cursor: pointer; background: var(--bg-tertiary); color: var(--text-muted); font-family: var(--font-main); }
+.item-cat.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* ========== Gear Gacha ========== */
+.gear-gacha-panel {
+  background: linear-gradient(135deg, rgba(255,165,2,0.06), rgba(255,107,160,0.06));
+  border: 1px solid var(--warning);
+  border-radius: 12px; padding: 14px; margin-bottom: 8px;
+}
+.gear-gacha-chapter-select {
+  display: flex; align-items: center; gap: 8px; justify-content: center;
+}
+.gear-card {
+  background: var(--bg-tertiary); border: 2px solid var(--border);
+  border-radius: 8px; padding: 6px; text-align: center;
+  cursor: pointer; transition: all 0.15s; position: relative;
+}
+.gear-card:active { transform: scale(0.95); }
+.gear-card.rarity-N  { border-color: var(--rarity-n); }
+.gear-card.rarity-R  { border-color: var(--rarity-r); }
+.gear-card.rarity-SR { border-color: var(--rarity-sr); }
+.gear-card.rarity-SSR { border-color: var(--rarity-ssr); box-shadow: 0 0 8px rgba(255,213,79,0.2); }
+.gear-card .gear-icon {
+  width: 44px; height: 44px; margin: 0 auto 4px;
+  border-radius: 8px; display: flex;
+  align-items: center; justify-content: center;
+  font-size: 22px; font-weight: 700;
+}
+.gear-card .gear-icon-img {
+  width: 100%; height: 100%; object-fit: contain; border-radius: 6px;
+}
+.gear-card .gear-name { font-size: 10px; font-weight: 600; }
+.gear-card .gear-rarity { font-size: 9px; margin-top: 1px; }
+.gear-card .gear-slot-badge {
+  position: absolute; top: 2px; right: 3px;
+  font-size: 8px; padding: 1px 4px; border-radius: 3px;
+  background: var(--bg-primary); color: var(--text-muted);
+}
+.gear-card .gear-equipped-badge {
+  position: absolute; bottom: 2px; left: 2px;
+  font-size: 8px; padding: 1px 4px; border-radius: 3px;
+  background: var(--success); color: #000; font-weight: 600;
+}
+.gear-result-card {
+  background: var(--bg-tertiary); border-radius: 8px; padding: 8px; text-align: center;
+}
+.gear-result-card.rarity-N  { border: 2px solid var(--rarity-n); }
+.gear-result-card.rarity-R  { border: 2px solid var(--rarity-r); }
+.gear-result-card.rarity-SR { border: 2px solid var(--rarity-sr); }
+.gear-result-card.rarity-SSR { border: 2px solid var(--rarity-ssr); box-shadow: 0 0 12px rgba(255,213,79,0.3); }
+
+/* ========== Idle Reward ========== */
+.idle-popup {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.85); z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+}
+.idle-popup .idle-card {
+  background: var(--bg-secondary); border: 2px solid var(--warning);
+  border-radius: 16px; padding: 24px; text-align: center;
+  animation: idleAppear 0.5s ease-out;
+}
+@keyframes idleAppear {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.idle-popup .idle-title { font-size: 20px; font-weight: 700; color: var(--warning); margin-bottom: 8px; }
+.idle-popup .idle-detail { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
+.idle-popup .idle-reward { font-size: 18px; font-weight: 700; margin: 8px 0; }
+
+/* ========== Toast ========== */
+.toast-container {
+  position: fixed; top: 12px; left: 50%; transform: translateX(-50%);
+  z-index: 300; display: flex; flex-direction: column; gap: 6px;
+  pointer-events: none;
+}
+.toast {
+  padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600;
+  background: var(--bg-secondary); border: 1px solid var(--border);
+  animation: toastIn 0.3s ease-out, toastOut 0.3s 2.2s ease-in forwards;
+  text-align: center; pointer-events: auto;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes toastOut { from { opacity: 1; } to { opacity: 0; } }
+
+/* ========== Chapter Tabs ========== */
+.chapter-tabs { display: flex; gap: 6px; margin-bottom: 10px; }
+.chapter-tab {
+  padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
+  border: 1px solid var(--border); cursor: pointer;
+  background: var(--bg-tertiary); color: var(--text-muted);
+  font-family: var(--font-main);
+}
+.chapter-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.chapter-tab.locked { opacity: 0.35; pointer-events: none; }
+
+/* ========== Image Viewer ========== */
+.image-viewer-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.92); z-index: 400;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.image-viewer-overlay img {
+  max-width: 95vw; max-height: 95vh;
+  object-fit: contain; border-radius: 8px;
+  box-shadow: 0 0 40px rgba(255,255,255,0.08);
+}
+.detail-portrait {
+  display: block; margin: 0 auto; border-radius: 12px;
+  max-height: 220px; max-width: 160px; object-fit: cover; object-position: top;
+  cursor: zoom-in; transition: opacity 0.2s; border: 2px solid var(--border);
+}
+.detail-portrait:hover { opacity: 0.85; }
+.detail-portrait-placeholder {
+  width: 80px; height: 80px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px; font-weight: 700; margin: 0 auto;
+}
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 13px; }
+.flex-row { display: flex; gap: 8px; align-items: center; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.progress-bar {
+  height: 8px; background: var(--bg-tertiary); border-radius: 4px; overflow: hidden; margin-top: 4px;
+}
+.progress-bar .fill {
+  height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.3s;
+}
+.team-slot {
+  width: 60px; height: 60px; border-radius: 10px; border: 2px dashed var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; color: var(--text-muted); cursor: pointer;
+  background: var(--bg-tertiary);
+}
+.team-slot.filled {
+  border-style: solid; position: relative; overflow: hidden;
+}
+.team-slot .slot-img {
+  width: 100%; height: 100%; object-fit: cover; object-position: top;
+}
+.team-slot .slot-placeholder {
+  font-size: 20px; font-weight: 700;
+}
+.team-slot .slot-level {
+  position: absolute; bottom: 2px; right: 4px;
+  font-size: 9px; font-weight: 700; color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+/* ========== Tower Screen ========== */
+.tower-overview {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.tower-card {
+  background: var(--bg-tertiary);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.tower-card:active { transform: scale(0.96); }
+.tower-card .tower-icon { font-size: 36px; margin-bottom: 4px; }
+.tower-card .tower-name { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+.tower-card .tower-reward { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+.tower-card .tower-progress { font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; }
+.tower-card .tower-attempts { font-size: 10px; color: var(--text-muted); }
+.tower-card.gold-tower { border-color: #ffa50288; background: linear-gradient(135deg, rgba(255,165,2,0.08), var(--bg-tertiary)); }
+.tower-card.gems-tower { border-color: #1e90ff88; background: linear-gradient(135deg, rgba(30,144,255,0.08), var(--bg-tertiary)); }
+.tower-card.exp-tower { border-color: #e8b84b88; background: linear-gradient(135deg, rgba(232,184,75,0.08), var(--bg-tertiary)); }
+.tower-card.stamina-tower { border-color: #2ed57388; background: linear-gradient(135deg, rgba(46,213,115,0.08), var(--bg-tertiary)); }
+
+.tower-floor-card {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; cursor: pointer; margin-bottom: 4px;
+}
+.tower-floor-card.cleared { opacity: 0.55; }
+.tower-floor-card.locked { opacity: 0.3; pointer-events: none; }
+.tower-floor-card .floor-num {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--bg-tertiary); display: flex;
+  align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; flex-shrink: 0;
+}
+.tower-floor-card.cleared .floor-num { background: var(--success); color: #000; font-size: 12px; }
+.tower-floor-card .floor-info { flex: 1; }
+.tower-floor-card .floor-name { font-size: 12px; font-weight: 600; }
+.tower-floor-card .floor-meta { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+.tower-floor-card .floor-reward { font-size: 11px; font-weight: 600; white-space: nowrap; }
+.boss-preview {
+  width: 40px; height: 40px; border-radius: 6px; object-fit: cover; object-position: top;
+  border: 2px solid var(--border); flex-shrink: 0; background: var(--bg-tertiary);
+}
+.tower-sweep-section {
+  margin-top: 16px; padding: 12px;
+  background: var(--bg-tertiary); border-radius: 10px;
+  text-align: center;
+}
+.tower-back-btn-wrap { margin-bottom: 10px; }
+.tower-floor-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <!-- Top Bar -->
+  <div id="topbar">
+    <span class="title">Anime Idle Realm</span>
+    <span class="resource gold"><span class="icon">🪙</span><span id="res-gold">0</span></span>
+    <span class="resource gems"><span class="icon">💎</span><span id="res-gems">0</span></span>
+    <span class="resource exp"><span class="icon">⭐</span><span id="res-exp">0</span></span>
+    <span class="resource stamina"><span class="icon">⚡</span><span id="res-stamina">0/0</span></span>
+  </div>
+
+  <!-- Screen Container -->
+  <div id="screen-container">
+
+    <!-- Characters Screen -->
+    <div id="screen-characters" class="screen active">
+      <div class="section-title">我的队伍</div>
+      <div class="flex-row" id="team-slots" style="margin-bottom:8px; justify-content:center; gap:10px;"></div>
+      <div id="energy-bar-wrap" style="margin-bottom:12px;padding:0 16px;display:none;">
+        <div class="flex-between" style="font-size:10px;margin-bottom:2px;">
+          <span>⚡ 队伍能量</span><span id="energy-text">0/12</span>
+        </div>
+        <div class="pity-bar"><div id="energy-fill" style="height:100%;background:var(--success);transition:width 0.3s;"></div></div>
+        <div id="energy-warn" style="font-size:10px;color:var(--danger);margin-top:2px;display:none;">⚠ 超出上限，全队属性-<span id="energy-penalty">0</span>%</div>
+      </div>
+      <div class="section-title">角色列表</div>
+      <div class="flex-row" style="justify-content:flex-end; margin-bottom:8px;">
+        <button class="btn btn-sm btn-secondary" onclick="GameUI.sortCharacters('rarity')">按稀有度</button>
+        <button class="btn btn-sm btn-secondary" onclick="GameUI.sortCharacters('level')">按等级</button>
+        <button class="btn btn-sm btn-secondary" onclick="GameUI.sortCharacters('element')">按属性</button>
+      </div>
+      <div class="char-grid" id="char-grid"></div>
+    </div>
+
+    <!-- Stages Screen -->
+    <div id="screen-stages" class="screen">
+      <div class="section-title">关卡选择</div>
+      <div style="margin-bottom:8px;">
+        <label style="font-size:11px;color:var(--text-muted);">挂机关卡：</label>
+        <select id="idle-stage-select" style="background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--border);border-radius:4px;padding:3px 6px;font-size:11px;font-family:var(--font-main);" onchange="GameState.idle_stage_id = this.value; GameState.save();">
+          <option value="">不挂机</option>
+        </select>
+      </div>
+      <div class="idle-rewards-card" id="idle-rewards-card" style="display:none;">
+        <div class="flex-between" style="margin-bottom:4px;">
+          <span style="font-size:13px;font-weight:700;">🎁 挂机收益</span>
+          <span style="font-size:10px;color:var(--text-muted);" id="idle-timer">0分</span>
+        </div>
+        <div class="flex-between" style="margin-bottom:6px;gap:4px;">
+          <span style="font-size:11px;color:var(--warning);">🪙<span id="idle-gold">0</span></span>
+          <span style="font-size:11px;color:#e8b84b;">⭐<span id="idle-exp">0</span></span>
+          <span style="font-size:11px;color:var(--success);">⚡<span id="idle-stamina">0</span></span>
+          <button class="btn btn-sm btn-warning" id="btn-claim-idle" onclick="GameUI.claimIdleRewards()">领取</button>
+        </div>
+      </div>
+      <div class="chapter-tabs" id="chapter-tabs"></div>
+      <div id="stage-list"></div>
+    </div>
+
+    <!-- Gacha Screen -->
+    <div id="screen-gacha" class="screen">
+      <div class="gacha-banner">
+        <h3>✨ 角色召唤 ✨</h3>
+        <p class="banner-sub">消耗召唤券或宝石获取新角色</p>
+        <div class="gacha-rates">
+          <span style="color:var(--rarity-ssr);">SSR 3%</span>
+          <span style="color:var(--rarity-sr);">SR 12%</span>
+          <span style="color:var(--rarity-r);">R 35%</span>
+          <span style="color:var(--rarity-n);">N 50%</span>
+        </div>
+        <p style="font-size:10px;color:var(--text-muted);margin:6px 0;">每90抽保底SSR / 每10抽保底SR+</p>
+        <div class="gacha-buttons">
+          <button class="btn btn-primary" onclick="GameUI.doGacha(1)">召唤 x1<br><small>1 券 / 50💎</small></button>
+          <button class="btn btn-warning" onclick="GameUI.doGacha(10)">召唤 x10<br><small>10 券 / 450💎</small></button>
+        </div>
+        <p style="margin-top:8px;font-size:11px;color:var(--text-muted);">拥有 <span id="gacha-ticket-count">0</span> 张召唤券</p>
+      </div>
+      <div class="section-title">保底计数</div>
+      <div class="card" style="text-align:center;">
+        <div class="flex-between" style="font-size:12px;">
+          <span>SSR保底</span><span id="pity-ssr">0/90</span>
+        </div>
+        <div class="progress-bar"><div class="fill" id="pity-ssr-bar" style="width:0%;background:var(--rarity-ssr);"></div></div>
+        <div class="flex-between" style="font-size:12px;margin-top:8px;">
+          <span>SR保底</span><span id="pity-sr">0/10</span>
+        </div>
+        <div class="progress-bar"><div class="fill" id="pity-sr-bar" style="width:0%;background:var(--rarity-sr);"></div></div>
+      </div>
+    </div>
+
+    <!-- Items Screen -->
+    <div id="screen-items" class="screen">
+      <!-- Gear Gacha Section -->
+      <div class="section-title">⚙ 装备抽奖 <span style="font-size:10px;font-weight:400;color:var(--text-muted);">(消耗金币)</span></div>
+      <div class="gear-gacha-panel" id="gear-gacha-panel">
+        <div class="gear-gacha-chapter-select">
+          <label style="font-size:11px;color:var(--text-muted);">章节池：</label>
+          <select id="gear-chapter-select" style="background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--border);border-radius:4px;padding:4px 8px;font-size:12px;font-family:var(--font-main);"></select>
+        </div>
+        <div style="display:flex;gap:4px;justify-content:center;margin:8px 0;font-size:10px;">
+          <span style="color:var(--rarity-ssr);background:var(--bg-tertiary);padding:2px 6px;border-radius:4px;">SSR 5%</span>
+          <span style="color:var(--rarity-sr);background:var(--bg-tertiary);padding:2px 6px;border-radius:4px;">SR 15%</span>
+          <span style="color:var(--rarity-r);background:var(--bg-tertiary);padding:2px 6px;border-radius:4px;">R 35%</span>
+          <span style="color:var(--rarity-n);background:var(--bg-tertiary);padding:2px 6px;border-radius:4px;">N 45%</span>
+        </div>
+        <div style="text-align:center;margin:8px 0;">
+          <span style="font-size:14px;font-weight:700;color:var(--warning);">🪙 <span id="gear-gacha-cost">500</span></span>
+          <span style="font-size:10px;color:var(--text-muted);margin-left:8px;">/ 抽</span>
+        </div>
+        <div style="text-align:center;">
+          <button class="btn btn-warning" id="btn-gear-gacha1" onclick="GameUI.doGearGacha(1)">单抽 ⚙</button>
+          <button class="btn btn-warning" id="btn-gear-gacha5" onclick="GameUI.doGearGacha(5)" style="margin-left:8px;">五连 ⚙<br><small style="font-size:9px;">9折</small></button>
+        </div>
+        <div style="text-align:center;margin-top:6px;font-size:10px;color:var(--text-muted);">
+          已解锁最高章节：<span id="gear-chapter-display">-</span>
+        </div>
+      </div>
+
+      <div class="section-title">装备仓库 <small style="font-weight:400;color:var(--text-muted);">(抽奖获得)</small></div>
+      <div class="item-grid" id="gear-inventory-grid"></div>
+
+      <div class="section-title">物品 <small style="font-weight:400;color:var(--text-muted);">(掉落/兑换)</small></div>
+      <div class="item-categories" id="item-categories">
+        <button class="item-cat active" data-cat="all">全部</button>
+        <button class="item-cat" data-cat="equipment">装备</button>
+        <button class="item-cat" data-cat="material">材料</button>
+        <button class="item-cat" data-cat="consumable">消耗品</button>
+      </div>
+      <div class="item-grid" id="item-grid"></div>
+      <div class="section-title">兑换码</div>
+      <div class="redeem-box">
+        <input type="text" id="redeem-input" placeholder="输入兑换码..." maxlength="32" autocomplete="off" onkeydown="if(event.key==='Enter')RedeemSystem.redeem()">
+        <button class="btn btn-sm btn-warning" onclick="RedeemSystem.redeem()">兑换</button>
+      </div>
+      <p id="redeem-msg" style="font-size:11px;text-align:center;margin-top:4px;min-height:16px;"></p>
+      <div style="margin-top:16px;text-align:center;">
+        <button class="btn btn-sm btn-danger" onclick="if(confirm('确定要清除所有存档数据吗？此操作不可撤销！')){SaveManager.reset();location.reload();}">⚠ 清除存档数据</button>
+      </div>
+    </div>
+
+    <!-- Tower Screen -->
+    <div id="screen-tower" class="screen">
+      <div class="tower-back-btn-wrap">
+        <button class="btn btn-sm btn-secondary" onclick="GameUI._activeTower = null; GameUI.renderTowerScreen();">← 返回塔列表</button>
+      </div>
+      <div id="tower-content"></div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div id="bottom-nav">
+    <button class="nav-btn active" data-screen="characters">
+      <span class="nav-icon">👥</span>角色
+    </button>
+    <button class="nav-btn" data-screen="stages">
+      <span class="nav-icon">⚔️</span>关卡
+    </button>
+    <button class="nav-btn" data-screen="gacha">
+      <span class="nav-icon">🎴</span>召唤
+    </button>
+    <button class="nav-btn" data-screen="items">
+      <span class="nav-icon">🎒</span>物品
+    </button>
+    <button class="nav-btn" data-screen="tower">
+      <span class="nav-icon">🗼</span>资源塔
+    </button>
+  </div>
+
+  <!-- Battle Overlay -->
+  <div id="battle-overlay">
+    <div class="battle-scene" id="battle-scene">
+      <div class="battle-enemies" id="battle-enemies"></div>
+      <div class="battle-log-wrap">
+        <div class="battle-log-header" id="battle-log-header" onclick="BattleUI.toggleLog()">
+          <span>战斗记录</span><span class="arrow" id="log-arrow">▼</span>
+        </div>
+        <div class="battle-log" id="battle-log"></div>
+      </div>
+      <div class="battle-allies" id="battle-allies"></div>
+    </div>
+    <div class="battle-controls">
+      <button class="btn btn-sm btn-secondary" onclick="BattleUI.togglePause()" id="btn-pause">暂停</button>
+      <button class="btn btn-sm btn-secondary" onclick="BattleUI.setSpeed(1)">1x</button>
+      <button class="btn btn-sm btn-secondary" onclick="BattleUI.setSpeed(2)">2x</button>
+      <button class="btn btn-sm btn-secondary" onclick="BattleUI.setSpeed(4)">4x</button>
+      <button class="btn btn-sm btn-warning" onclick="BattleUI.setSpeed(0)" title="瞬间完成整场战斗">跳过</button>
+      <span class="speed-badge" id="speed-badge">1x</span>
+      <span style="flex:1;"></span>
+      <span style="font-size:10px;color:var(--text-muted);">Wave <span id="wave-indicator">1/1</span></span>
+      <button class="btn btn-sm btn-danger" onclick="BattleUI.flee()">逃跑</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- ⚠ 嵌入式JSON仅为file://协议兜底，新增内容只需更新data/下的外部JSON，不用改这里 ⚠ -->
+<script id="embedded-characters" type="application/json">{"characters":[{"id":"sakura_blade","name":"樱刃","rarity":"SSR","element":"fire","role":"attacker","base_stats":{"hp":1200,"atk":180,"def":80,"spd":110,"crit_rate":0.12,"crit_dmg":1.8},"growth_rates":{"hp":150,"atk":22,"def":9,"spd":3},"skill_ids":["fire_slash","blazing_aura"],"star_bonus":[{"stars":1,"skill_id":"star_firestorm"},{"stars":3,"skill_id":"star_inferno"},{"stars":5,"skill_id":"star_berserk"}],"portrait":"assets/characters/sakura_blade.png","gacha_weight":5,"lora_config":{"lora":"","lora_strength":0,"prompt":"1girl, full body, standing, sakura pink hair, holding katana, cherry blossom garden background, kimono, fierce expression, fire element, cinematic lighting, depth of field, masterpiece","width":768,"height":1344},"description":"执掌樱花之焰的剑士，性格豪爽，剑术精湛。"},{"id":"aqua_mage","name":"水月法师","rarity":"SSR","element":"water","role":"healer","base_stats":{"hp":900,"atk":140,"def":70,"spd":95,"crit_rate":0.05,"crit_dmg":1.5},"growth_rates":{"hp":120,"atk":18,"def":8,"spd":3},"skill_ids":["healing_rain","ice_lance"],"star_bonus":[{"stars":1,"skill_id":"star_purify"},{"stars":3,"skill_id":"star_tsunami"},{"stars":5,"skill_id":"star_blessing"}],"portrait":"assets/characters/aqua_mage.png","gacha_weight":5,"lora_config":{"lora":"","lora_strength":0,"prompt":"1girl, full body, standing, blue hair, water mage, flowing robe, holding crystal staff, underwater palace background, water bubbles, gentle smile, cinematic lighting, masterpiece","width":768,"height":1344},"description":"操控水之力的神秘法师，温柔善良，擅长治愈之术。"},{"id":"storm_ranger","name":"疾风游侠","rarity":"SR","element":"wind","role":"attacker","base_stats":{"hp":950,"atk":155,"def":65,"spd":130,"crit_rate":0.15,"crit_dmg":1.7},"growth_rates":{"hp":110,"atk":18,"def":7,"spd":4},"skill_ids":["wind_arrow","gale_step"],"star_bonus":[{"stars":1,"skill_id":"star_hurricane"},{"stars":3,"skill_id":"star_cyclone"},{"stars":5,"skill_id":"star_blessing"}],"portrait":"assets/characters/storm_ranger.png","gacha_weight":15,"lora_config":{"lora":"","lora_strength":0,"prompt":"1girl, full body, standing, green hair, archer, forest background, wind element, cloak, holding bow, swift dynamic pose, dappled sunlight, cinematic lighting, masterpiece","width":768,"height":1344},"description":"森林中的精灵游侠，箭术百发百中，行动如风。"},{"id":"shadow_assassin","name":"暗影刺客","rarity":"SR","element":"dark","role":"attacker","base_stats":{"hp":800,"atk":175,"def":55,"spd":140,"crit_rate":0.2,"crit_dmg":2.0},"growth_rates":{"hp":95,"atk":21,"def":6,"spd":4},"skill_ids":["shadow_strike","dark_veil"],"star_bonus":[{"stars":1,"skill_id":"star_execute"},{"stars":3,"skill_id":"star_berserk"},{"stars":5,"skill_id":"star_hurricane"}],"portrait":"assets/characters/shadow_assassin.png","gacha_weight":15,"lora_config":{"lora":"","lora_strength":0,"prompt":"1girl, full body, standing, dark purple hair, assassin, ninja outfit, holding dagger, shadow element, moonlit rooftop night background, mysterious cool, cinematic lighting, masterpiece","width":768,"height":1344},"description":"来自暗影之国的刺客，来无影去无踪，一击必杀。"},{"id":"holy_knight","name":"圣光骑士","rarity":"SR","element":"light","role":"defender","base_stats":{"hp":1500,"atk":100,"def":140,"spd":75,"crit_rate":0.05,"crit_dmg":1.5},"growth_rates":{"hp":180,"atk":12,"def":16,"spd":2},"skill_ids":["holy_smite","divine_shield"],"star_bonus":[{"stars":1,"skill_id":"star_holy_nova"},{"stars":3,"skill_id":"star_blessing"},{"stars":5,"skill_id":"star_purify"}],"portrait":"assets/characters/holy_knight.png","gacha_weight":15,"lora_config":{"lora":"","lora_strength":0,"prompt":"1girl, full body, standing, blonde hair, knight, silver armor, holding sword and shield, cathedral background, holy light rays, dignified, cinematic lighting, masterpiece","width":768,"height":1344},"description":"圣光教团的骑士，守护弱小，坚不可摧的盾牌。"},{"id":"flame_novice","name":"火焰学徒","rarity":"R","element":"fire","role":"attacker","base_stats":{"hp":700,"atk":120,"def":50,"spd":85,"crit_rate":0.08,"crit_dmg":1.5},"growth_rates":{"hp":90,"atk":15,"def":6,"spd":2},"skill_ids":["fire_slash"],"star_bonus":[{"stars":2,"skill_id":"star_firestorm"},{"stars":5,"skill_id":"star_inferno"}],"portrait":"assets/characters/flame_novice.png","gacha_weight":35,"lora_config":{"lora":"","lora_strength":0,"prompt":"1girl, full body, standing, red hair, apprentice mage, simple robe, fire magic in hand, wizard academy background, cute young, warm lighting, masterpiece","width":768,"height":1344},"description":"刚入门的火焰法师学徒，虽然稚嫩但潜力无限。"},{"id":"water_acolyte","name":"水泉侍僧","rarity":"R","element":"water","role":"support","base_stats":{"hp":750,"atk":90,"def":60,"spd":80,"crit_rate":0.05,"crit_dmg":1.5},"growth_rates":{"hp":100,"atk":11,"def":7,"spd":2},"skill_ids":["healing_rain"],"star_bonus":[{"stars":2,"skill_id":"star_purify"},{"stars":5,"skill_id":"star_tsunami"}],"portrait":"assets/characters/water_acolyte.png","gacha_weight":35,"lora_config":{"lora":"","lora_strength":0,"prompt":"1girl, full body, standing, teal hair, shrine maiden, water shrine background, water element flowing, simple pure, young, serene lighting, masterpiece","width":768,"height":1344},"description":"侍奉水之精灵的见习僧侣，擅长基础的治愈术。"},{"id":"wind_scout","name":"风之斥候","rarity":"R","element":"wind","role":"support","base_stats":{"hp":650,"atk":100,"def":45,"spd":120,"crit_rate":0.1,"crit_dmg":1.5},"growth_rates":{"hp":80,"atk":13,"def":5,"spd":3},"skill_ids":["gale_step"],"star_bonus":[{"stars":2,"skill_id":"star_hurricane"},{"stars":5,"skill_id":"star_cyclone"}],"portrait":"assets/characters/wind_scout.png","gacha_weight":35,"lora_config":{"lora":"","lora_strength":0,"prompt":"1girl, full body, standing, green short hair, scout, light armor, holding dual daggers, wind element, mountain cliff background, agile dynamic pose, cinematic lighting, masterpiece","width":768,"height":1344},"description":"行动敏捷的森林斥候，擅长侦查和游击战术。"},{"id":"darkling_pup","name":"暗影幼崽","rarity":"N","element":"dark","role":"attacker","base_stats":{"hp":500,"atk":85,"def":35,"spd":90,"crit_rate":0.08,"crit_dmg":1.5},"growth_rates":{"hp":65,"atk":10,"def":4,"spd":2},"skill_ids":["shadow_strike"],"star_bonus":[{"stars":3,"skill_id":"star_execute"},{"stars":5,"skill_id":"star_berserk"}],"portrait":"assets/characters/darkling_pup.png","gacha_weight":50,"lora_config":{"lora":"","lora_strength":0,"prompt":"1girl, full body, standing, small dark creature, cute, shadow element, chibi, moonlit cave background, simple design, soft rim lighting, masterpiece","width":768,"height":1344},"description":"一只可爱的小暗影生物，虽然弱小但忠心耿耿。"},{"id":"light_sprite","name":"光之精灵","rarity":"N","element":"light","role":"healer","base_stats":{"hp":450,"atk":55,"def":40,"spd":85,"crit_rate":0.03,"crit_dmg":1.3},"growth_rates":{"hp":55,"atk":7,"def":5,"spd":2},"skill_ids":["holy_smite"],"star_bonus":[{"stars":3,"skill_id":"star_holy_nova"},{"stars":5,"skill_id":"star_blessing"}],"portrait":"assets/characters/light_sprite.png","gacha_weight":50,"lora_config":{"lora":"","lora_strength":0,"prompt":"1girl, full body, floating, tiny light fairy, glowing wings, cute, chibi, heavenly garden background, white gold aura, sparkles, ethereal lighting, masterpiece","width":768,"height":1344},"description":"小小的光之精灵，散播着温暖的光芒。"}]}</script>
+<script id="embedded-enemies" type="application/json">{"enemies":[{"id":"slime_fire","name":"火焰史莱姆","element":"fire","stats":{"hp":500,"atk":55,"def":25,"spd":80,"crit_rate":0.03,"crit_dmg":1.3},"skill_ids":["flame_burst_mini"],"portrait":"assets/enemies/slime_fire.png","lora_config":{"lora":"","lora_strength":0,"prompt":"monster, fire slime, cute, simple, chibi, glowing red, game monster","width":512,"height":512},"gold_drop":40,"exp_drop":25,"item_drops":[{"item_id":"fire_crystal","drop_rate":0.1}]},{"id":"slime_water","name":"冰泉史莱姆","element":"water","stats":{"hp":550,"atk":50,"def":30,"spd":75,"crit_rate":0.03,"crit_dmg":1.3},"skill_ids":["water_bubble"],"portrait":"assets/enemies/slime_water.png","lora_config":{"lora":"","lora_strength":0,"prompt":"monster, water slime, cute, simple, chibi, blue bubbles, game monster","width":512,"height":512},"gold_drop":40,"exp_drop":25,"item_drops":[{"item_id":"water_crystal","drop_rate":0.1}]},{"id":"slime_wind","name":"旋风史莱姆","element":"wind","stats":{"hp":450,"atk":60,"def":20,"spd":95,"crit_rate":0.05,"crit_dmg":1.4},"skill_ids":["wind_blade"],"portrait":"assets/enemies/slime_wind.png","lora_config":{"lora":"","lora_strength":0,"prompt":"monster, wind slime, cute, simple, chibi, green swirl, game monster","width":512,"height":512},"gold_drop":45,"exp_drop":28,"item_drops":[{"item_id":"wind_crystal","drop_rate":0.1}]},{"id":"goblin_fire","name":"烈焰哥布林","element":"fire","stats":{"hp":900,"atk":85,"def":45,"spd":82,"crit_rate":0.05,"crit_dmg":1.5},"skill_ids":["flame_burst_mini","fire_slash"],"portrait":"assets/enemies/goblin_fire.png","lora_config":{"lora":"","lora_strength":0,"prompt":"monster, goblin, fire element, red skin, tusks, holding torch, fierce, game monster","width":512,"height":512},"gold_drop":80,"exp_drop":50,"item_drops":[{"item_id":"fire_crystal","drop_rate":0.2},{"item_id":"iron_sword","drop_rate":0.05}]},{"id":"shadow_wolf","name":"暗影狼","element":"dark","stats":{"hp":1200,"atk":100,"def":50,"spd":90,"crit_rate":0.1,"crit_dmg":1.6},"skill_ids":["shadow_strike","dark_veil"],"portrait":"assets/enemies/shadow_wolf.png","lora_config":{"lora":"","lora_strength":0,"prompt":"monster, shadow wolf, dark fur, glowing purple eyes, fierce, game monster","width":512,"height":512},"gold_drop":120,"exp_drop":75,"item_drops":[{"item_id":"dark_crystal","drop_rate":0.15},{"item_id":"shadow_cloak","drop_rate":0.05}]},{"id":"boss_fire_dragon","name":"炎龙·拉格纳","element":"fire","stats":{"hp":4500,"atk":170,"def":80,"spd":85,"crit_rate":0.1,"crit_dmg":2.0},"skill_ids":["blazing_aura","fire_slash"],"portrait":"assets/enemies/boss_fire_dragon.png","lora_config":{"lora":"","lora_strength":0,"prompt":"monster, dragon, fire element, huge, scales, breathing fire, epic, boss","width":1600,"height":960},"gold_drop":500,"exp_drop":300,"item_drops":[{"item_id":"fire_crystal","drop_rate":0.5},{"item_id":"dragon_scale","drop_rate":0.15}]}]}</script>
+<script id="embedded-skills" type="application/json">{"skills":[{"id":"fire_slash","name":"烈焰斩","type":"damage","element":"fire","target":"single","base_multiplier":1.8,"scale_stat":"atk","cooldown":2,"mana_cost":25,"effects":[{"type":"burn","chance":0.4,"duration":3,"value":0.08,"scale":"caster_atk"}],"icon":"assets/skills/fire_slash.png","description":"凝聚火焰之力斩向敌人，有概率造成灼烧效果。"},{"id":"blazing_aura","name":"烈焰光环","type":"buff","element":"fire","target":"all_allies","base_multiplier":0,"scale_stat":"atk","cooldown":5,"mana_cost":40,"effects":[{"type":"atk_up","chance":1.0,"duration":3,"value":1.25,"scale":null}],"icon":"assets/skills/blazing_aura.png","description":"释放烈焰光环，提升全体队友攻击力。"},{"id":"healing_rain","name":"治愈之雨","type":"heal","element":"water","target":"all_allies","base_multiplier":0.6,"scale_stat":"atk","cooldown":4,"mana_cost":40,"effects":[],"icon":"assets/skills/healing_rain.png","description":"召唤治愈之雨，恢复全体队友生命值。"},{"id":"ice_lance","name":"冰晶之枪","type":"damage","element":"water","target":"single","base_multiplier":2.0,"scale_stat":"atk","cooldown":3,"mana_cost":35,"effects":[{"type":"spd_down","chance":0.5,"duration":2,"value":0.7,"scale":null}],"icon":"assets/skills/ice_lance.png","description":"投掷冰晶长枪，有概率降低敌人速度。"},{"id":"wind_arrow","name":"疾风箭","type":"damage","element":"wind","target":"single","base_multiplier":1.5,"scale_stat":"atk","cooldown":1,"mana_cost":20,"effects":[],"icon":"assets/skills/wind_arrow.png","description":"射出缠绕风之力的箭矢，快速而精准。"},{"id":"gale_step","name":"疾风步","type":"buff","element":"wind","target":"self","base_multiplier":0,"scale_stat":"atk","cooldown":4,"mana_cost":30,"effects":[{"type":"spd_up","chance":1.0,"duration":3,"value":1.4,"scale":null}],"icon":"assets/skills/gale_step.png","description":"以风之力加速，大幅提升自身速度。"},{"id":"shadow_strike","name":"暗影突袭","type":"damage","element":"dark","target":"single","base_multiplier":2.2,"scale_stat":"atk","cooldown":3,"mana_cost":30,"effects":[{"type":"def_down","chance":0.3,"duration":2,"value":0.75,"scale":null}],"icon":"assets/skills/shadow_strike.png","description":"从暗影中突袭敌人，有概率降低敌人防御。"},{"id":"dark_veil","name":"暗幕","type":"debuff","element":"dark","target":"all_enemies","base_multiplier":0,"scale_stat":"atk","cooldown":5,"mana_cost":35,"effects":[{"type":"atk_down","chance":0.7,"duration":2,"value":0.7,"scale":null}],"icon":"assets/skills/dark_veil.png","description":"释放黑暗帷幕，有概率降低全体敌人攻击力。"},{"id":"holy_smite","name":"圣光惩戒","type":"damage","element":"light","target":"single","base_multiplier":1.7,"scale_stat":"atk","cooldown":2,"mana_cost":25,"effects":[{"type":"stun","chance":0.2,"duration":1,"value":0,"scale":null}],"icon":"assets/skills/holy_smite.png","description":"降下圣光之力惩戒敌人，有概率造成眩晕。"},{"id":"divine_shield","name":"神圣护盾","type":"buff","element":"light","target":"all_allies","base_multiplier":0,"scale_stat":"atk","cooldown":5,"mana_cost":45,"effects":[{"type":"shield","chance":1.0,"duration":3,"value":0.3,"scale":"caster_max_hp"}],"icon":"assets/skills/divine_shield.png","description":"为全体队友施加神圣护盾，吸收伤害。"},{"id":"flame_burst_mini","name":"小型火焰","type":"damage","element":"fire","target":"single","base_multiplier":1.2,"scale_stat":"atk","cooldown":0,"mana_cost":15,"effects":[],"icon":"assets/skills/flame_burst_mini.png","description":"释放小型火焰攻击敌人。"},{"id":"water_bubble","name":"水泡攻击","type":"damage","element":"water","target":"single","base_multiplier":1.1,"scale_stat":"atk","cooldown":0,"mana_cost":15,"effects":[],"icon":"assets/skills/water_bubble.png","description":"喷射水泡攻击敌人。"},{"id":"wind_blade","name":"风刃","type":"damage","element":"wind","target":"single","base_multiplier":1.2,"scale_stat":"atk","cooldown":0,"mana_cost":15,"effects":[],"icon":"assets/skills/wind_blade.png","description":"发出风之刃攻击敌人。"},{"id":"star_firestorm","name":"★烈焰风暴","type":"damage","element":"fire","target":"all_enemies","base_multiplier":1.5,"scale_stat":"atk","cooldown":4,"mana_cost":0,"effects":[{"type":"burn","chance":0.5,"duration":2,"value":0.06,"scale":"caster_atk"}],"icon":"assets/skills/star_firestorm.png","description":"★觉醒特技: 召唤烈焰风暴席卷全体敌人。"},{"id":"star_inferno","name":"★地狱烈焰","type":"damage","element":"fire","target":"all_enemies","base_multiplier":2.0,"scale_stat":"atk","cooldown":5,"mana_cost":0,"effects":[{"type":"burn","chance":0.7,"duration":3,"value":0.1,"scale":"caster_atk"}],"icon":"assets/skills/star_inferno.png","description":"★觉醒特技: 释放地狱烈焰焚烧全体敌人。"},{"id":"star_tsunami","name":"★怒涛狂澜","type":"damage","element":"water","target":"all_enemies","base_multiplier":1.4,"scale_stat":"atk","cooldown":4,"mana_cost":0,"effects":[{"type":"spd_down","chance":0.6,"duration":2,"value":0.75,"scale":null}],"icon":"assets/skills/star_tsunami.png","description":"★觉醒特技: 召唤巨浪冲击全体敌人。"},{"id":"star_purify","name":"★净化之泉","type":"heal","element":"water","target":"all_allies","base_multiplier":0.8,"scale_stat":"atk","cooldown":4,"mana_cost":0,"effects":[{"type":"shield","chance":1.0,"duration":2,"value":0.15,"scale":"caster_max_hp"}],"icon":"assets/skills/star_purify.png","description":"★觉醒特技: 净化并治疗全体队友，附加护盾。"},{"id":"star_hurricane","name":"★飓风之眼","type":"damage","element":"wind","target":"all_enemies","base_multiplier":1.6,"scale_stat":"atk","cooldown":3,"mana_cost":0,"effects":[],"icon":"assets/skills/star_hurricane.png","description":"★觉醒特技: 以飓风之力撕裂全体敌人。"},{"id":"star_cyclone","name":"★旋风斩","type":"damage","element":"wind","target":"all_enemies","base_multiplier":1.3,"scale_stat":"atk","cooldown":3,"mana_cost":0,"effects":[{"type":"spd_down","chance":0.4,"duration":2,"value":0.8,"scale":null}],"icon":"assets/skills/star_cyclone.png","description":"★觉醒特技: 以旋风斩击全体敌人。"},{"id":"star_execute","name":"★处决","type":"damage","element":"dark","target":"single","base_multiplier":3.0,"scale_stat":"atk","cooldown":5,"mana_cost":0,"effects":[],"icon":"assets/skills/star_execute.png","description":"★觉醒特技: 对单个敌人造成毁灭性打击。"},{"id":"star_berserk","name":"★狂暴化","type":"buff","element":"dark","target":"self","base_multiplier":0,"scale_stat":"atk","cooldown":5,"mana_cost":0,"effects":[{"type":"atk_up","chance":1.0,"duration":3,"value":1.5,"scale":null},{"type":"def_down","chance":1.0,"duration":3,"value":0.7,"scale":null}],"icon":"assets/skills/star_berserk.png","description":"★觉醒特技: 以防御为代价大幅提升攻击力。"},{"id":"star_holy_nova","name":"★圣光新星","type":"damage","element":"light","target":"all_enemies","base_multiplier":1.3,"scale_stat":"atk","cooldown":4,"mana_cost":0,"effects":[{"type":"stun","chance":0.3,"duration":1,"value":0,"scale":null}],"icon":"assets/skills/star_holy_nova.png","description":"★觉醒特技: 爆发圣光冲击全体敌人，可造成眩晕。"},{"id":"star_blessing","name":"★天使祝福","type":"buff","element":"light","target":"all_allies","base_multiplier":0,"scale_stat":"atk","cooldown":5,"mana_cost":0,"effects":[{"type":"atk_up","chance":1.0,"duration":3,"value":1.2,"scale":null},{"type":"shield","chance":1.0,"duration":3,"value":0.2,"scale":"caster_max_hp"}],"icon":"assets/skills/star_blessing.png","description":"★觉醒特技: 祝福全体队友，提升攻击并附加护盾。"}]}</script>
+<script id="embedded-stages" type="application/json">{"stages":[{"id":"stage_1_1","chapter":1,"stage":1,"name":"烈焰草原","unlock_condition":null,"waves":[{"enemies":[{"enemy_id":"slime_fire","level":1}]},{"enemies":[{"enemy_id":"slime_fire","level":1},{"enemy_id":"slime_fire","level":1}]},{"enemies":[{"enemy_id":"slime_fire","level":3}]}],"base_gold":80,"base_exp":50,"first_clear_bonus":{"gold":300,"items":[{"item_id":"gacha_ticket","quantity":1}]}},{"id":"stage_1_2","chapter":1,"stage":2,"name":"清泉溪流","unlock_condition":"clear_stage_1_1","waves":[{"enemies":[{"enemy_id":"slime_water","level":2}]},{"enemies":[{"enemy_id":"slime_water","level":2},{"enemy_id":"slime_wind","level":2}]},{"enemies":[{"enemy_id":"slime_water","level":4}]}],"base_gold":90,"base_exp":55,"first_clear_bonus":{"gold":350,"items":[{"item_id":"hp_potion_small","quantity":3}]}},{"id":"stage_1_3","chapter":1,"stage":3,"name":"狂风山谷","unlock_condition":"clear_stage_1_2","waves":[{"enemies":[{"enemy_id":"slime_wind","level":3}]},{"enemies":[{"enemy_id":"slime_wind","level":3},{"enemy_id":"slime_fire","level":3}]},{"enemies":[{"enemy_id":"slime_wind","level":5},{"enemy_id":"slime_wind","level":5}]}],"base_gold":100,"base_exp":60,"first_clear_bonus":{"gold":400,"items":[{"item_id":"gacha_ticket","quantity":1}]}},{"id":"stage_1_4","chapter":1,"stage":4,"name":"暗影森林","unlock_condition":"clear_stage_1_3","waves":[{"enemies":[{"enemy_id":"goblin_fire","level":4}]},{"enemies":[{"enemy_id":"goblin_fire","level":4},{"enemy_id":"slime_fire","level":4}]},{"enemies":[{"enemy_id":"goblin_fire","level":6}]}],"base_gold":120,"base_exp":75,"first_clear_bonus":{"gold":500,"items":[{"item_id":"gacha_ticket","quantity":2}]}},{"id":"stage_1_5","chapter":1,"stage":5,"name":"龙炎巢穴","unlock_condition":"clear_stage_1_4","waves":[{"enemies":[{"enemy_id":"goblin_fire","level":5},{"enemy_id":"slime_fire","level":5}]},{"enemies":[{"enemy_id":"shadow_wolf","level":6}]},{"enemies":[{"enemy_id":"boss_fire_dragon","level":8}]}],"base_gold":200,"base_exp":150,"first_clear_bonus":{"gold":1000,"items":[{"item_id":"gacha_ticket","quantity":3},{"item_id":"dragon_scale","quantity":1}]}},{"id":"stage_2_1","chapter":2,"stage":1,"name":"幽暗沼泽","unlock_condition":"clear_stage_1_5","waves":[{"enemies":[{"enemy_id":"slime_water","level":7},{"enemy_id":"shadow_wolf","level":7}]},{"enemies":[{"enemy_id":"shadow_wolf","level":8}]},{"enemies":[{"enemy_id":"goblin_fire","level":8},{"enemy_id":"slime_water","level":8}]}],"base_gold":140,"base_exp":80,"first_clear_bonus":{"gold":600,"items":[{"item_id":"gacha_ticket","quantity":2}]}}]}</script>
+<script id="embedded-items" type="application/json">{"items":[{"id":"gacha_ticket","name":"召唤券","type":"consumable","rarity":"R","icon":"assets/items/gacha_ticket.png","description":"用于进行一次角色召唤。","stackable":true,"sell_price":500,"effect":{"type":"gacha_pull"}},{"id":"hp_potion_small","name":"小型生命药水","type":"consumable","rarity":"N","icon":"assets/items/hp_potion_small.png","description":"恢复一名角色300点生命值。","stackable":true,"sell_price":50,"effect":{"type":"heal","value":300}},{"id":"hp_potion_large","name":"大型生命药水","type":"consumable","rarity":"R","icon":"assets/items/hp_potion_large.png","description":"恢复一名角色1000点生命值。","stackable":true,"sell_price":150,"effect":{"type":"heal","value":1000}},{"id":"fire_crystal","name":"火焰结晶","type":"material","rarity":"SR","icon":"assets/items/fire_crystal.png","description":"蕴含火焰能量的晶体，用于角色觉醒。","stackable":true,"sell_price":200},{"id":"water_crystal","name":"冰泉结晶","type":"material","rarity":"SR","icon":"assets/items/water_crystal.png","description":"蕴含冰泉能量的晶体，用于角色觉醒。","stackable":true,"sell_price":200},{"id":"wind_crystal","name":"疾风结晶","type":"material","rarity":"SR","icon":"assets/items/wind_crystal.png","description":"蕴含风之能量的晶体，用于角色觉醒。","stackable":true,"sell_price":200},{"id":"dark_crystal","name":"暗影结晶","type":"material","rarity":"SR","icon":"assets/items/dark_crystal.png","description":"蕴含暗影能量的晶体，用于角色觉醒。","stackable":true,"sell_price":200},{"id":"dragon_scale","name":"龙鳞","type":"material","rarity":"SSR","icon":"assets/items/dragon_scale.png","description":"火龙掉落的珍贵鳞片，极其稀有。","stackable":true,"sell_price":1000},{"id":"iron_sword","name":"铁剑","type":"equipment","subtype":"weapon","rarity":"R","icon":"assets/items/iron_sword.png","description":"一把普通的铁剑，增加攻击力。","stackable":false,"sell_price":300,"equip_slot":"weapon","equip_stats":{"atk":25,"crit_rate":0.03},"equip_requirement":{"level":1}},{"id":"shadow_cloak","name":"暗影斗篷","type":"equipment","subtype":"armor","rarity":"SR","icon":"assets/items/shadow_cloak.png","description":"暗影之力织成的斗篷，提升闪避般的防御效果。","stackable":false,"sell_price":500,"equip_slot":"armor","equip_stats":{"def":40,"spd":15},"equip_requirement":{"level":5}},{"id":"flame_amulet","name":"烈焰护符","type":"equipment","subtype":"accessory","rarity":"SR","icon":"assets/items/flame_amulet.png","description":"蕴含火焰之力的护符，增强火属性攻击。","stackable":false,"sell_price":500,"equip_slot":"accessory","equip_stats":{"atk":30,"crit_dmg":0.15},"equip_requirement":{"level":5,"element":"fire"}}]}</script>
+
+<script>
+/* =================================================================================
+   SECTION: Data Layer - DataLoader, SaveManager, StateManager
+   ================================================================================= */
+
+const EMBEDDED_MAP = {
+  'characters.json': 'embedded-characters',
+  'enemies.json': 'embedded-enemies',
+  'skills.json': 'embedded-skills',
+  'stages.json': 'embedded-stages',
+  'items.json': 'embedded-items'
+};
+
+const DataLoader = {
+  cache: {},
+
+  _loadFromEmbedded(filename) {
+    const el = document.getElementById(EMBEDDED_MAP[filename]);
+    if (!el) return null;
+    try {
+      const data = JSON.parse(el.textContent);
+      console.log(`Loaded ${filename} from embedded data`);
+      return data;
+    } catch (e) {
+      console.error(`Failed to parse embedded ${filename}:`, e);
+      return null;
+    }
+  },
+
+  async loadJSON(filename) {
+    if (this.cache[filename]) return this.cache[filename];
+
+    // Try fetch first (works with HTTP server)
+    try {
+      const resp = await fetch(`data/${filename}`);
+      if (resp.ok) {
+        const data = await resp.json();
+        this.cache[filename] = data;
+        console.log(`Loaded ${filename} from external file`);
+        return data;
+      }
+    } catch (e) {
+      console.warn(`Fetch failed for ${filename}, falling back to embedded data`);
+    }
+
+    // Fall back to embedded data (works with file:// protocol)
+    const data = this._loadFromEmbedded(filename);
+    if (data) {
+      this.cache[filename] = data;
+      return data;
+    }
+    console.error(`Failed to load ${filename}: no source available`);
+    return null;
+  },
+
+  async loadAll() {
+    const [characters, enemies, skills, stages, items] = await Promise.all([
+      this.loadJSON('characters.json'),
+      this.loadJSON('enemies.json'),
+      this.loadJSON('skills.json'),
+      this.loadJSON('stages.json'),
+      this.loadJSON('items.json')
+    ]);
+    return { characters, enemies, skills, stages, items };
+  },
+
+  getCharacter(id) {
+    const data = this.cache['characters.json'];
+    return data ? data.characters.find(c => c.id === id) : null;
+  },
+
+  getEnemy(id) {
+    const data = this.cache['enemies.json'];
+    return data ? data.enemies.find(e => e.id === id) : null;
+  },
+
+  getSkill(id) {
+    const data = this.cache['skills.json'];
+    return data ? data.skills.find(s => s.id === id) : null;
+  },
+
+  getItem(id) {
+    const data = this.cache['items.json'];
+    return data ? data.items.find(i => i.id === id) : null;
+  },
+
+  getStage(id) {
+    const data = this.cache['stages.json'];
+    return data ? data.stages.find(s => s.id === id) : null;
+  },
+
+  getAllCharacters() { return this.cache['characters.json']?.characters || []; },
+  getAllStages() { return this.cache['stages.json']?.stages || []; },
+  getAllItems() { return this.cache['items.json']?.items || []; },
+  getChapters() {
+    const stages = this.getAllStages();
+    const chapters = [...new Set(stages.map(s => s.chapter))].sort((a, b) => a - b);
+    return chapters;
+  }
+};
+
+const SaveManager = {
+  KEY: 'cfe_save',
+
+  getDefaultState() {
+    return {
+      gold: 500,
+      gems: 100,
+      exp_pool: 0,
+      stamina: 30,
+      max_stamina: 30,
+      owned_characters: [],
+      current_team: [null, null, null, null],
+      cleared_stages: [],
+      items: [],
+      gacha_pity_ssr: 0,
+      gacha_pity_sr: 0,
+      last_seen_timestamp: Date.now(),
+      last_idle_claim: Date.now(),
+      idle_stage_id: null,
+      redeemed_codes: [],
+      stage_stars: {},
+      claimed_star_rewards: [],
+      gear_inventory: [],
+      gear_id_counter: 0,
+      tower_progress: {},
+      tower_attempts: {},
+      tower_last_reset: null
+    };
+  },
+
+  load() {
+    try {
+      const raw = localStorage.getItem(this.KEY);
+      if (!raw) return this.getDefaultState();
+      const state = JSON.parse(raw);
+      return { ...this.getDefaultState(), ...state };
+    } catch (e) {
+      console.error('Save load failed:', e);
+      return this.getDefaultState();
+    }
+  },
+
+  save(state) {
+    try {
+      const toSave = { ...state };
+      delete toSave.current_battle;
+      localStorage.setItem(this.KEY, JSON.stringify(toSave));
+    } catch (e) {
+      console.error('Save failed:', e);
+    }
+  },
+
+  reset() {
+    localStorage.removeItem(this.KEY);
+  }
+};
+
+const GameState = {
+  ...SaveManager.getDefaultState(),
+
+  init(loaded) {
+    Object.assign(this, loaded);
+    // Ensure nested objects
+    if (!this.owned_characters) this.owned_characters = [];
+    if (!this.current_team) this.current_team = [null, null, null, null];
+    if (!this.cleared_stages) this.cleared_stages = [];
+    if (!this.items) this.items = [];
+    if (this.gacha_pity_ssr === undefined) this.gacha_pity_ssr = 0;
+    if (this.gacha_pity_sr === undefined) this.gacha_pity_sr = 0;
+    if (!this.idle_stage_id) this.idle_stage_id = null;
+    if (!this.redeemed_codes) this.redeemed_codes = [];
+    if (!this.stage_stars) this.stage_stars = {};
+    if (!this.claimed_star_rewards) this.claimed_star_rewards = [];
+    if (!this.last_idle_claim) this.last_idle_claim = this.last_seen_timestamp || Date.now();
+    if (!this.gear_inventory) this.gear_inventory = [];
+    if (this.gear_id_counter === undefined) this.gear_id_counter = 0;
+    _gearIdCounter = this.gear_id_counter || 0;
+    // Migrate: ensure all gear instances have equipped_to field
+    for (const g of this.gear_inventory) {
+      if (g.equipped_to === undefined) g.equipped_to = null;
+    }
+    // Migrate: ensure all owned chars have stars field
+    for (const c of this.owned_characters) {
+      if (c.stars === undefined) c.stars = 0;
+    }
+    // Migrate: tower fields
+    if (!this.tower_progress) this.tower_progress = {};
+    if (!this.tower_attempts) this.tower_attempts = {};
+    if (!this.tower_last_reset) this.tower_last_reset = null;
+    this.updateMaxStamina();
+    this.current_battle = null;
+  },
+
+  save() {
+    SaveManager.save({
+      gold: this.gold,
+      gems: this.gems,
+      exp_pool: this.exp_pool,
+      stamina: this.stamina,
+      max_stamina: this.max_stamina,
+      owned_characters: this.owned_characters,
+      current_team: this.current_team,
+      cleared_stages: this.cleared_stages,
+      items: this.items,
+      gacha_pity_ssr: this.gacha_pity_ssr,
+      gacha_pity_sr: this.gacha_pity_sr,
+      last_seen_timestamp: this.last_seen_timestamp,
+      last_idle_claim: this.last_idle_claim,
+      idle_stage_id: this.idle_stage_id,
+      redeemed_codes: this.redeemed_codes,
+      stage_stars: this.stage_stars,
+      claimed_star_rewards: this.claimed_star_rewards,
+      gear_inventory: this.gear_inventory,
+      gear_id_counter: _gearIdCounter,
+      tower_progress: this.tower_progress,
+      tower_attempts: this.tower_attempts,
+      tower_last_reset: this.tower_last_reset
+    });
+  },
+
+  addGold(amount) {
+    this.gold += Math.floor(amount);
+    this.save();
+    GameUI.updateResources();
+  },
+
+  addGems(amount) {
+    this.gems += Math.floor(amount);
+    this.save();
+    GameUI.updateResources();
+  },
+
+  addExp(amount) {
+    this.exp_pool += Math.floor(amount);
+    this.save();
+    GameUI.updateResources();
+  },
+
+  addItem(itemId, quantity) {
+    const existing = this.items.find(i => i.item_id === itemId);
+    const itemDef = DataLoader.getItem(itemId);
+    if (itemDef && itemDef.stackable && existing) {
+      existing.quantity += quantity;
+    } else {
+      this.items.push({ item_id: itemId, quantity });
+    }
+    this.save();
+  },
+
+  removeItem(itemId, quantity) {
+    const existing = this.items.find(i => i.item_id === itemId);
+    if (!existing) return false;
+    existing.quantity -= quantity;
+    if (existing.quantity <= 0) {
+      this.items = this.items.filter(i => i.item_id !== itemId);
+    }
+    this.save();
+    return true;
+  },
+
+  getItemCount(itemId) {
+    const found = this.items.find(i => i.item_id === itemId);
+    return found ? found.quantity : 0;
+  },
+
+  // ---- Tower Helpers ----
+  checkTowerDailyReset() {
+    const today = new Date().toDateString();
+    if (this.tower_last_reset !== today) {
+      this.tower_attempts = {};
+      this.tower_last_reset = today;
+      this.save();
+    }
+  },
+
+  getTowerProgress(towerType) {
+    if (!this.tower_progress[towerType]) {
+      this.tower_progress[towerType] = { cleared: [], highestCleared: 0 };
+    }
+    return this.tower_progress[towerType];
+  },
+
+  clearTowerFloor(towerType, floor) {
+    const prog = this.getTowerProgress(towerType);
+    if (!prog.cleared.includes(floor)) {
+      prog.cleared.push(floor);
+    }
+    if (floor > prog.highestCleared) {
+      prog.highestCleared = floor;
+    }
+    this.save();
+  },
+
+  getTowerAttempts(towerType) {
+    this.checkTowerDailyReset();
+    const a = this.tower_attempts[towerType];
+    return a !== undefined ? a : TOWER_FREE_ATTEMPTS;
+  },
+
+  useTowerAttempt(towerType) {
+    this.checkTowerDailyReset();
+    if (this.tower_attempts[towerType] === undefined) {
+      this.tower_attempts[towerType] = TOWER_FREE_ATTEMPTS;
+    }
+    if (this.tower_attempts[towerType] > 0) {
+      this.tower_attempts[towerType]--;
+      this.save();
+      return true;
+    }
+    return false;
+  },
+
+  canChallenge(towerType, floor) {
+    const prog = this.getTowerProgress(towerType);
+    // Floor 1 is always unlocked
+    if (floor > 1 && floor > prog.highestCleared + 1) return false;
+    return true;
+  },
+
+  isTowerFloorCleared(towerType, floor) {
+    const prog = this.getTowerProgress(towerType);
+    return prog.cleared.includes(floor);
+  },
+
+  isTowerFloorFirstClear(towerType, floor) {
+    const prog = this.getTowerProgress(towerType);
+    return !prog.cleared.includes(floor);
+  },
+
+  getRarityCost(rarity) {
+    const costs = { SSR: 4, SR: 3, R: 2, N: 1 };
+    return costs[rarity] || 1;
+  },
+
+  getTeamEnergy() {
+    let total = 0;
+    for (const charId of this.current_team) {
+      if (!charId) continue;
+      const def = DataLoader.getCharacter(charId);
+      if (def) total += this.getRarityCost(def.rarity);
+    }
+    return total;
+  },
+
+  getEnergyOverflow() {
+    return Math.max(0, this.getTeamEnergy() - 12);
+  },
+
+  getEnergyPenalty() {
+    const overflow = this.getEnergyOverflow();
+    if (overflow <= 0) return 0;
+    if (overflow >= 4) return 0.40;
+    if (overflow >= 3) return 0.30;
+    if (overflow >= 2) return 0.24;
+    return 0.12;
+  },
+
+  addCharacter(charId) {
+    const def = DataLoader.getCharacter(charId);
+    if (!def) return null;
+    const existing = this.owned_characters.find(c => c.id === charId);
+    if (existing) {
+      // Duplicate - add star (max 5)
+      const maxStars = 5;
+      if ((existing.stars || 0) < maxStars) {
+        existing.stars = (existing.stars || 0) + 1;
+        // Check for star bonus skill unlock
+        const unlocked = (def.star_bonus || []).find(b => b.stars === existing.stars);
+        const msg = unlocked
+          ? `${def.name} 升到 ★${existing.stars}！解锁特技: ${(DataLoader.getSkill(unlocked.skill_id) || {}).name || unlocked.skill_id}`
+          : `${def.name} 升到 ★${existing.stars}！`;
+        GameUI.showToast(msg, 'success');
+      } else {
+        GameUI.showToast(`${def.name} 已满星 (★5)，转换为金币`, 'warning');
+      }
+      const rarityBonus = { N: 10, R: 30, SR: 100, SSR: 500 };
+      this.addGold(rarityBonus[def.rarity] || 10);
+      this.save();
+      return { ...existing, duplicate: true };
+    }
+    const newChar = {
+      id: charId,
+      level: 1,
+      stars: 0,
+      equipment: {},
+      awakening: 0
+    };
+    this.owned_characters.push(newChar);
+    // Auto-add to team if slot available
+    const emptySlot = this.current_team.findIndex(s => s === null);
+    if (emptySlot >= 0) {
+      this.current_team[emptySlot] = charId;
+    }
+    this.save();
+    return { ...newChar, duplicate: false };
+  },
+
+  getOwnedChar(charId) {
+    return this.owned_characters.find(c => c.id === charId) || null;
+  },
+
+  getCharLevelStats(charId) {
+    const def = DataLoader.getCharacter(charId);
+    const owned = this.getOwnedChar(charId);
+    if (!def) return null;
+    const level = owned ? owned.level : 1;
+    const stats = {};
+    for (const [key, base] of Object.entries(def.base_stats)) {
+      const growth = def.growth_rates[key] || 0;
+      stats[key] = Math.floor(base + growth * (level - 1));
+    }
+    // Star stat bonus: +4% per star
+    if (owned && owned.stars > 0) {
+      const starMult = 1 + owned.stars * 0.04;
+      for (const key of ['hp', 'atk', 'def', 'spd']) {
+        stats[key] = Math.floor((stats[key] || 0) * starMult);
+      }
+    }
+    // Add equipment bonuses (supports both old items and gear instances)
+    if (owned && owned.equipment) {
+      for (const equipId of Object.values(owned.equipment)) {
+        if (!equipId) continue;
+        const equipData = this.getEquipStats(equipId);
+        if (equipData && equipData.stats) {
+          for (const [key, val] of Object.entries(equipData.stats)) {
+            stats[key] = (stats[key] || 0) + val;
+          }
+        }
+      }
+    }
+    return stats;
+  },
+
+  // ---- Gear System Helpers ----
+  getGearBase(baseId) {
+    return GEAR_BASES.find(g => g.base_id === baseId) || null;
+  },
+
+  getGearInstance(gearId) {
+    return this.gear_inventory.find(g => g.gear_id === gearId) || null;
+  },
+
+  isGearId(id) {
+    return typeof id === 'string' && id.startsWith('gear_');
+  },
+
+  getEquipStats(equipId) {
+    if (!equipId) return null;
+    if (this.isGearId(equipId)) {
+      const gear = this.getGearInstance(equipId);
+      if (!gear) return null;
+      const base = this.getGearBase(gear.base_id);
+      return { stats: gear.stats, name: base ? base.name : '??', rarity: gear.rarity, isGear: true, gearId: gear.gear_id, baseId: gear.base_id };
+    }
+    const item = DataLoader.getItem(equipId);
+    if (item && item.equip_stats) {
+      return { stats: item.equip_stats, name: item.name, rarity: item.rarity, isGear: false, itemId: equipId };
+    }
+    return null;
+  },
+
+  addGearInstance(baseId, rarity) {
+    const base = this.getGearBase(baseId);
+    if (!base) return null;
+    const mult = GEAR_RARITY_MULTIPLIER[rarity] || 1.0;
+    const stats = {};
+    for (const [key, val] of Object.entries(base.base_stats)) {
+      stats[key] = Math.floor(val * mult);
+    }
+    const gear = {
+      gear_id: generateGearId(),
+      base_id: baseId,
+      rarity: rarity,
+      stats: stats,
+      equipped_to: null
+    };
+    this.gear_inventory.push(gear);
+    this.save();
+    return gear;
+  },
+
+  removeGearInstance(gearId) {
+    const idx = this.gear_inventory.findIndex(g => g.gear_id === gearId);
+    if (idx < 0) return false;
+    this.gear_inventory.splice(idx, 1);
+    this.save();
+    return true;
+  },
+
+  getHighestClearedChapter() {
+    let maxChapter = 0;
+    for (const sid of this.cleared_stages) {
+      const parts = sid.split('_');
+      if (parts.length >= 2) {
+        const ch = parseInt(parts[1]);
+        if (ch > maxChapter) maxChapter = ch;
+      }
+    }
+    return maxChapter;
+  },
+
+  getAvailableGearChapter() {
+    return Math.max(1, this.getHighestClearedChapter());
+  },
+
+  getExpToLevel(level) {
+    return Math.floor(50 * Math.pow(level, 1.5));
+  },
+
+  clearStage(stageId, stars = 0) {
+    const isFirstClear = !this.cleared_stages.includes(stageId);
+    if (isFirstClear) {
+      this.cleared_stages.push(stageId);
+      this.updateMaxStamina();
+    } else {
+      this.stamina = Math.max(0, this.stamina - 5);
+    }
+    if (stars > 0) {
+      this.setStageStars(stageId, stars);
+    }
+    this.save();
+  },
+
+  updateMaxStamina() {
+    this.max_stamina = Math.min(480, 30 + this.cleared_stages.length * 5);
+  },
+
+  setStageStars(stageId, stars) {
+    const current = this.stage_stars[stageId] || 0;
+    if (stars > current) {
+      this.stage_stars[stageId] = stars;
+      this.save();
+    }
+  },
+
+  getStageStars(stageId) {
+    return this.stage_stars[stageId] || 0;
+  },
+
+  getChapterStars(chapter) {
+    let total = 0;
+    for (let s = 1; s <= 5; s++) {
+      total += this.stage_stars[`stage_${chapter}_${s}`] || 0;
+    }
+    return total;
+  },
+
+  getChapterClaimedRewards(chapter) {
+    return this.claimed_star_rewards.filter(r => r.startsWith(`ch${chapter}_`)).map(r => parseInt(r.split('_')[1]));
+  },
+
+  getAvailableStarRewards(chapter) {
+    const total = this.getChapterStars(chapter);
+    const claimed = this.getChapterClaimedRewards(chapter);
+    return STAR_REWARDS.filter(r => r.stars <= total && !claimed.includes(r.stars));
+  },
+
+  claimStarReward(chapter, rewardStars) {
+    const reward = STAR_REWARDS.find(r => r.stars === rewardStars);
+    if (!reward) return null;
+    const key = `ch${chapter}_${rewardStars}`;
+    if (this.claimed_star_rewards.includes(key)) return null;
+    if (this.getChapterStars(chapter) < rewardStars) return null;
+
+    this.claimed_star_rewards.push(key);
+    if (reward.gems) this.addGems(reward.gems);
+    if (reward.items) {
+      for (const [itemId, qty] of reward.items) {
+        this.addItem(itemId, qty);
+      }
+    }
+    this.save();
+    return reward;
+  },
+
+  isStageCleared(stageId) {
+    return this.cleared_stages.includes(stageId);
+  },
+
+  canUnlockStage(stage) {
+    if (!stage.unlock_condition) return true;
+    if (stage.unlock_condition.startsWith('clear_')) {
+      const stageId = stage.unlock_condition.replace('clear_', '');
+      return this.isStageCleared(stageId);
+    }
+    return false;
+  }
+};
+
+/* =================================================================================
+   SECTION: Game Logic - ElementSystem, ProgressionSystem, GachaSystem, BattleEngine
+   ================================================================================= */
+
+const ElementSystem = {
+  // Returns damage multiplier for attacker element vs defender element
+  getMultiplier(atkElement, defElement) {
+    const table = {
+      fire: { wind: 1.5, water: 0.75 },
+      water: { fire: 1.5, wind: 0.75 },
+      wind: { water: 1.5, fire: 0.75 },
+      light: { dark: 2.0 },
+      dark: { light: 2.0 }
+    };
+    const row = table[atkElement];
+    if (!row) return 1.0;
+    return row[defElement] || 1.0;
+  },
+
+  // Returns damage received multiplier (inverse of dealt)
+  getReceivedMultiplier(atkElement, defElement) {
+    // When defender has advantage, they take less damage
+    const table = {
+      fire: { wind: 0.75, water: 1.5 },
+      water: { fire: 0.75, wind: 1.5 },
+      wind: { water: 0.75, fire: 1.5 },
+      light: { dark: 2.0 },
+      dark: { light: 2.0 }
+    };
+    const row = table[defElement];
+    if (!row) return 1.0;
+    return row[atkElement] || 1.0;
+  }
+};
+
+const ProgressionSystem = {
+  levelUp(charId) {
+    const owned = GameState.getOwnedChar(charId);
+    const def = DataLoader.getCharacter(charId);
+    if (!owned || !def) return false;
+    if (owned.level >= (def.maxLevel || 100)) return false;
+
+    const needed = GameState.getExpToLevel(owned.level);
+    if (GameState.exp_pool < needed) return false;
+
+    GameState.exp_pool -= needed;
+    owned.level++;
+    GameState.save();
+    GameUI.showToast(`${def.name} 升级到 Lv.${owned.level}！`, 'success');
+    GameUI.updateResources();
+    return true;
+  },
+
+  // Calculate total exp cost from level 1 to current level
+  getTotalExpSpent(level) {
+    let total = 0;
+    for (let i = 1; i < level; i++) {
+      total += GameState.getExpToLevel(i);
+    }
+    return total;
+  },
+
+  resetLevel(charId) {
+    const owned = GameState.getOwnedChar(charId);
+    const def = DataLoader.getCharacter(charId);
+    if (!owned || !def) return false;
+    if (owned.level <= 1) return false;
+
+    const refund = this.getTotalExpSpent(owned.level);
+    GameState.exp_pool += refund;
+    owned.level = 1;
+    GameState.save();
+    GameUI.showToast(`${def.name} 已重置为 Lv.1，返还 ${refund} EXP`, 'info');
+    GameUI.updateResources();
+    return true;
+  }
+};
+
+/* =================================================================================
+   Redeem Codes - 添加新码只需在下面加一行
+   格式: 'CODE': { gold, gems, exp, items: [[id,qty],...], chars: [id,...], desc }
+   ================================================================================= */
+const STAR_REWARDS = [
+  { stars: 3, gems: 50 },
+  { stars: 6, gems: 100, items: [['gacha_ticket', 2]] },
+  { stars: 9, gems: 150 },
+  { stars: 12, gems: 200, items: [['gacha_ticket', 3]] },
+  { stars: 15, gems: 300, items: [['gacha_ticket', 5]] },
+];
+
+const REDEEM_CODES = {
+  'WELCOME':      { gold: 1000, gems: 200, exp: 500, desc: '欢迎奖励' },
+  'TESTGOLD':     { gold: 10000, desc: '测试金币' },
+  'TESTGEMS':     { gems: 5000, desc: '测试宝石' },
+  'TESTEXP':      { exp: 50000, desc: '测试经验' },
+  'FULLTEAM':     { chars: ['sakura_blade','aqua_mage','storm_ranger','holy_knight'], desc: 'SSR+SR队伍' },
+  'LUCKYZERO':    { gold: 3000, gems: 500, exp: 2000, items: [['gacha_ticket',20],['hp_potion_large',10]], desc: '新手豪华包' },
+  'DRAGONSLAYER': { gold: 5000, exp: 10000, items: [['dragon_scale',5],['gacha_ticket',10]], desc: '屠龙奖励' },
+};
+
+const RedeemSystem = {
+  redeem() {
+    const input = document.getElementById('redeem-input');
+    const code = (input.value || '').trim().toUpperCase();
+    if (!code) {
+      document.getElementById('redeem-msg').textContent = '请输入兑换码';
+      return;
+    }
+
+    const def = REDEEM_CODES[code];
+    if (!def) {
+      document.getElementById('redeem-msg').textContent = '无效的兑换码';
+      GameUI.showToast('无效的兑换码', 'warning');
+      return;
+    }
+
+    if (GameState.redeemed_codes.includes(code)) {
+      document.getElementById('redeem-msg').textContent = '该兑换码已使用过';
+      GameUI.showToast('该兑换码已使用过', 'warning');
+      return;
+    }
+
+    // Apply rewards
+    if (def.gold) GameState.addGold(def.gold);
+    if (def.gems) GameState.addGems(def.gems);
+    if (def.exp) GameState.addExp(def.exp);
+    if (def.items) {
+      for (const [itemId, qty] of def.items) {
+        GameState.addItem(itemId, qty);
+      }
+    }
+    if (def.chars) {
+      for (const charId of def.chars) {
+        GameState.addCharacter(charId);
+      }
+    }
+
+    GameState.redeemed_codes.push(code);
+    GameState.save();
+
+    document.getElementById('redeem-input').value = '';
+    document.getElementById('redeem-msg').textContent = `兑换成功: ${def.desc || code}`;
+    GameUI.showToast(`兑换成功: ${def.desc || code}`, 'success');
+    GameUI.renderAll();
+  }
+};
+
+const GachaSystem = {
+  RATES: [
+    { rarity: 'SSR', weight: 3, color: 'var(--rarity-ssr)' },
+    { rarity: 'SR', weight: 12, color: 'var(--rarity-sr)' },
+    { rarity: 'R', weight: 35, color: 'var(--rarity-r)' },
+    { rarity: 'N', weight: 50, color: 'var(--rarity-n)' },
+  ],
+
+  pull() {
+    // Check pity
+    let forcedRarity = null;
+    if (GameState.gacha_pity_ssr >= 89) {
+      forcedRarity = 'SSR';
+    } else if (GameState.gacha_pity_sr >= 9) {
+      forcedRarity = 'SR';
+    }
+
+    let rolledRarity;
+    if (forcedRarity) {
+      rolledRarity = forcedRarity;
+    } else {
+      const roll = Math.random() * 100;
+      let cumulative = 0;
+      rolledRarity = 'N';
+      for (const rate of this.RATES) {
+        cumulative += rate.weight;
+        if (roll < cumulative) {
+          rolledRarity = rate.rarity;
+          break;
+        }
+      }
+    }
+
+    // Update pity
+    if (rolledRarity === 'SSR') {
+      GameState.gacha_pity_ssr = 0;
+      GameState.gacha_pity_sr = 0;
+    } else if (rolledRarity === 'SR') {
+      GameState.gacha_pity_ssr++;
+      GameState.gacha_pity_sr = 0;
+    } else {
+      GameState.gacha_pity_ssr++;
+      GameState.gacha_pity_sr++;
+    }
+
+    // Pick random character of that rarity
+    const pool = DataLoader.getAllCharacters().filter(c => c.rarity === rolledRarity);
+    if (pool.length === 0) {
+      // Fallback: pick from any rarity
+      const allPool = DataLoader.getAllCharacters();
+      const picked = allPool[Math.floor(Math.random() * allPool.length)];
+      return { charId: picked.id, rarity: picked.rarity };
+    }
+    // Weight by gacha_weight
+    const totalWeight = pool.reduce((sum, c) => sum + (c.gacha_weight || 10), 0);
+    let roll = Math.random() * totalWeight;
+    for (const c of pool) {
+      roll -= (c.gacha_weight || 10);
+      if (roll <= 0) return { charId: c.id, rarity: c.rarity };
+    }
+    const last = pool[pool.length - 1];
+    return { charId: last.id, rarity: last.rarity };
+  },
+
+  canPull(count) {
+    const tickets = GameState.getItemCount('gacha_ticket');
+    if (count === 1) {
+      return tickets >= 1 || GameState.gems >= 50;
+    }
+    return tickets >= 10 || GameState.gems >= 450;
+  },
+
+  consumeForPull(count) {
+    const tickets = GameState.getItemCount('gacha_ticket');
+    if (count === 1) {
+      if (tickets >= 1) {
+        GameState.removeItem('gacha_ticket', 1);
+      } else {
+        GameState.addGems(-50);
+      }
+    } else {
+      if (tickets >= 10) {
+        GameState.removeItem('gacha_ticket', 10);
+      } else {
+        const useTickets = Math.min(tickets, 10);
+        const useGems = (10 - useTickets) * 45;
+        if (useTickets > 0) GameState.removeItem('gacha_ticket', useTickets);
+        GameState.addGems(-useGems);
+      }
+    }
+    GameState.save();
+  }
+};
+
+// ===== GEAR GACHA SYSTEM =====
+const GEAR_BASES = [
+  // Weapons (5)
+  { base_id: 'wooden_sword',     name: '木剑',     slot: 'weapon',    chapter: 1, icon_prompt: 'object, ((no human)), dutch angle, wooden sword, simple, rustic, fantasy, game icon', base_stats: { atk: 15 } },
+  { base_id: 'iron_blade',       name: '铁刃',     slot: 'weapon',    chapter: 2, icon_prompt: 'object, ((no human)), dutch angle, iron blade, sharp steel, fantasy, game icon', base_stats: { atk: 30, crit_rate: 0.03 } },
+  { base_id: 'steel_greatsword', name: '钢之大剑', slot: 'weapon',    chapter: 4, icon_prompt: 'object, ((no human)), dutch angle, steel greatsword, massive blade, fantasy, game icon', base_stats: { atk: 55, crit_dmg: 0.08 } },
+  { base_id: 'flame_katana',     name: '炎之太刀', slot: 'weapon',    chapter: 6, icon_prompt: 'object, ((no human)), dutch angle, flame katana, fire blade, japanese sword, fantasy, game icon', base_stats: { atk: 85, crit_rate: 0.05, crit_dmg: 0.12 } },
+  { base_id: 'divine_blade',     name: '圣剑',     slot: 'weapon',    chapter: 8, icon_prompt: 'object, ((no human)), dutch angle, divine holy sword, golden glow, legendary, fantasy, game icon', base_stats: { atk: 130, crit_rate: 0.08, crit_dmg: 0.20 } },
+  // Armor (5)
+  { base_id: 'cloth_vest',       name: '布衣',     slot: 'armor',     chapter: 1, icon_prompt: 'object, ((no human)), dutch angle, cloth vest, simple fabric armor, fantasy, game icon', base_stats: { def: 10, hp: 30 } },
+  { base_id: 'leather_armor',    name: '皮甲',     slot: 'armor',     chapter: 2, icon_prompt: 'object, ((no human)), dutch angle, leather armor, brown leather, fantasy, game icon', base_stats: { def: 20, hp: 60 } },
+  { base_id: 'chainmail',        name: '锁子甲',   slot: 'armor',     chapter: 4, icon_prompt: 'object, ((no human)), dutch angle, chainmail armor, steel rings, fantasy, game icon', base_stats: { def: 35, hp: 120, spd: -3 } },
+  { base_id: 'dragon_armor',     name: '龙鳞甲',   slot: 'armor',     chapter: 6, icon_prompt: 'object, ((no human)), dutch angle, dragon scale armor, red scales, fantasy, game icon', base_stats: { def: 55, hp: 200 } },
+  { base_id: 'aegis_plate',      name: '神盾铠',   slot: 'armor',     chapter: 8, icon_prompt: 'object, ((no human)), dutch angle, aegis plate armor, golden heavy armor, divine, fantasy, game icon', base_stats: { def: 85, hp: 320, spd: -6 } },
+  // Accessories (5)
+  { base_id: 'brass_ring',       name: '铜戒指',   slot: 'accessory', chapter: 1, icon_prompt: 'object, ((no human)), dutch angle, brass ring, simple jewelry, fantasy, game icon', base_stats: { hp: 25, spd: 2 } },
+  { base_id: 'silver_ring',      name: '银戒指',   slot: 'accessory', chapter: 2, icon_prompt: 'object, ((no human)), dutch angle, silver ring, elegant jewelry, fantasy, game icon', base_stats: { hp: 55, spd: 5, atk: 8 } },
+  { base_id: 'ruby_amulet',      name: '红宝石护符',slot: 'accessory', chapter: 4, icon_prompt: 'object, ((no human)), dutch angle, ruby amulet, red gemstone, glowing, fantasy, game icon', base_stats: { hp: 100, atk: 20, crit_rate: 0.03 } },
+  { base_id: 'phoenix_feather',  name: '凤凰羽',   slot: 'accessory', chapter: 6, icon_prompt: 'object, ((no human)), dutch angle, phoenix feather, flaming feather, rebirth, fantasy, game icon', base_stats: { hp: 160, spd: 10, crit_dmg: 0.08 } },
+  { base_id: 'celestial_crown',  name: '天界冠冕', slot: 'accessory', chapter: 8, icon_prompt: 'object, ((no human)), dutch angle, celestial crown, golden crown, divine, fantasy, game icon', base_stats: { hp: 250, atk: 40, spd: 14, crit_rate: 0.06 } },
+];
+
+const GEAR_RARITY_MULTIPLIER = { N: 1.0, R: 1.5, SR: 2.2, SSR: 3.0 };
+const GEAR_GACHA_COST  = [0, 500, 800, 1200, 1600, 2000, 2500, 3000, 3600, 4200, 5000];
+const GEAR_GACHA_RATES = [
+  { rarity: 'SSR', weight: 5 },
+  { rarity: 'SR',  weight: 15 },
+  { rarity: 'R',   weight: 35 },
+  { rarity: 'N',   weight: 45 },
+];
+const GEAR_SELL_PRICE = { N: 50, R: 150, SR: 400, SSR: 1000 };
+
+let _gearIdCounter = 0;
+function generateGearId() { _gearIdCounter++; return 'gear_gen_' + _gearIdCounter; }
+
+function getGearPool(chapter) {
+  return GEAR_BASES.filter(g => g.chapter <= chapter);
+}
+
+/* =================================================================================
+   SECTION: Tower Config
+   ================================================================================= */
+
+const TOWER_FLOORS = 25;
+const TOWER_FREE_ATTEMPTS = 3;
+const TOWER_BOSS_PORTRAITS = [
+  'boss_fire_dragon', 'boss_water_dragon', 'boss_wind_tengu', 'boss_storm_eagle',
+  'boss_ice_serpent', 'boss_dark_lich', 'boss_shadow_lord', 'boss_light_titan',
+  'boss_holy_golem', 'boss_fire_phoenix'
+];
+const TOWER_ELEMENTS = ['fire', 'water', 'wind', 'light', 'dark'];
+
+const TOWER_CONFIG = [
+  {
+    type: 'gold',
+    name: '黄金之塔',
+    icon: '🪙',
+    cssClass: 'gold-tower',
+    rewardType: 'gold',
+    getReward(floor) { return Math.floor(800 * Math.pow(1.08, floor - 1)); }
+  },
+  {
+    type: 'gems',
+    name: '宝石之塔',
+    icon: '💎',
+    cssClass: 'gems-tower',
+    rewardType: 'gems',
+    getReward(floor) { return floor * 3; }
+  },
+  {
+    type: 'exp',
+    name: '经验之塔',
+    icon: '⭐',
+    cssClass: 'exp-tower',
+    rewardType: 'exp',
+    getReward(floor) { return Math.floor(400 * Math.pow(1.06, floor - 1)); }
+  },
+  {
+    type: 'stamina',
+    name: '体力之塔',
+    icon: '⚡',
+    cssClass: 'stamina-tower',
+    rewardType: 'stamina',
+    getReward(floor) { return Math.max(1, Math.floor(floor * 1.5)); }
+  }
+];
+
+function getTowerBossStats(towerType, floor) {
+  return {
+    hp: Math.floor(200 * Math.pow(1.33, floor - 1)),
+    atk: Math.floor(45 * Math.pow(1.33, floor - 1)),
+    def: Math.floor(18 * Math.pow(1.33, floor - 1)),
+    spd: 65 + (floor - 1) * 4,
+    crit_rate: Math.min(0.30, 0.02 + floor * 0.01),
+    crit_dmg: Math.min(2.5, 1.4 + floor * 0.045)
+  };
+}
+
+function getTowerBossPortrait(floor) {
+  return `assets/enemies/${TOWER_BOSS_PORTRAITS[(floor - 1) % 10]}.png`;
+}
+
+function getTowerBossElement(floor) {
+  return TOWER_ELEMENTS[(floor - 1) % 5];
+}
+
+const BattleEngine = {
+  createBattle(stageId) {
+    const stage = DataLoader.getStage(stageId);
+    if (!stage) return null;
+
+    const allies = [];
+    for (const charId of GameState.current_team) {
+      if (!charId) continue;
+      const def = DataLoader.getCharacter(charId);
+      if (!def) continue;
+      const stats = GameState.getCharLevelStats(charId);
+      const owned = GameState.getOwnedChar(charId);
+      allies.push({
+        id: charId,
+        name: def.name,
+        element: def.element,
+        isAlly: true,
+        stats: { ...stats },
+        maxHp: stats.hp,
+        currentHp: stats.hp,
+        skills: [...(def.skill_ids || []), ...((def.star_bonus || []).filter(b => (owned.stars || 0) >= b.stars).map(b => b.skill_id))],
+        cooldowns: {},
+        effects: [],
+        actionGauge: 0,
+        died: false
+      });
+    }
+
+    if (allies.length === 0) return null;
+
+    // Apply energy overflow penalty to all allies
+    const penalty = GameState.getEnergyPenalty();
+    if (penalty > 0) {
+      for (const ally of allies) {
+        for (const key of ['hp', 'atk', 'def', 'spd']) {
+          ally.stats[key] = Math.floor(ally.stats[key] * (1 - penalty));
+        }
+        ally.maxHp = ally.stats.hp;
+        ally.currentHp = Math.min(ally.currentHp, ally.maxHp);
+      }
+    }
+
+    // Build enemy waves
+    const enemyWaves = stage.waves.map(wave => {
+      return wave.enemies.map(e => {
+        const enemyDef = DataLoader.getEnemy(e.enemy_id);
+        if (!enemyDef) return null;
+        const levelMult = 1 + (e.level - 1) * 0.1;
+        const stats = {};
+        for (const [key, val] of Object.entries(enemyDef.stats)) {
+          stats[key] = Math.floor(val * levelMult);
+        }
+        return {
+          id: `${e.enemy_id}_${Math.random().toString(36).slice(2, 6)}`,
+          name: enemyDef.name + (e.level > 1 ? ` Lv${e.level}` : ''),
+          element: enemyDef.element,
+          isAlly: false,
+          stats: { ...stats },
+          maxHp: stats.hp,
+          currentHp: stats.hp,
+          skills: enemyDef.skill_ids || [],
+          cooldowns: {},
+          effects: [],
+          actionGauge: 0,
+          goldDrop: enemyDef.gold_drop || 0,
+          expDrop: enemyDef.exp_drop || 0,
+          itemDrops: enemyDef.item_drops || []
+        };
+      }).filter(Boolean);
+    });
+
+    return {
+      stageId,
+      stage,
+      allies,
+      enemyWaves,
+      currentWave: 0,
+      enemies: enemyWaves[0] || [],
+      battleLog: [],
+      phase: 'battle', // battle | victory | defeat
+      paused: false,
+      speed: 1,
+      goldEarned: 0,
+      expEarned: 0,
+      itemsEarned: [],
+      allyDeaths: 0
+    };
+  },
+
+  startBattle(stageId) {
+    if (GameState.stamina < 5) {
+      GameUI.showToast('体力不足！', 'error');
+      return;
+    }
+    const battle = this.createBattle(stageId);
+    if (!battle) {
+      GameUI.showToast('请先组建队伍！', 'error');
+      return;
+    }
+    GameState.current_battle = battle;
+    GameUI.showBattle();
+    document.getElementById('speed-badge').textContent = '1x';
+    document.getElementById('btn-pause').textContent = '暂停';
+    BattleUI.render();
+    BattleUI.log('战斗开始！', 'info');
+    BattleUI.scheduleTurn();
+  },
+
+  processTurn() {
+    const battle = GameState.current_battle;
+    if (!battle || battle.phase !== 'battle' || battle.paused) return false;
+
+    const allUnits = [...battle.allies.filter(a => a.currentHp > 0), ...battle.enemies.filter(e => e.currentHp > 0)];
+    if (allUnits.length === 0) return false;
+
+    // CTB: Fill action gauges
+    let acted = false;
+    while (!acted) {
+      // Tick gauges (base 60 + 25% speed — compresses speed gap so slow units still act)
+      for (const unit of allUnits) {
+        if (unit.currentHp <= 0) continue;
+        unit.actionGauge += Math.floor(60 + unit.stats.spd * 0.25);
+      }
+
+      // Check if any unit is ready
+      const ready = allUnits.filter(u => u.currentHp > 0 && u.actionGauge >= 100);
+      if (ready.length === 0) continue;
+
+      // Sort by gauge overflow descending
+      ready.sort((a, b) => b.actionGauge - a.actionGauge);
+      const actor = ready[0];
+      actor.actionGauge = Math.max(0, actor.actionGauge - 100);
+
+      // Resolve effects before action
+      this.resolveEffects(actor);
+
+      if (actor.currentHp <= 0) continue;
+
+      // Tick down cooldowns by 1 action
+      for (const sid of Object.keys(actor.cooldowns)) {
+        actor.cooldowns[sid]--;
+        if (actor.cooldowns[sid] <= 0) delete actor.cooldowns[sid];
+      }
+
+      // Choose skill
+      const skill = this.chooseSkill(actor);
+      if (!skill) continue;
+
+      // Execute skill
+      const targets = this.getTargets(actor, skill, battle);
+      if (targets.length === 0) continue;
+
+      BattleUI.log(`${actor.name} 使用了【${skill.name}】！`, actor.isAlly ? 'buff' : 'info');
+      BattleUI.showAction(actor, skill);
+
+      for (const target of targets) {
+        if (target.currentHp <= 0) continue;
+        this.applySkill(actor, target, skill, battle);
+      }
+
+      // Set cooldown (action-count based: CD=N means unavailable for N more actions)
+      if (skill.cooldown > 0) {
+        actor.cooldowns[skill.id] = skill.cooldown;
+      }
+
+      acted = true;
+    }
+
+    // Tick down effects
+    for (const unit of allUnits) {
+      unit.effects = unit.effects.filter(e => {
+        e.duration--;
+        return e.duration > 0;
+      });
+    }
+
+    // Check win/lose
+    const aliveAllies = battle.allies.filter(a => a.currentHp > 0);
+    const aliveEnemies = battle.enemies.filter(e => e.currentHp > 0);
+
+    if (aliveAllies.length === 0) {
+      battle.phase = 'defeat';
+      BattleUI.showResult(false);
+      return false;
+    }
+    if (aliveEnemies.length === 0) {
+      this.nextWave(battle);
+    }
+
+    // Don't re-render here — scheduleTurn handles it so animations play out
+    return battle.phase === 'battle';
+  },
+
+  nextWave(battle) {
+    battle.currentWave++;
+    if (battle.currentWave >= battle.enemyWaves.length) {
+      // Victory
+      battle.phase = 'victory';
+      if (battle.isTowerBattle) {
+        // Tower rewards handled in showResultBody
+        BattleUI.showResult(true);
+      } else {
+        // Calculate rewards for normal battles
+        const stage = battle.stage;
+        battle.goldEarned = stage.base_gold;
+        battle.expEarned = stage.base_exp;
+        for (const enemy of battle.enemies) {
+          battle.goldEarned += enemy.goldDrop || 0;
+          battle.expEarned += enemy.expDrop || 0;
+          for (const drop of (enemy.itemDrops || [])) {
+            if (Math.random() < drop.drop_rate) {
+              battle.itemsEarned.push({ item_id: drop.item_id, quantity: 1 });
+            }
+          }
+        }
+        // Calculate stars (0 deaths=3★, 1=2★, 2+=1★)
+        const stars = battle.allyDeaths === 0 ? 3 : battle.allyDeaths === 1 ? 2 : 1;
+        GameState.clearStage(battle.stageId, stars);
+        GameState.addGold(battle.goldEarned);
+        GameState.addExp(battle.expEarned);
+        for (const item of battle.itemsEarned) {
+          GameState.addItem(item.item_id, item.quantity);
+        }
+        // First clear bonus
+        if (GameState.cleared_stages.filter(s => s === battle.stageId).length <= 1) {
+          const bonus = battle.stage.first_clear_bonus;
+          if (bonus) {
+            if (bonus.gold) GameState.addGold(bonus.gold);
+            if (bonus.items) {
+              for (const bi of bonus.items) {
+                GameState.addItem(bi.item_id, bi.quantity);
+              }
+            }
+          }
+        }
+        BattleUI.showResult(true);
+      }
+    } else {
+      battle.enemies = battle.enemyWaves[battle.currentWave].map(e => ({ ...e }));
+      BattleUI.log(`--- 第 ${battle.currentWave + 1} 波敌人出现！ ---`, 'info');
+      BattleUI.render();
+    }
+  },
+
+  chooseSkill(unit) {
+    const available = (unit.skills || []).filter(sid => {
+      return !unit.cooldowns[sid] || unit.cooldowns[sid] <= 0;
+    }).map(sid => DataLoader.getSkill(sid)).filter(Boolean);
+
+    if (available.length === 0) {
+      // Basic attack (no skill)
+      return {
+        id: 'basic_attack',
+        name: '普通攻击',
+        type: 'damage',
+        element: unit.element,
+        target: unit.isAlly ? 'single_enemy' : 'single_ally',
+        base_multiplier: 1.0,
+        scale_stat: 'atk',
+        cooldown: 0,
+        effects: []
+      };
+    }
+
+    // Prefer damage skills for attackers, heal for low HP
+    if (!unit.isAlly) {
+      // Enemy: random from available
+      return available[Math.floor(Math.random() * available.length)];
+    }
+
+    // Ally: use skill with highest multiplier, or heal if HP < 40%
+    const hpRatio = unit.currentHp / unit.maxHp;
+    const healSkills = available.filter(s => s.type === 'heal');
+    if (hpRatio < 0.4 && healSkills.length > 0) {
+      return healSkills[0];
+    }
+
+    // Prefer non-basic skills
+    const specialSkills = available.filter(s => s.type === 'damage' || s.type === 'debuff');
+    if (specialSkills.length > 0) {
+      specialSkills.sort((a, b) => (b.base_multiplier || 0) - (a.base_multiplier || 0));
+      return specialSkills[0];
+    }
+    return available[0];
+  },
+
+  getTargets(actor, skill, battle) {
+    if (skill.target === 'self') {
+      return [actor];
+    }
+
+    // Determine friendly and enemy pools based on who the actor is
+    const friendlies = actor.isAlly ? battle.allies : battle.enemies;
+    const opponents = actor.isAlly ? battle.enemies : battle.allies;
+
+    let pool;
+    const t = skill.target;
+    const isHealBuff = skill.type === 'heal' || skill.type === 'buff';
+
+    if (isHealBuff) {
+      // Heal/buff always targets friendlies
+      pool = (t === 'all_allies' || t === 'all') ? friendlies : friendlies;
+    } else {
+      // Damage/debuff always targets opponents
+      pool = (t === 'all_enemies' || t === 'all') ? opponents : opponents;
+    }
+
+    // Single-target selection
+    if (t === 'single' || t === 'single_enemy' || t === 'single_ally') {
+      const alive = pool.filter(u => u.currentHp > 0);
+      if (alive.length === 0) return [];
+      if (skill.type === 'heal') {
+        alive.sort((a, b) => (a.currentHp / a.maxHp) - (b.currentHp / b.maxHp));
+        return [alive[0]];
+      }
+      return [alive[Math.floor(Math.random() * alive.length)]];
+    }
+
+    return pool.filter(u => u.currentHp > 0);
+  },
+
+  applySkill(actor, target, skill, battle) {
+    if (skill.type === 'damage') {
+      const elementMult = ElementSystem.getMultiplier(actor.element, target.element);
+      const atkStat = actor.stats[skill.scale_stat] || actor.stats.atk;
+      const defStat = target.stats.def;
+
+      let raw = atkStat * (skill.base_multiplier || 1.0) * elementMult;
+      const defRatio = defStat / (defStat + 200);
+      let damage = raw * (1 - defRatio);
+
+      // Crit
+      let isCrit = false;
+      if (Math.random() < (actor.stats.crit_rate || 0)) {
+        damage *= (actor.stats.crit_dmg || 1.5);
+        isCrit = true;
+      }
+
+      // Variance
+      damage *= 0.9 + Math.random() * 0.2;
+      damage = Math.max(1, Math.floor(damage));
+
+      target.currentHp = Math.max(0, target.currentHp - damage);
+
+      // Track ally deaths for star rating
+      if (target.currentHp <= 0 && target.isAlly && !target.died) {
+        target.died = true;
+        battle.allyDeaths++;
+      }
+
+      const dmgText = isCrit ? `暴击! ${damage}` : `${damage}`;
+      BattleUI.showDamage(target, damage, isCrit);
+      BattleUI.log(
+        `${actor.name} -> ${target.name}: ${dmgText}${elementMult !== 1 ? (elementMult > 1 ? ' [克制]' : ' [被抵抗]') : ''}`,
+        'damage'
+      );
+
+      // Apply effects
+      for (const effect of (skill.effects || [])) {
+        if (Math.random() < (effect.chance || 0)) {
+          this.applyEffect(actor, target, effect, battle);
+        }
+      }
+
+      battle.goldEarned += (target.goldDrop || 0);
+      battle.expEarned += (target.expDrop || 0);
+    } else if (skill.type === 'heal') {
+      const scaleStat = actor.stats[skill.scale_stat] || actor.stats.atk;
+      const healAmount = Math.floor(scaleStat * (skill.base_multiplier || 0.6) * (0.9 + Math.random() * 0.2));
+      target.currentHp = Math.min(target.maxHp, target.currentHp + healAmount);
+      BattleUI.showDamage(target, healAmount, false, true);
+      BattleUI.log(`${actor.name} 治疗 ${target.name}: +${healAmount} HP`, 'heal');
+    } else if (skill.type === 'buff' || skill.type === 'debuff') {
+      for (const effect of (skill.effects || [])) {
+        if (Math.random() < (effect.chance || 1.0)) {
+          this.applyEffect(actor, target, effect, battle);
+        }
+      }
+    }
+  },
+
+  applyEffect(actor, target, effect, battle) {
+    const existingIdx = target.effects.findIndex(e => e.type === effect.type);
+    const newEffect = {
+      type: effect.type,
+      duration: effect.duration || 1,
+      value: effect.value || 0,
+      scale: effect.scale || null,
+      source: actor.id
+    };
+    if (existingIdx >= 0) {
+      target.effects[existingIdx] = newEffect; // Replace
+    } else {
+      target.effects.push(newEffect);
+    }
+    const effectNames = {
+      burn: '灼烧', poison: '中毒', bleed: '流血', stun: '眩晕',
+      shield: '护盾', atk_up: '攻击↑', def_up: '防御↑', spd_up: '速度↑',
+      atk_down: '攻击↓', def_down: '防御↓', spd_down: '速度↓'
+    };
+    BattleUI.log(`${target.name} 被施加了【${effectNames[effect.type] || effect.type}】`, 'buff');
+  },
+
+  resolveEffects(unit) {
+    const dotTypes = ['burn', 'poison', 'bleed'];
+    for (const effect of unit.effects) {
+      if (dotTypes.includes(effect.type) && effect.duration > 0) {
+        const dotDmg = Math.floor((unit.maxHp || 100) * (effect.value || 0.05));
+        unit.currentHp = Math.max(0, unit.currentHp - dotDmg);
+        BattleUI.showDamage(unit, dotDmg, false);
+      }
+    }
+
+    // Check for stun
+    const stunned = unit.effects.some(e => e.type === 'stun' && e.duration > 0);
+    if (stunned) {
+      unit.actionGauge = 0; // Skip turn
+    }
+  },
+
+  getEffectiveStat(unit, statName) {
+    let val = unit.stats[statName] || 0;
+    for (const effect of unit.effects) {
+      if (effect.type === `${statName}_up`) {
+        val *= (effect.value || 1.3);
+      } else if (effect.type === `${statName}_down`) {
+        val *= (effect.value || 0.7);
+      }
+    }
+    return Math.floor(val);
+  }
+};
+
+/* =================================================================================
+   SECTION: Tower Engine
+   ================================================================================= */
+
+const TowerEngine = {
+  createTowerBattle(towerType, floor) {
+    const allies = [];
+    for (const charId of GameState.current_team) {
+      if (!charId) continue;
+      const def = DataLoader.getCharacter(charId);
+      if (!def) continue;
+      const stats = GameState.getCharLevelStats(charId);
+      const owned = GameState.getOwnedChar(charId);
+      allies.push({
+        id: charId,
+        name: def.name,
+        element: def.element,
+        isAlly: true,
+        stats: { ...stats },
+        maxHp: stats.hp,
+        currentHp: stats.hp,
+        skills: [...(def.skill_ids || []), ...((def.star_bonus || []).filter(b => (owned.stars || 0) >= b.stars).map(b => b.skill_id))],
+        cooldowns: {},
+        effects: [],
+        actionGauge: 0,
+        died: false
+      });
+    }
+
+    if (allies.length === 0) return null;
+
+    // Apply energy overflow penalty
+    const penalty = GameState.getEnergyPenalty();
+    if (penalty > 0) {
+      for (const ally of allies) {
+        for (const key of ['hp', 'atk', 'def', 'spd']) {
+          ally.stats[key] = Math.floor(ally.stats[key] * (1 - penalty));
+        }
+        ally.maxHp = ally.stats.hp;
+        ally.currentHp = Math.min(ally.currentHp, ally.maxHp);
+      }
+    }
+
+    const bossStats = getTowerBossStats(towerType, floor);
+    const bossElement = getTowerBossElement(floor);
+    const bossPortrait = getTowerBossPortrait(floor);
+    const bossName = `${floor}F BOSS`;
+
+    const enemies = [{
+      id: `tower_boss_${towerType}_${floor}`,
+      name: bossName,
+      element: bossElement,
+      isAlly: false,
+      isBoss: true,
+      portrait: bossPortrait,
+      stats: { ...bossStats },
+      maxHp: bossStats.hp,
+      currentHp: bossStats.hp,
+      skills: ['shadow_strike', 'dark_veil'],
+      cooldowns: {},
+      effects: [],
+      actionGauge: 0
+    }];
+
+    const towerConfig = TOWER_CONFIG.find(t => t.type === towerType);
+
+    return {
+      stageId: null,
+      isTowerBattle: true,
+      towerType,
+      towerFloor: floor,
+      towerConfig,
+      allies,
+      enemyWaves: [enemies.map(e => ({ ...e }))],
+      currentWave: 0,
+      enemies,
+      battleLog: [],
+      phase: 'battle',
+      paused: false,
+      speed: 1,
+      // Tower doesn't use these reward tracking fields from normal battles
+      goldEarned: 0,
+      expEarned: 0,
+      itemsEarned: [],
+      allyDeaths: 0
+    };
+  },
+
+  startTowerBattle(towerType, floor) {
+    if (GameState.current_team.every(s => s === null)) {
+      GameUI.showToast('请先组建队伍！', 'error');
+      return;
+    }
+
+    if (!GameState.canChallenge(towerType, floor)) {
+      GameUI.showToast('该层尚未解锁！', 'warning');
+      return;
+    }
+
+    const isFirstClear = GameState.isTowerFloorFirstClear(towerType, floor);
+    if (!isFirstClear) {
+      if (GameState.getTowerAttempts(towerType) <= 0) {
+        GameUI.showToast('今日挑战次数已用完！', 'error');
+        return;
+      }
+      // Consume attempt for re-clears (not first clear)
+      GameState.useTowerAttempt(towerType);
+    }
+
+    const battle = this.createTowerBattle(towerType, floor);
+    if (!battle) {
+      GameUI.showToast('请先组建队伍！', 'error');
+      return;
+    }
+
+    GameState.current_battle = battle;
+    GameUI.showBattle();
+    document.getElementById('speed-badge').textContent = '1x';
+    document.getElementById('btn-pause').textContent = '暂停';
+    BattleUI.render();
+    BattleUI.log(`资源塔 ${towerType} ${floor}F 挑战开始！`, 'info');
+    BattleUI.scheduleTurn();
+  },
+
+  getSweepRewards(towerType) {
+    const prog = GameState.getTowerProgress(towerType);
+    const config = TOWER_CONFIG.find(t => t.type === towerType);
+    if (!config || prog.highestCleared <= 0) return null;
+    const reward = config.getReward(prog.highestCleared);
+    return { floor: prog.highestCleared, reward, rewardType: config.rewardType };
+  },
+
+  sweepTower(towerType) {
+    const prog = GameState.getTowerProgress(towerType);
+    if (prog.highestCleared <= 0) {
+      GameUI.showToast('没有已通关的楼层可扫荡！', 'warning');
+      return;
+    }
+
+    if (GameState.getTowerAttempts(towerType) <= 0) {
+      GameUI.showToast('今日挑战次数已用完！', 'error');
+      return;
+    }
+
+    GameState.useTowerAttempt(towerType);
+
+    const info = this.getSweepRewards(towerType);
+    const { floor, reward, rewardType } = info;
+
+    if (rewardType === 'gold') GameState.addGold(reward);
+    else if (rewardType === 'gems') GameState.addGems(reward);
+    else if (rewardType === 'exp') GameState.addExp(reward);
+    else if (rewardType === 'stamina') {
+      GameState.stamina = Math.min(GameState.max_stamina, GameState.stamina + reward);
+      GameState.save();
+    }
+
+    const rewardStr = rewardType === 'gold' ? `🪙+${reward.toLocaleString()}`
+      : rewardType === 'gems' ? `💎+${reward}`
+      : rewardType === 'exp' ? `⭐+${reward.toLocaleString()}`
+      : `⚡+${reward}`;
+
+    GameUI.showToast(`扫荡完成！${rewardStr} (${floor}F)`, 'success');
+    GameUI.updateResources();
+    GameUI.renderTowerScreen();
+  }
+};
+
+const InventoryManager = {
+  equipItem(charId, equipId) {
+    const owned = GameState.getOwnedChar(charId);
+    if (!owned) return false;
+
+    const isGear = GameState.isGearId(equipId);
+    let slot;
+
+    if (isGear) {
+      const gear = GameState.getGearInstance(equipId);
+      if (!gear || gear.equipped_to) return false;
+      const base = GameState.getGearBase(gear.base_id);
+      if (!base) return false;
+      slot = base.slot;
+    } else {
+      const item = DataLoader.getItem(equipId);
+      if (!item || item.type !== 'equipment') return false;
+      if (item.equip_requirement) {
+        if (item.equip_requirement.level && owned.level < item.equip_requirement.level) return false;
+        const def = DataLoader.getCharacter(charId);
+        if (item.equip_requirement.element && def.element !== item.equip_requirement.element) return false;
+      }
+      slot = item.equip_slot;
+    }
+
+    // Unequip old item/gear in same slot
+    if (owned.equipment[slot]) {
+      this.unequipItem(charId, slot);
+    }
+
+    if (isGear) {
+      const gear = GameState.getGearInstance(equipId);
+      if (gear) gear.equipped_to = charId;
+    } else {
+      if (!GameState.removeItem(equipId, 1)) return false;
+    }
+
+    owned.equipment[slot] = equipId;
+    GameState.save();
+    return true;
+  },
+
+  unequipItem(charId, slot) {
+    const owned = GameState.getOwnedChar(charId);
+    if (!owned) return false;
+    const equipId = owned.equipment[slot];
+    if (!equipId) return false;
+    if (GameState.isGearId(equipId)) {
+      const gear = GameState.getGearInstance(equipId);
+      if (gear) gear.equipped_to = null;
+    } else {
+      GameState.addItem(equipId, 1);
+    }
+    delete owned.equipment[slot];
+    GameState.save();
+    return true;
+  },
+
+  useItem(itemId, targetCharId) {
+    const item = DataLoader.getItem(itemId);
+    if (!item || item.type !== 'consumable') return false;
+    if (!GameState.removeItem(itemId, 1)) return false;
+
+    if (item.effect) {
+      if (item.effect.type === 'gacha_pull') {
+        // Handled by gacha system
+        GameState.addItem(itemId, 1); // Put it back, gacha handles consumption
+        return false;
+      }
+      if (item.effect.type === 'heal') {
+        if (targetCharId) {
+          // Heal specific character (not in battle context, so just acknowledge)
+          GameUI.showToast(`使用了${item.name}`, 'success');
+        }
+      }
+    }
+    GameState.save();
+    return true;
+  },
+
+  sellItem(itemId, quantity) {
+    const item = DataLoader.getItem(itemId);
+    if (!item) return false;
+    const qty = Math.min(quantity, GameState.getItemCount(itemId));
+    if (qty <= 0) return false;
+    GameState.removeItem(itemId, qty);
+    GameState.addGold((item.sell_price || 10) * qty);
+    GameUI.showToast(`出售了 ${qty}x ${item.name}`, 'info');
+    return true;
+  }
+};
+
+const StageManager = {
+  getAvailableStages() {
+    return DataLoader.getAllStages().filter(s => GameState.canUnlockStage(s));
+  },
+
+  getNextStage(currentStageId) {
+    const stages = DataLoader.getAllStages();
+    const idx = stages.findIndex(s => s.id === currentStageId);
+    if (idx >= 0 && idx < stages.length - 1) {
+      const next = stages[idx + 1];
+      if (GameState.canUnlockStage(next)) return next;
+    }
+    return null;
+  },
+
+  sweepStage(stageId, count) {
+    const stage = DataLoader.getStage(stageId);
+    if (!stage) return null;
+    if (!GameState.isStageCleared(stageId)) return null;
+
+    const cost = 5 * count;
+    if (GameState.stamina < cost) {
+      GameUI.showToast(`体力不足！需要 ⚡${cost}`, 'error');
+      return null;
+    }
+
+    // Calculate per-sweep rewards
+    let perGold = stage.base_gold || 0;
+    let perExp = stage.base_exp || 0;
+    const itemDrops = {}; // item_id -> total quantity
+
+    for (let sweep = 0; sweep < count; sweep++) {
+      let sweepGold = perGold;
+      let sweepExp = perExp;
+
+      for (const wave of stage.waves) {
+        for (const e of wave.enemies) {
+          const enemyDef = DataLoader.getEnemy(e.enemy_id);
+          if (!enemyDef) continue;
+          const lvlMult = 1 + (e.level - 1) * 0.1;
+          sweepGold += Math.floor((enemyDef.gold_drop || 0) * lvlMult);
+          sweepExp += Math.floor((enemyDef.exp_drop || 0) * lvlMult);
+          for (const drop of (enemyDef.item_drops || [])) {
+            if (Math.random() < drop.drop_rate) {
+              itemDrops[drop.item_id] = (itemDrops[drop.item_id] || 0) + 1;
+            }
+          }
+        }
+      }
+
+      // Accumulate (gold/exp can vary per sweep due to lvlMult, but it's actually fixed)
+      if (sweep === 0) { perGold = sweepGold; perExp = sweepExp; }
+    }
+
+    // Apply
+    GameState.stamina -= cost;
+    GameState.addGold(perGold * count);
+    GameState.addExp(perExp * count);
+    for (const [itemId, qty] of Object.entries(itemDrops)) {
+      GameState.addItem(itemId, qty);
+    }
+    GameState.save();
+    GameUI.updateResources();
+
+    const parts = [];
+    if (perGold * count > 0) parts.push(`🪙+${(perGold * count).toLocaleString()}`);
+    if (perExp * count > 0) parts.push(`⭐+${(perExp * count).toLocaleString()}`);
+    const itemParts = Object.entries(itemDrops).map(([id, q]) => `${DataLoader.getItem(id)?.name || id}×${q}`);
+    if (itemParts.length > 0) parts.push(itemParts.join(', '));
+
+    GameUI.showToast(`扫荡 ${stage.name} ×${count}！${parts.join(' ')}`, 'success');
+    return { gold: perGold * count, exp: perExp * count, items: itemDrops };
+  }
+};
+
+const IdleManager = {
+  STAMINA_REGEN_SEC: 360,
+  MAX_IDLE_MIN: 720,
+
+  getPendingRewards() {
+    const now = Date.now();
+    const elapsedMs = now - GameState.last_idle_claim;
+    const elapsedMin = Math.min(elapsedMs / 60000, this.MAX_IDLE_MIN);
+
+    // Stamina always regens regardless of idle stage
+    const staminaRegen = Math.floor(elapsedMs / (this.STAMINA_REGEN_SEC * 1000));
+    const stamina = Math.min(staminaRegen, GameState.max_stamina - GameState.stamina);
+
+    let gold = 0, exp = 0, stage = null;
+    if (GameState.idle_stage_id) {
+      stage = DataLoader.getStage(GameState.idle_stage_id);
+      if (stage && elapsedMin >= 0.1) {
+        const eff = 0.5;
+        const chapterBonus = 1 + (stage.chapter - 1) * 0.1;
+        const goldPerMin = stage.base_gold * chapterBonus * eff;
+        const expPerMin = stage.base_exp * chapterBonus * eff;
+        gold = Math.floor(goldPerMin * elapsedMin);
+        exp = Math.floor(expPerMin * elapsedMin);
+      }
+    }
+
+    return { gold, exp, stamina, minutes: elapsedMin, stage };
+  },
+
+  claimRewards() {
+    const rewards = this.getPendingRewards();
+    if (rewards.gold <= 0 && rewards.exp <= 0 && rewards.stamina <= 0) return null;
+
+    GameState.last_idle_claim = Date.now();
+    if (rewards.gold > 0) GameState.addGold(rewards.gold);
+    if (rewards.exp > 0) GameState.addExp(rewards.exp);
+    if (rewards.stamina > 0) {
+      GameState.stamina = Math.min(GameState.max_stamina, GameState.stamina + rewards.stamina);
+    }
+    GameState.save();
+    return rewards;
+  }
+};
+
+/* =================================================================================
+   SECTION: UI Layer - ScreenManager, Renderers, BattleUI, GameUI
+   ================================================================================= */
+
+const GameUI = {
+  currentScreen: 'characters',
+  sortMode: 'rarity',
+  _activeTower: null,
+  _quickDismantle: false,
+
+  init() {
+    // Nav buttons
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => this.switchScreen(btn.dataset.screen));
+    });
+    this.updateResources();
+    this.renderAll();
+  },
+
+  switchScreen(screen) {
+    this.currentScreen = screen;
+    if (screen !== 'stages' && this.idleTimer) {
+      clearInterval(this.idleTimer);
+      this.idleTimer = null;
+    }
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelector(`#screen-${screen}`).classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.nav-btn[data-screen="${screen}"]`).classList.add('active');
+    this.renderScreen(screen);
+  },
+
+  renderScreen(screen) {
+    switch (screen) {
+      case 'characters': this.renderCharacters(); break;
+      case 'stages': this.renderStages(); break;
+      case 'gacha': this.renderGacha(); break;
+      case 'items': this.renderItems(); break;
+      case 'tower': this.renderTowerScreen(); break;
+    }
+  },
+
+  renderAll() {
+    this.updateResources();
+    this.renderCharacters();
+    this.renderStages();
+    this.renderGacha();
+    this.renderItems();
+    this.renderTowerScreen();
+  },
+
+  updateResources() {
+    document.getElementById('res-gold').textContent = GameState.gold.toLocaleString();
+    document.getElementById('res-gems').textContent = GameState.gems.toLocaleString();
+    document.getElementById('res-exp').textContent = GameState.exp_pool.toLocaleString();
+    document.getElementById('res-stamina').textContent = `${GameState.stamina}/${GameState.max_stamina}`;
+  },
+
+  showToast(msg, type) {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = msg;
+    const colors = {
+      success: 'var(--success)',
+      error: 'var(--danger)',
+      info: 'var(--info)',
+      warning: 'var(--warning)'
+    };
+    toast.style.borderColor = colors[type] || 'var(--border)';
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 2600);
+  },
+
+  /* ---- Characters Screen ---- */
+  renderCharacters() {
+    const owned = GameState.owned_characters;
+
+    // Team slots
+    const teamDiv = document.getElementById('team-slots');
+    teamDiv.innerHTML = '';
+    for (let i = 0; i < 4; i++) {
+      const charId = GameState.current_team[i];
+      const slot = document.createElement('div');
+      slot.className = 'team-slot' + (charId ? ' filled' : '');
+      if (charId) {
+        const def = DataLoader.getCharacter(charId);
+        const owned = GameState.getOwnedChar(charId);
+        const img = this.createImage(def?.portrait, def?.element || 'light', def?.name || '?');
+        if (img.tagName === 'IMG') {
+          img.className = 'slot-img';
+          slot.appendChild(img);
+        } else {
+          slot.innerHTML = `<span class="slot-placeholder">${def?.name?.[0] || '?'}</span>`;
+          slot.style.background = `var(--${def?.element || 'light'})33`;
+        }
+        slot.innerHTML += `<span class="slot-level">Lv${owned?.level || 1} ${'★'.repeat(owned?.stars || 0)}</span>`;
+        slot.title = def?.name || charId;
+        slot.onclick = () => this.openCharDetail(charId);
+      } else {
+        slot.innerHTML = '+';
+        slot.title = '点击选择角色';
+        slot.onclick = () => this.showTeamSelect(i);
+      }
+      teamDiv.appendChild(slot);
+    }
+
+    // Energy bar
+    const energy = GameState.getTeamEnergy();
+    const overflow = GameState.getEnergyOverflow();
+    const penalty = Math.round(GameState.getEnergyPenalty() * 100);
+    const energyWrap = document.getElementById('energy-bar-wrap');
+    const energyFill = document.getElementById('energy-fill');
+    const energyText = document.getElementById('energy-text');
+    const energyWarn = document.getElementById('energy-warn');
+    const energyPenalty = document.getElementById('energy-penalty');
+    energyWrap.style.display = 'block';
+    const pct = Math.min(100, (energy / 12) * 100);
+    energyFill.style.width = `${pct}%`;
+    energyFill.style.background = overflow > 0 ? 'var(--danger)' : 'var(--success)';
+    energyText.textContent = `${energy}/12`;
+    if (overflow > 0) {
+      energyWarn.style.display = 'block';
+      energyPenalty.textContent = penalty;
+    } else {
+      energyWarn.style.display = 'none';
+    }
+
+    // Character grid
+    const grid = document.getElementById('char-grid');
+    if (owned.length === 0) {
+      grid.innerHTML = '<div class="empty-state">还没有角色，去召唤吧！</div>';
+      return;
+    }
+
+    let chars = [...owned];
+    if (this.sortMode === 'rarity') {
+      const order = { SSR: 0, SR: 1, R: 2, N: 3 };
+      chars.sort((a, b) => {
+        const ra = DataLoader.getCharacter(a.id)?.rarity;
+        const rb = DataLoader.getCharacter(b.id)?.rarity;
+        const va = order[ra] !== undefined ? order[ra] : 4;
+        const vb = order[rb] !== undefined ? order[rb] : 4;
+        if (va !== vb) return va - vb;
+        return b.level - a.level; // Same rarity: higher level first
+      });
+    } else if (this.sortMode === 'level') {
+      chars.sort((a, b) => b.level - a.level);
+    } else if (this.sortMode === 'element') {
+      const order = { fire: 0, water: 1, wind: 2, light: 3, dark: 4 };
+      chars.sort((a, b) => {
+        const ea = DataLoader.getCharacter(a.id)?.element || '';
+        const eb = DataLoader.getCharacter(b.id)?.element || '';
+        return (order[ea] || 5) - (order[eb] || 5);
+      });
+    }
+
+    grid.innerHTML = chars.map(c => {
+      const def = DataLoader.getCharacter(c.id);
+      if (!def) return '';
+      const img = this.createImageHtml(def.portrait, def.element, def.name, 'char-img');
+      const ph = !def.portrait ? `<div class="char-placeholder" style="background:var(--${def.element})22; color:var(--${def.element});">${def.name[0]}</div>` : '';
+      return `
+        <div class="char-card rarity-${def.rarity}" onclick="GameUI.openCharDetail('${c.id}')">
+          <span class="element-icon" style="background:var(--${def.element});color:#000;">${def.element === 'fire' ? '火' : def.element === 'water' ? '水' : def.element === 'wind' ? '风' : def.element === 'light' ? '光' : '暗'}</span>
+          <span class="rarity-badge" style="color:var(--rarity-${def.rarity.toLowerCase()});">${def.rarity}</span>
+          ${img || ph}
+          <div class="char-name">${'★'.repeat(c.stars || 0)}${def.name}</div>
+          <div class="char-level">Lv.${c.level}</div>
+        </div>
+      `;
+    }).join('');
+  },
+
+  sortCharacters(mode) {
+    this.sortMode = mode;
+    this.renderCharacters();
+  },
+
+  showTeamSelect(slotIdx) {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+      <div class="modal">
+        <h3>选择角色</h3>
+        <div id="team-select-list" style="max-height:50vh;overflow-y:auto;"></div>
+        <button class="btn btn-secondary btn-block" style="margin-top:12px;" id="team-select-close">取消</button>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    const list = overlay.querySelector('#team-select-list');
+    const owned = GameState.owned_characters.filter(c => !GameState.current_team.includes(c.id));
+    if (owned.length === 0) {
+      list.innerHTML = '<div class="empty-state">所有角色已在队伍中</div>';
+    } else {
+      list.innerHTML = owned.map(c => {
+        const def = DataLoader.getCharacter(c.id);
+        if (!def) return '';
+        const cost = GameState.getRarityCost(def.rarity);
+        const currentEnergy = GameState.getTeamEnergy();
+        const costColor = (currentEnergy + cost > 12) ? 'var(--danger)' : 'var(--text-muted)';
+        return `
+          <div class="card flex-between" style="cursor:pointer;" data-char="${c.id}">
+            <span>${def.name} <small style="color:${costColor};">⚡${cost}</small> <small style="color:var(--text-muted);">Lv${c.level} ${def.rarity}</small></span>
+            <button class="btn btn-sm btn-primary">选择</button>
+          </div>
+        `;
+      }).join('');
+
+      list.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', () => {
+          GameState.current_team[slotIdx] = card.dataset.char;
+          GameState.save();
+          this.renderCharacters();
+          overlay.remove();
+        });
+      });
+    }
+
+    overlay.querySelector('#team-select-close').addEventListener('click', () => overlay.remove());
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+  },
+
+  openCharDetail(charId) {
+    const def = DataLoader.getCharacter(charId);
+    const owned = GameState.getOwnedChar(charId);
+    if (!def || !owned) return;
+
+    const stats = GameState.getCharLevelStats(charId);
+    const expNeeded = GameState.getExpToLevel(owned.level);
+    const canLevel = GameState.exp_pool >= expNeeded && owned.level < (def.maxLevel || 100);
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+
+    const imgHtml = def.portrait
+      ? `<img src="${def.portrait}" alt="${def.name}" class="detail-portrait" onclick="GameUI.showImageViewer('${def.portrait}', '${def.name}')" onerror="this.outerHTML='<div class=\\'detail-portrait-placeholder\\' style=\\'background:var(--${def.element})22;color:var(--${def.element});\\'>${def.name[0]}</div>'">`
+      : `<div class="detail-portrait-placeholder" style="background:var(--${def.element})22;color:var(--${def.element});">${def.name[0]}</div>`;
+
+    overlay.innerHTML = `
+      <div class="modal">
+        <button class="close-btn" id="detail-close">&times;</button>
+        <div style="text-align:center;margin-bottom:12px;">
+          ${imgHtml}
+          <h3 style="color:var(--rarity-${def.rarity.toLowerCase()})">${def.rarity} ${def.name}</h3>
+          <div style="font-size:16px;color:var(--warning);margin:2px 0;">${'★'.repeat(owned.stars || 0)}${'☆'.repeat(5 - (owned.stars || 0))}</div>
+          <p style="font-size:11px;color:var(--text-muted);">${def.description || ''}</p>
+          <p style="font-size:11px;color:var(--text-secondary);">元素: ${def.element} | 定位: ${def.role || 'attacker'}</p>
+        </div>
+
+        <div class="flex-between" style="margin-bottom:4px;font-size:11px;">
+          <span>Lv.${owned.level}</span>
+          <span>升级需要: ${expNeeded} EXP (库存: ${GameState.exp_pool})</span>
+        </div>
+        <button class="btn btn-sm btn-warning" id="btn-level-up" style="width:100%;" ${canLevel ? '' : 'disabled'}>
+          ${canLevel ? `升级到 Lv.${owned.level + 1} (-${expNeeded} EXP)` : (owned.level >= (def.maxLevel || 100) ? '已满级' : 'EXP不足')}
+        </button>
+        ${owned.level > 1 ? `<button class="btn btn-sm btn-danger" id="btn-reset-level" style="width:100%;margin-top:4px;">重置等级 (返还 ${ProgressionSystem.getTotalExpSpent(owned.level)} EXP)</button>` : ''}
+
+        <div class="section-title" style="margin-top:12px;">属性</div>
+        ${Object.entries(stats).map(([k, v]) => {
+          const labels = { hp: '生命', atk: '攻击', def: '防御', spd: '速度', crit_rate: '暴击率', crit_dmg: '暴伤' };
+          const format = k === 'crit_rate' ? `${(v * 100).toFixed(1)}%` : k === 'crit_dmg' ? `${v.toFixed(1)}x` : v;
+          return `<div class="stat-row"><span class="stat-label">${labels[k] || k}</span><span class="stat-value">${format}</span></div>`;
+        }).join('')}
+
+        <div class="section-title">技能</div>
+        ${(def.skill_ids || []).map(sid => {
+          const skill = DataLoader.getSkill(sid);
+          if (!skill) return '';
+          return `<div class="card" style="font-size:11px;">
+            <strong>${skill.name}</strong> <span style="color:var(--text-muted);">CD:${skill.cooldown}</span>
+            <br>${skill.description || ''}
+          </div>`;
+        }).join('')}
+
+        ${(def.star_bonus || []).length > 0 ? `
+        <div class="section-title">觉醒特技 ★</div>
+        ${(def.star_bonus || []).map(b => {
+          const skill = DataLoader.getSkill(b.skill_id);
+          if (!skill) return '';
+          const unlocked = (owned.stars || 0) >= b.stars;
+          return `<div class="card" style="font-size:11px;opacity:${unlocked ? 1 : 0.4};border-color:${unlocked ? 'var(--warning)' : 'var(--border)'};">
+            <strong style="color:${unlocked ? 'var(--warning)' : 'var(--text-muted)'};">${skill.name}</strong>
+            <span style="color:var(--text-muted);">CD:${skill.cooldown}</span>
+            <span style="color:${unlocked ? 'var(--success)' : 'var(--danger)'};font-size:10px;">${unlocked ? '(已解锁)' : `(需要 ★${b.stars})`}</span>
+            <br>${skill.description || ''}
+          </div>`;
+        }).join('')}
+        ` : ''}
+        <div class="section-title">装备</div>
+        ${['weapon', 'armor', 'accessory'].map(slot => {
+          const equipId = owned.equipment?.[slot];
+          const equipData = equipId ? GameState.getEquipStats(equipId) : null;
+          const rarityColor = equipData ? `var(--rarity-${equipData.rarity.toLowerCase()})` : '';
+          const slotNames = { weapon: '武器', armor: '防具', accessory: '饰品' };
+          return `<div class="equip-slot" data-action="${equipData ? 'unequip' : 'equip'}" data-char="${charId}" data-slot="${slot}">
+            <span class="slot-label">${slotNames[slot]}</span>
+            <span class="slot-item" style="color:${rarityColor};">${equipData ? `${equipData.name} (${equipData.rarity})` : ''}</span>
+            <span class="slot-empty">${!equipData ? '空' : '✕'}</span>
+          </div>`;
+        }).join('')}
+
+        <div class="flex-row" style="margin-top:12px;gap:6px;">
+          <button class="btn btn-sm btn-primary" id="btn-add-team">加入队伍</button>
+          <button class="btn btn-sm btn-danger" id="btn-remove-team">移出队伍</button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+    // Equip slot handlers (use closure, not inline onclick)
+    overlay.querySelectorAll('.equip-slot').forEach(slot => {
+      slot.addEventListener('click', () => {
+        const action = slot.dataset.action;
+        const cId = slot.dataset.char;
+        const s = slot.dataset.slot;
+        if (action === 'unequip') {
+          overlay.remove();
+          GameUI.showEquipSelect(cId, s, true);
+        } else {
+          overlay.remove();
+          GameUI.showEquipSelect(cId, s, false);
+        }
+      });
+    });
+    overlay.querySelector('#detail-close').addEventListener('click', () => overlay.remove());
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+    overlay.querySelector('#btn-add-team').addEventListener('click', () => {
+      // 已在队伍中不重复添加
+      if (GameState.current_team.includes(charId)) {
+        GameUI.showToast('该角色已在队伍中', 'warning');
+        overlay.remove();
+        return;
+      }
+      const emptySlot = GameState.current_team.findIndex(s => s === null);
+      if (emptySlot >= 0) {
+        GameState.current_team[emptySlot] = charId;
+      } else {
+        // Find if this char is already in team
+        const existingSlot = GameState.current_team.findIndex(s => s === charId);
+        if (existingSlot < 0) {
+          GameState.current_team[0] = charId; // Replace first slot
+        }
+      }
+      GameState.save();
+      this.renderCharacters();
+      overlay.remove();
+    });
+    overlay.querySelector('#btn-remove-team').addEventListener('click', () => {
+      GameState.current_team = GameState.current_team.map(s => s === charId ? null : s);
+      GameState.save();
+      this.renderCharacters();
+      overlay.remove();
+    });
+    const btnLevelUp = overlay.querySelector('#btn-level-up');
+    if (btnLevelUp) {
+      btnLevelUp.addEventListener('click', () => {
+        if (ProgressionSystem.levelUp(charId)) {
+          this.openCharDetail(charId);
+          overlay.remove();
+          this.renderCharacters();
+        }
+      });
+    }
+    const btnResetLevel = overlay.querySelector('#btn-reset-level');
+    if (btnResetLevel) {
+      btnResetLevel.addEventListener('click', () => {
+        const owned = GameState.getOwnedChar(charId);
+        if (confirm(`确定要重置 ${owned ? DataLoader.getCharacter(charId)?.name : ''} 的等级吗？\n将返还 ${ProgressionSystem.getTotalExpSpent(owned.level)} EXP，等级回到 Lv.1。`)) {
+          ProgressionSystem.resetLevel(charId);
+          this.openCharDetail(charId);
+          overlay.remove();
+          this.renderCharacters();
+        }
+      });
+    }
+  },
+
+  showEquipSelect(charId, slot, isOccupied) {
+    // Old-style items
+    const equippableItems = GameState.items.filter(entry => {
+      const item = DataLoader.getItem(entry.item_id);
+      if (!item || item.type !== 'equipment' || item.equip_slot !== slot) return false;
+      const owned = GameState.getOwnedChar(charId);
+      if (item.equip_requirement?.level && owned.level < item.equip_requirement.level) return false;
+      const def = DataLoader.getCharacter(charId);
+      if (item.equip_requirement?.element && def.element !== item.equip_requirement.element) return false;
+      return true;
+    });
+
+    // Gear instances
+    const equippableGear = GameState.gear_inventory.filter(g => {
+      const base = GameState.getGearBase(g.base_id);
+      return base && base.slot === slot && !g.equipped_to;
+    });
+
+    const hasAny = equippableItems.length > 0 || equippableGear.length > 0;
+    const slotNames = { weapon: '武器', armor: '防具', accessory: '饰品' };
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+      <div class="modal">
+        <h3>选择装备 - ${slotNames[slot]}</h3>
+        ${isOccupied ? `<button class="btn btn-danger btn-block" id="equip-unequip" style="margin-bottom:12px;">卸下当前装备</button>` : ''}
+        <div id="equip-list" style="max-height:50vh;overflow-y:auto;">
+          ${!hasAny ? `<div class="empty-state">${isOccupied ? '没有可更换的装备' : '没有可装备的物品'}</div>` : ''}
+          ${equippableGear.map(g => {
+            const base = GameState.getGearBase(g.base_id);
+            const rarityColor = `var(--rarity-${g.rarity.toLowerCase()})`;
+            return `<div class="card flex-between" style="cursor:pointer;border-color:${rarityColor};" data-equip="${g.gear_id}">
+              <span style="color:${rarityColor};">⚙ ${base.name} <small style="color:var(--text-muted);">${g.rarity} | ${Object.entries(g.stats).map(([k,v])=>`${k}+${v}`).join(', ')}</small></span>
+              <button class="btn btn-sm btn-primary">${isOccupied ? '更换' : '装备'}</button>
+            </div>`;
+          }).join('')}
+          ${equippableItems.map(e => {
+            const item = DataLoader.getItem(e.item_id);
+            return `<div class="card flex-between" style="cursor:pointer;" data-equip="${e.item_id}">
+              <span>📦 ${item.name} <small style="color:var(--text-muted);">${item.rarity} | ${Object.entries(item.equip_stats||{}).map(([k,v])=>`${k}+${v}`).join(', ')}</small></span>
+              <button class="btn btn-sm btn-primary">${isOccupied ? '更换' : '装备'}</button>
+            </div>`;
+          }).join('')}
+        </div>
+        <button class="btn btn-secondary btn-block" style="margin-top:12px;" id="equip-select-close">取消</button>
+      </div>
+    `;
+
+    // Unequip button handler
+    const unequipBtn = overlay.querySelector('#equip-unequip');
+    if (unequipBtn) {
+      unequipBtn.addEventListener('click', () => {
+        InventoryManager.unequipItem(charId, slot);
+        overlay.remove();
+        GameUI.showToast('已卸下装备', 'info');
+        GameState.save();
+        GameUI.renderCharacters();
+        GameUI.openCharDetail(charId);
+      });
+    }
+    document.body.appendChild(overlay);
+
+    overlay.querySelectorAll('.card[data-equip]').forEach(card => {
+      card.addEventListener('click', () => {
+        overlay.remove();
+        if (InventoryManager.equipItem(charId, card.dataset.equip)) {
+          this.showToast('装备成功！', 'success');
+          GameState.save();
+        }
+        this.renderCharacters();
+        this.openCharDetail(charId);
+      });
+    });
+    overlay.querySelector('#equip-select-close').addEventListener('click', () => overlay.remove());
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+  },
+
+  /* ---- Stages Screen ---- */
+  renderStages() {
+    // Clear previous idle timer and start new one
+    if (this.idleTimer) clearInterval(this.idleTimer);
+    this.idleTimer = setInterval(() => this.updateIdleDisplay(), 1000);
+
+    // Chapter tabs
+    const chapters = DataLoader.getChapters();
+    const chapterTabs = document.getElementById('chapter-tabs');
+    const activeChapter = this._activeChapter || 1;
+    chapterTabs.innerHTML = chapters.map(ch => {
+      const locked = ch > 1 && !GameState.isStageCleared(`stage_${ch - 1}_5`);
+      return `<button class="chapter-tab${ch === activeChapter ? ' active' : ''}${locked ? ' locked' : ''}" data-chapter="${ch}">第${ch}章${locked ? ' 🔒' : ''}</button>`;
+    }).join('');
+
+    chapterTabs.querySelectorAll('.chapter-tab:not(.locked)').forEach(tab => {
+      tab.addEventListener('click', () => {
+        chapterTabs.querySelectorAll('.chapter-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        this._activeChapter = parseInt(tab.dataset.chapter);
+        this.renderStageList(this._activeChapter);
+      });
+    });
+
+    this.renderStageList(activeChapter);
+    this.updateIdleSelect();
+  },
+
+  renderStageList(chapter) {
+    const stages = DataLoader.getAllStages().filter(s => s.chapter === chapter);
+    const div = document.getElementById('stage-list');
+    div.innerHTML = stages.map(s => {
+      const cleared = GameState.isStageCleared(s.id);
+      const unlocked = GameState.canUnlockStage(s);
+      const stars = GameState.getStageStars(s.id);
+      const starStr = cleared ? ('★'.repeat(stars) + '☆'.repeat(3 - stars)) : '';
+      const maxSweep = Math.floor(GameState.stamina / 5);
+      return `
+        <div class="card stage-card ${cleared ? 'cleared' : ''} ${!unlocked ? 'locked' : ''}" data-stage="${s.id}">
+          <div class="stage-num">${cleared ? starStr : s.stage}</div>
+          <div class="stage-info">
+            <div class="stage-name">${s.stage === 5 ? '👑 ' : ''}${s.name}</div>
+            <div class="stage-meta">${s.waves.length}波敌人 | 推荐Lv${s.chapter * 5 + s.stage}</div>
+          </div>
+          <div class="stage-reward">🪙${s.base_gold} ⚡5</div>
+          ${cleared ? `<button class="btn btn-sm btn-warning stage-sweep-btn" data-stage="${s.id}" data-max="${maxSweep}">⚡扫荡</button>` : ''}
+        </div>
+      `;
+    }).join('');
+
+    // Chapter star rewards
+    const chapterStars = GameState.getChapterStars(chapter);
+    const availableRewards = GameState.getAvailableStarRewards(chapter);
+    const claimedRewards = GameState.getChapterClaimedRewards(chapter);
+    const nextReward = STAR_REWARDS.find(r => r.stars > chapterStars && !claimedRewards.includes(r.stars));
+    div.innerHTML += `
+      <div class="chapter-stars-section">
+        <div class="flex-between" style="margin-bottom:6px;">
+          <span style="font-size:12px;font-weight:700;">⭐ 第${chapter}章累计星数: ${chapterStars}</span>
+          ${nextReward ? `<span style="font-size:10px;color:var(--text-muted);">下一档: ${nextReward.stars}★</span>` : ''}
+        </div>
+        <div class="chapter-star-bar">
+          ${STAR_REWARDS.map(r => {
+            const achieved = chapterStars >= r.stars;
+            const claimed = claimedRewards.includes(r.stars);
+            const canClaim = availableRewards.some(a => a.stars === r.stars);
+            return `<div class="star-milestone ${achieved ? 'achieved' : ''} ${claimed ? 'claimed' : ''} ${canClaim ? 'claimable' : ''}" onclick="${canClaim ? `GameUI.claimChapterStarReward(${chapter},${r.stars})` : ''}" title="${r.stars}★: 💎${r.gems}${r.items ? ' + 券×' + r.items[0][1] : ''}">
+              <div class="milestone-dot">${claimed ? '✓' : r.stars}</div>
+              <div class="milestone-reward">💎${r.gems}${r.items ? '<br>🎫×'+r.items[0][1] : ''}</div>
+            </div>`;
+          }).join('')}
+        </div>
+        ${availableRewards.length > 0 ? `<button class="btn btn-sm btn-warning" style="margin-top:6px;width:100%;" onclick="GameUI.claimAllChapterStars(${chapter})">领取全部 (${availableRewards.length}个)</button>` : ''}
+      </div>
+    `;
+
+    // Stage card click → battle
+    div.querySelectorAll('.stage-card:not(.locked)').forEach(card => {
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('.stage-sweep-btn')) return; // Don't start battle on sweep click
+        const stageId = card.dataset.stage;
+        const ch = parseInt(stageId.split('_')[1]);
+        GameUI._activeChapter = ch;
+        BattleEngine.startBattle(stageId);
+      });
+    });
+
+    // Sweep button click
+    div.querySelectorAll('.stage-sweep-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const stageId = btn.dataset.stage;
+        const max = parseInt(btn.dataset.max) || 0;
+        if (max <= 0) {
+          GameUI.showToast('体力不足！需要 ⚡5', 'error');
+          return;
+        }
+        GameUI._showSweepPrompt(stageId, max);
+      });
+    });
+  },
+
+  _showSweepPrompt(stageId, maxCount) {
+    const stage = DataLoader.getStage(stageId);
+    if (!stage) return;
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+      <div class="modal" style="text-align:center;">
+        <h3>⚡ 扫荡 ${stage.name}</h3>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">每次消耗 ⚡5，最多 ${maxCount} 次</p>
+        <div class="flex-row" style="justify-content:center;gap:8px;margin-bottom:12px;">
+          <button class="btn btn-sm btn-secondary" id="sweep-dec">-</button>
+          <span style="font-size:20px;font-weight:700;min-width:40px;" id="sweep-count">1</span>
+          <button class="btn btn-sm btn-secondary" id="sweep-inc">+</button>
+          <button class="btn btn-sm btn-secondary" id="sweep-max">MAX</button>
+        </div>
+        <p style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">
+          预计收益: 🪙<span id="sweep-preview-gold">0</span> ⭐<span id="sweep-preview-exp">0</span>
+        </p>
+        <p style="font-size:11px;color:var(--warning);margin-bottom:12px;">
+          消耗 ⚡<span id="sweep-cost">5</span>
+        </p>
+        <div class="flex-row" style="gap:8px;justify-content:center;">
+          <button class="btn btn-primary" id="sweep-confirm">确认扫荡</button>
+          <button class="btn btn-secondary" id="sweep-cancel">取消</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    const stageGold = stage.base_gold || 0;
+    const stageExp = stage.base_exp || 0;
+    // Rough estimate of enemy drops
+    let enemyGold = 0, enemyExp = 0;
+    for (const wave of stage.waves) {
+      for (const e of wave.enemies) {
+        const enemyDef = DataLoader.getEnemy(e.enemy_id);
+        if (!enemyDef) continue;
+        const lvlMult = 1 + (e.level - 1) * 0.1;
+        enemyGold += Math.floor((enemyDef.gold_drop || 0) * lvlMult);
+        enemyExp += Math.floor((enemyDef.exp_drop || 0) * lvlMult);
+      }
+    }
+    const perGold = stageGold + enemyGold;
+    const perExp = stageExp + enemyExp;
+
+    let count = 1;
+    const updatePreview = () => {
+      document.getElementById('sweep-count').textContent = count;
+      document.getElementById('sweep-preview-gold').textContent = (perGold * count).toLocaleString();
+      document.getElementById('sweep-preview-exp').textContent = (perExp * count).toLocaleString();
+      document.getElementById('sweep-cost').textContent = (5 * count).toString();
+    };
+    updatePreview();
+
+    const close = () => overlay.remove();
+    overlay.querySelector('#sweep-cancel').addEventListener('click', close);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+
+    overlay.querySelector('#sweep-dec').addEventListener('click', () => {
+      if (count > 1) { count--; updatePreview(); }
+    });
+    overlay.querySelector('#sweep-inc').addEventListener('click', () => {
+      if (count < maxCount) { count++; updatePreview(); }
+    });
+    overlay.querySelector('#sweep-max').addEventListener('click', () => {
+      count = maxCount; updatePreview();
+    });
+    overlay.querySelector('#sweep-confirm').addEventListener('click', () => {
+      close();
+      StageManager.sweepStage(stageId, count);
+      GameUI.renderStages();
+    });
+  },
+
+  claimChapterStarReward(chapter, stars) {
+    const reward = GameState.claimStarReward(chapter, stars);
+    if (!reward) return;
+    let msg = `💎+${reward.gems}`;
+    if (reward.items) msg += ' ' + reward.items.map(([id, q]) => `${DataLoader.getItem(id)?.name || id}+${q}`).join(' ');
+    this.showToast(`领取成功！${msg}`, 'success');
+    this.renderStages();
+    this.updateResources();
+  },
+
+  claimAllChapterStars(chapter) {
+    const available = GameState.getAvailableStarRewards(chapter);
+    if (available.length === 0) return;
+    let totalGems = 0, totalItems = [];
+    for (const r of available) {
+      const reward = GameState.claimStarReward(chapter, r.stars);
+      if (reward) {
+        totalGems += reward.gems || 0;
+        if (reward.items) totalItems.push(...reward.items);
+      }
+    }
+    let msg = `💎+${totalGems}`;
+    if (totalItems.length > 0) msg += ' ' + totalItems.map(([id, q]) => `${DataLoader.getItem(id)?.name || id}+${q}`).join(' ');
+    this.showToast(`全部领取！${msg}`, 'success');
+    this.renderStages();
+    this.updateResources();
+  },
+
+  updateIdleSelect() {
+    const select = document.getElementById('idle-stage-select');
+    const cleared = GameState.cleared_stages;
+    select.innerHTML = '<option value="">不挂机</option>' +
+      cleared.map(sid => {
+        const stage = DataLoader.getStage(sid);
+        return stage ? `<option value="${sid}" ${GameState.idle_stage_id === sid ? 'selected' : ''}>${stage.name}</option>` : '';
+      }).join('');
+    this.updateIdleDisplay();
+  },
+
+  updateIdleDisplay() {
+    const card = document.getElementById('idle-rewards-card');
+    const btn = document.getElementById('btn-claim-idle');
+    if (!card || !btn) return;
+
+    const rewards = IdleManager.getPendingRewards();
+    const hasAny = rewards.gold > 0 || rewards.exp > 0 || rewards.stamina > 0;
+    if (!hasAny && !GameState.idle_stage_id) { card.style.display = 'none'; return; }
+
+    card.style.display = 'block';
+    document.getElementById('idle-timer').textContent = `${Math.floor(rewards.minutes)}分`;
+    document.getElementById('idle-gold').textContent = rewards.gold.toLocaleString();
+    document.getElementById('idle-exp').textContent = rewards.exp.toLocaleString();
+    document.getElementById('idle-stamina').textContent = rewards.stamina;
+    btn.disabled = !hasAny;
+  },
+
+  claimIdleRewards() {
+    const rewards = IdleManager.claimRewards();
+    if (!rewards) { this.showToast('暂无收益可领取', 'warning'); return; }
+    const parts = [];
+    if (rewards.gold > 0) parts.push(`🪙+${rewards.gold.toLocaleString()}`);
+    if (rewards.exp > 0) parts.push(`⭐+${rewards.exp.toLocaleString()}`);
+    if (rewards.stamina > 0) parts.push(`⚡+${rewards.stamina}`);
+    this.showToast(`领取成功！${parts.join(' ')}`, 'success');
+    this.updateIdleDisplay();
+    this.updateResources();
+  },
+
+  /* ---- Gacha Screen ---- */
+  renderGacha() {
+    document.getElementById('gacha-ticket-count').textContent = GameState.getItemCount('gacha_ticket');
+    document.getElementById('pity-ssr').textContent = `${GameState.gacha_pity_ssr}/90`;
+    document.getElementById('pity-sr').textContent = `${GameState.gacha_pity_sr}/10`;
+    document.getElementById('pity-ssr-bar').style.width = `${(GameState.gacha_pity_ssr / 90) * 100}%`;
+    document.getElementById('pity-sr-bar').style.width = `${(GameState.gacha_pity_sr / 10) * 100}%`;
+  },
+
+  async doGacha(count) {
+    if (!GachaSystem.canPull(count)) {
+      this.showToast('召唤券或宝石不足！', 'error');
+      return;
+    }
+
+    GachaSystem.consumeForPull(count);
+
+    const results = [];
+    for (let i = 0; i < count; i++) {
+      results.push(GachaSystem.pull());
+    }
+
+    if (count === 1) {
+      await this.showGachaResult(results[0]);
+    } else {
+      await this.showMultiGachaResult(results);
+    }
+
+    GameState.save();
+    this.renderGacha();
+    this.renderCharacters();
+    this.updateResources();
+  },
+
+  showMultiGachaResult(results) {
+    return new Promise(resolve => {
+      // Process all results first
+      const cards = results.map(r => {
+        const def = DataLoader.getCharacter(r.charId);
+        if (!def) return null;
+        const charResult = GameState.addCharacter(r.charId);
+        return { def, result: r, charResult };
+      }).filter(Boolean);
+
+      const overlay = document.createElement('div');
+      overlay.className = 'gacha-result-overlay';
+
+      let html = `<div class="gacha-multi-title">召唤结果 (${results.length}连)</div><div class="gacha-multi-grid">`;
+      for (const { def, result, charResult } of cards) {
+        const rarityColor = `var(--rarity-${result.rarity.toLowerCase()})`;
+        const img = this.createImageHtml(def.portrait, def.element, def.name, 'multi-img');
+        const ph = !def.portrait ? `<div class="multi-placeholder" style="background:var(--${def.element})22;color:var(--${def.element});">${def.name[0]}</div>` : '';
+        const tag = charResult.duplicate
+          ? `<div class="multi-tag" style="color:var(--warning);">重复 ★+1</div>`
+          : `<div class="multi-tag" style="color:var(--success);">NEW</div>`;
+        html += `
+          <div class="gacha-multi-card rarity-${result.rarity}">
+            ${img || ph}
+            <div class="multi-name">${def.name}</div>
+            <div class="multi-rarity" style="color:${rarityColor};">${result.rarity}</div>
+            ${tag}
+          </div>`;
+      }
+      html += `</div><button class="btn btn-primary gacha-multi-ok" id="multi-ok">确定</button>`;
+
+      overlay.innerHTML = html;
+      document.body.appendChild(overlay);
+
+      overlay.querySelector('#multi-ok').addEventListener('click', () => {
+        overlay.remove();
+        resolve();
+      });
+    });
+  },
+
+  showGachaResult(result) {
+    return new Promise(resolve => {
+      const def = DataLoader.getCharacter(result.charId);
+      if (!def) { resolve(); return; }
+
+      const overlay = document.createElement('div');
+      overlay.className = 'gacha-result-overlay';
+
+      // Phase 1: Orb
+      const rarityColor = `var(--rarity-${result.rarity.toLowerCase()})`;
+      overlay.innerHTML = `
+        <div class="gacha-orb" style="background:radial-gradient(circle, ${rarityColor}33, ${rarityColor}88);" id="orb"></div>
+        <p style="margin-top:12px;color:var(--text-muted);">点击揭晓...</p>
+      `;
+      document.body.appendChild(overlay);
+
+      const reveal = () => {
+        const charResult = GameState.addCharacter(result.charId);
+        const img = this.createImageHtml(def.portrait, def.element, def.name, 'reveal-img');
+        const ph = !def.portrait ? `<div class="reveal-placeholder" style="background:var(--${def.element})22;color:var(--${def.element});">${def.name[0]}</div>` : '';
+
+        overlay.innerHTML = `
+          <div class="gacha-character-reveal">
+            ${img || ph}
+            <div class="reveal-rarity" style="color:${rarityColor};">${result.rarity} ${def.element === 'fire' ? '🔥' : def.element === 'water' ? '💧' : def.element === 'wind' ? '🍃' : def.element === 'light' ? '✨' : '🌑'}</div>
+            <div class="reveal-name">${def.name}</div>
+            ${charResult.duplicate ? `<p style="color:var(--warning);margin-top:4px;">重复角色 → 升星 ★${charResult.stars || GameState.getOwnedChar(result.charId)?.stars || '?'}<br>+金币补偿</p>` : '<p style="color:var(--success);margin-top:4px;">新角色加入！</p>'}
+            <button class="btn btn-primary" style="margin-top:16px;" id="reveal-ok">确定</button>
+          </div>
+        `;
+        overlay.querySelector('#reveal-ok').addEventListener('click', () => {
+          overlay.remove();
+          resolve();
+        });
+      };
+
+      overlay.addEventListener('click', reveal, { once: true });
+    });
+  },
+
+  /* ---- Items Screen ---- */
+  renderItems() {
+    this.renderGearGachaPanel();
+    this.renderGearInventory();
+
+    const grid = document.getElementById('item-grid');
+    const items = GameState.items;
+    if (items.length === 0) {
+      grid.innerHTML = '<div class="empty-state">暂无物品</div>';
+      return;
+    }
+
+    grid.innerHTML = items.map(entry => {
+      const item = DataLoader.getItem(entry.item_id);
+      if (!item) return '';
+      return `
+        <div class="item-card" data-item="${entry.item_id}" data-qty="${entry.quantity}">
+          <div class="item-icon-box" style="background:var(--${item.rarity?.toLowerCase() || 'n'});opacity:0.15;">${this.getItemEmoji(item)}</div>
+          <div class="item-name">${item.name}</div>
+          ${entry.quantity > 1 ? `<span class="item-qty">${entry.quantity}</span>` : ''}
+        </div>
+      `;
+    }).join('');
+
+    grid.querySelectorAll('.item-card').forEach(card => {
+      card.addEventListener('click', () => this.showItemDetail(card.dataset.item));
+    });
+  },
+
+  getItemEmoji(item) {
+    if (item.type === 'equipment') return item.equip_slot === 'weapon' ? '⚔️' : item.equip_slot === 'armor' ? '🛡️' : '💍';
+    if (item.type === 'consumable') return item.id.includes('potion') ? '🧪' : '🎫';
+    if (item.type === 'material') return '💎';
+    return '📦';
+  },
+
+  showItemDetail(itemId) {
+    const item = DataLoader.getItem(itemId);
+    const qty = GameState.getItemCount(itemId);
+    if (!item) return;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+      <div class="modal">
+        <button class="close-btn" id="item-detail-close">&times;</button>
+        <div style="text-align:center;">
+          <div style="font-size:60px;">${this.getItemEmoji(item)}</div>
+          <h3 style="color:var(--rarity-${item.rarity?.toLowerCase() || 'n'});">${item.rarity} ${item.name}</h3>
+          <p style="font-size:12px;color:var(--text-muted);">${item.description}</p>
+          <p style="font-size:12px;">数量: ${qty}</p>
+          <p style="font-size:10px;color:var(--text-muted);">售价: 🪙${item.sell_price || 0}</p>
+        </div>
+        ${item.type === 'equipment' ? `
+          <div class="section-title">装备属性</div>
+          ${Object.entries(item.equip_stats || {}).map(([k, v]) => `<div class="stat-row"><span class="stat-label">${k}</span><span class="stat-value">+${v}</span></div>`).join('')}
+        ` : ''}
+        <div class="flex-row" style="margin-top:12px;">
+          ${item.type === 'equipment' ? `<button class="btn btn-sm btn-primary" id="btn-equip-item">装备</button>` : ''}
+          ${item.type === 'consumable' ? `<button class="btn btn-sm btn-success" id="btn-use-item">使用</button>` : ''}
+          <button class="btn btn-sm btn-warning" id="btn-sell-item">出售</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.querySelector('#item-detail-close').addEventListener('click', () => overlay.remove());
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+    overlay.querySelector('#btn-sell-item')?.addEventListener('click', () => {
+      const amt = prompt(`出售多少个？(最多${qty})`, '1');
+      const n = parseInt(amt);
+      if (n > 0 && n <= qty) {
+        InventoryManager.sellItem(itemId, n);
+        this.renderItems();
+        this.updateResources();
+        overlay.remove();
+      }
+    });
+    overlay.querySelector('#btn-equip-item')?.addEventListener('click', () => {
+      // Show character selection for equip
+      const chars = GameState.owned_characters;
+      const canEquip = chars.filter(c => {
+        const owned = GameState.getOwnedChar(c.id);
+        const def = DataLoader.getCharacter(c.id);
+        if (!owned || !def) return false;
+        if (item.equip_requirement?.level && owned.level < item.equip_requirement.level) return false;
+        if (item.equip_requirement?.element && def.element !== item.equip_requirement.element) return false;
+        return true;
+      });
+      if (canEquip.length === 0) {
+        this.showToast('没有符合装备条件的角色！', 'error');
+      } else if (canEquip.length === 1) {
+        InventoryManager.equipItem(canEquip[0].id, itemId);
+        this.showToast(`已装备到 ${DataLoader.getCharacter(canEquip[0].id)?.name}`, 'success');
+        this.renderItems();
+        overlay.remove();
+      } else {
+        // Let user pick
+        const charList = canEquip.map(c => `<option value="${c.id}">${DataLoader.getCharacter(c.id)?.name} Lv${c.level}</option>`).join('');
+        const sel = prompt(`选择角色:\n${canEquip.map((c,i) => `${i+1}. ${DataLoader.getCharacter(c.id)?.name} Lv${c.level}`).join('\n')}`, '1');
+        const idx = parseInt(sel) - 1;
+        if (idx >= 0 && idx < canEquip.length) {
+          InventoryManager.equipItem(canEquip[idx].id, itemId);
+          this.showToast('装备成功！', 'success');
+          this.renderItems();
+        }
+        overlay.remove();
+      }
+    });
+    overlay.querySelector('#btn-use-item')?.addEventListener('click', () => {
+      if (InventoryManager.useItem(itemId, null)) {
+        this.showToast(`使用了${item.name}`, 'success');
+        this.renderItems();
+        overlay.remove();
+      }
+    });
+  },
+
+  /* ---- Helpers ---- */
+  createImage(src, element, name) {
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = name || '';
+    img.onerror = () => {
+      const div = document.createElement('div');
+      div.textContent = (name || '?')[0];
+      div.style.cssText = `width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:inherit;font-weight:700;background:var(--${element || 'light'})22;color:var(--${element || 'light'});border-radius:inherit;`;
+      img.replaceWith(div);
+    };
+    return img;
+  },
+
+  createImageHtml(src, element, name, className) {
+    if (!src) return null;
+    return `<img src="${src}" alt="${name || ''}" class="${className}" onerror="this.outerHTML='<div class=\\'${className}\\' style=\\'display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:700;background:var(--${element || 'light'})22;color:var(--${element || 'light'});\\'>${(name||'?')[0]}</div>'">`;
+  },
+
+  showImageViewer(src, name) {
+    const overlay = document.createElement('div');
+    overlay.className = 'image-viewer-overlay';
+    overlay.innerHTML = `<img src="${src}" alt="${name || ''}">`;
+    overlay.addEventListener('click', () => overlay.remove());
+    document.body.appendChild(overlay);
+  },
+
+  showBattle() {
+    document.getElementById('battle-overlay').classList.add('active');
+  },
+
+  hideBattle() {
+    document.getElementById('battle-overlay').classList.remove('active');
+    document.getElementById('speed-badge').textContent = '1x';
+    document.getElementById('btn-pause').textContent = '暂停';
+    GameState.current_battle = null;
+    this.renderAll();
+  },
+
+  /* ---- Gear Gacha ---- */
+  renderGearGachaPanel() {
+    const maxChapter = GameState.getAvailableGearChapter();
+    const select = document.getElementById('gear-chapter-select');
+    if (!select) return;
+    const unlocked = [];
+    for (let ch = 1; ch <= 10; ch++) {
+      if (ch === 1 || DataLoader.getAllStages().some(s => s.chapter === ch && GameState.isStageCleared(s.id))) {
+        unlocked.push(ch);
+      }
+    }
+    if (unlocked.length === 0) unlocked.push(1);
+    select.innerHTML = unlocked.map(ch =>
+      `<option value="${ch}" ${ch === maxChapter ? 'selected' : ''}>第${ch}章 (🪙${GEAR_GACHA_COST[ch]})</option>`
+    ).join('');
+    select.onchange = () => {
+      document.getElementById('gear-gacha-cost').textContent = GEAR_GACHA_COST[parseInt(select.value)];
+    };
+    document.getElementById('gear-gacha-cost').textContent = GEAR_GACHA_COST[maxChapter];
+    document.getElementById('gear-chapter-display').textContent = `第${maxChapter}章`;
+  },
+
+  renderGearInventory() {
+    const grid = document.getElementById('gear-inventory-grid');
+    if (!grid) return;
+    const gears = GameState.gear_inventory;
+
+    // Quick dismantle toggle (insert before grid)
+    let toggleWrap = document.getElementById('quick-dismantle-wrap');
+    if (gears.length === 0) {
+      if (toggleWrap) toggleWrap.style.display = 'none';
+      grid.innerHTML = '<div class="empty-state">暂无装备，去抽奖吧！</div>';
+      return;
+    }
+
+    if (!toggleWrap) {
+      toggleWrap = document.createElement('div');
+      toggleWrap.id = 'quick-dismantle-wrap';
+      toggleWrap.style.cssText = 'text-align:right;margin-bottom:6px;';
+      grid.parentNode.insertBefore(toggleWrap, grid);
+    }
+    toggleWrap.style.display = 'block';
+    toggleWrap.innerHTML = `
+      <button class="btn btn-sm ${this._quickDismantle ? 'btn-danger' : 'btn-secondary'}" id="btn-quick-dismantle">
+        ${this._quickDismantle ? '⚡快速分解 ON' : '快速分解 OFF'}
+      </button>
+    `;
+
+    const slotIcons = { weapon: '⚔️', armor: '🛡️', accessory: '💍' };
+    grid.innerHTML = gears.map(g => {
+      const base = GameState.getGearBase(g.base_id);
+      if (!base) return '';
+      const rarityColor = `var(--rarity-${g.rarity.toLowerCase()})`;
+      const iconPath = `assets/gear/${g.base_id}.png`;
+      const dismantleHint = this._quickDismantle && !g.equipped_to
+        ? `🪙${GEAR_SELL_PRICE[g.rarity]}` : '';
+      return `
+        <div class="gear-card rarity-${g.rarity}" data-gear="${g.gear_id}">
+          <div class="gear-icon" style="background:${rarityColor}22;color:${rarityColor};">
+            <img src="${iconPath}" class="gear-icon-img" onerror="this.style.display='none';this.parentElement.textContent='${slotIcons[base.slot]||'⚙'}';this.parentElement.style.color='${rarityColor}';" alt="">
+          </div>
+          <div class="gear-name">${base.name}</div>
+          <div class="gear-rarity" style="color:${rarityColor};">${g.rarity}</div>
+          ${g.equipped_to ? '<div class="gear-equipped-badge">已装</div>' : ''}
+          <div class="gear-slot-badge">${base.slot === 'weapon' ? '武' : base.slot === 'armor' ? '防' : '饰'}</div>
+          ${dismantleHint ? `<div style="font-size:9px;color:var(--warning);margin-top:2px;">${dismantleHint}</div>` : ''}
+        </div>`;
+    }).join('');
+
+    // Toggle button
+    const toggleBtn = toggleWrap.querySelector('#btn-quick-dismantle');
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', () => {
+        this._quickDismantle = !this._quickDismantle;
+        this.showToast(this._quickDismantle ? '快速分解模式开启 — 点击装备直接出售' : '快速分解模式关闭', 'info');
+        if (!this._quickDismantle) { this.renderGearInventory(); return; }
+        // Re-render to show dismantle prices
+        this.renderGearInventory();
+      });
+    }
+
+    // Gear card clicks
+    const self = this;
+    grid.querySelectorAll('.gear-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const gearId = card.dataset.gear;
+        if (self._quickDismantle) {
+          const gear = GameState.getGearInstance(gearId);
+          if (!gear) return;
+          if (gear.equipped_to) {
+            self.showToast('已装备的装备不能快速分解', 'warning');
+            return;
+          }
+          const base = GameState.getGearBase(gear.base_id);
+          const dismantle = () => {
+            GameState.addGold(GEAR_SELL_PRICE[gear.rarity]);
+            GameState.removeGearInstance(gearId);
+            self.showToast(`分解 ${gear.rarity} ${base?.name || '?'} 🪙+${GEAR_SELL_PRICE[gear.rarity]}`, 'info');
+            self.renderItems();
+          };
+          if (gear.rarity === 'SSR') {
+            if (confirm(`确定分解 ${gear.rarity} ${base?.name || '?'} 获得 🪙${GEAR_SELL_PRICE[gear.rarity]}？`)) dismantle();
+          } else {
+            dismantle();
+          }
+        } else {
+          self.showGearDetail(gearId);
+        }
+      });
+    });
+  },
+
+  showGearDetail(gearId) {
+    const gear = GameState.getGearInstance(gearId);
+    if (!gear) return;
+    const base = GameState.getGearBase(gear.base_id);
+    if (!base) return;
+    const rarityColor = `var(--rarity-${gear.rarity.toLowerCase()})`;
+    const slotNames = { weapon: '武器', armor: '防具', accessory: '饰品' };
+    const iconPath = `assets/gear/${gear.base_id}.png`;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+      <div class="modal">
+        <button class="close-btn" id="gear-detail-close">&times;</button>
+        <div style="text-align:center;">
+          <img src="${iconPath}" style="width:80px;height:80px;object-fit:contain;border-radius:12px;" onerror="this.outerHTML='<div style=font-size:60px;>⚙</div>'" alt="">
+          <h3 style="color:${rarityColor};">${gear.rarity} ${base.name}</h3>
+          <p style="font-size:11px;color:var(--text-muted);">${slotNames[base.slot]} | 第${base.chapter}章解锁</p>
+          ${gear.equipped_to ? `<p style="font-size:11px;color:var(--success);">已装备于: ${DataLoader.getCharacter(gear.equipped_to)?.name || '?'}</p>` : ''}
+        </div>
+        <div class="section-title">属性</div>
+        ${Object.entries(gear.stats).map(([k, v]) => {
+          const labels = { hp: '生命', atk: '攻击', def: '防御', spd: '速度', crit_rate: '暴击率', crit_dmg: '暴伤' };
+          const format = k === 'crit_rate' ? `${(v*100).toFixed(1)}%` : k === 'crit_dmg' ? `${v.toFixed(1)}x` : `+${v}`;
+          return `<div class="stat-row"><span class="stat-label">${labels[k]||k}</span><span class="stat-value">${format}</span></div>`;
+        }).join('')}
+        <div class="flex-row" style="margin-top:12px;gap:6px;">
+          ${!gear.equipped_to ? `<button class="btn btn-sm btn-primary" id="btn-gear-equip">装备</button>` : `<button class="btn btn-sm btn-secondary" id="btn-gear-unequip">卸下</button>`}
+          <button class="btn btn-sm btn-warning" id="btn-gear-sell">出售 🪙${GEAR_SELL_PRICE[gear.rarity]}</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.querySelector('#gear-detail-close').addEventListener('click', () => overlay.remove());
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+
+    overlay.querySelector('#btn-gear-sell')?.addEventListener('click', () => {
+      if (confirm(`出售 ${gear.rarity} ${base.name} 获得 🪙${GEAR_SELL_PRICE[gear.rarity]}？`)) {
+        if (gear.equipped_to) {
+          const owned = GameState.getOwnedChar(gear.equipped_to);
+          if (owned) {
+            for (const [slot, val] of Object.entries(owned.equipment || {})) {
+              if (val === gearId) delete owned.equipment[slot];
+            }
+          }
+        }
+        GameState.addGold(GEAR_SELL_PRICE[gear.rarity]);
+        GameState.removeGearInstance(gearId);
+        this.showToast(`出售成功！🪙+${GEAR_SELL_PRICE[gear.rarity]}`, 'info');
+        this.renderItems();
+        overlay.remove();
+      }
+    });
+
+    if (!gear.equipped_to) {
+      overlay.querySelector('#btn-gear-equip')?.addEventListener('click', () => {
+        const chars = GameState.owned_characters.filter(c => true);
+        if (chars.length === 0) {
+          this.showToast('没有角色！', 'error');
+        } else if (chars.length === 1) {
+          InventoryManager.equipItem(chars[0].id, gearId);
+          this.showToast('装备成功！', 'success');
+          this.renderItems();
+          overlay.remove();
+        } else {
+          const sel = prompt(`选择角色:\n${chars.map((c,i) => `${i+1}. ${DataLoader.getCharacter(c.id)?.name} Lv${c.level}`).join('\n')}`, '1');
+          const idx = parseInt(sel) - 1;
+          if (idx >= 0 && idx < chars.length) {
+            InventoryManager.equipItem(chars[idx].id, gearId);
+            this.showToast('装备成功！', 'success');
+            this.renderItems();
+          }
+          overlay.remove();
+        }
+      });
+    } else {
+      overlay.querySelector('#btn-gear-unequip')?.addEventListener('click', () => {
+        const owned = GameState.getOwnedChar(gear.equipped_to);
+        if (owned) {
+          for (const [slot, val] of Object.entries(owned.equipment || {})) {
+            if (val === gearId) {
+              InventoryManager.unequipItem(gear.equipped_to, slot);
+              this.showToast('已卸下装备', 'info');
+              this.renderItems();
+              break;
+            }
+          }
+        }
+        overlay.remove();
+      });
+    }
+  },
+
+  async doGearGacha(count) {
+    const chapter = parseInt(document.getElementById('gear-chapter-select')?.value) || 1;
+    const costPerPull = GEAR_GACHA_COST[chapter] || 500;
+    let totalCost = costPerPull * count;
+    if (count === 5) totalCost = Math.floor(totalCost * 0.9);
+
+    if (GameState.gold < totalCost) {
+      this.showToast(`金币不足！需要 🪙${totalCost.toLocaleString()}`, 'error');
+      return;
+    }
+
+    GameState.addGold(-totalCost);
+
+    const pool = getGearPool(chapter);
+    const results = [];
+    for (let i = 0; i < count; i++) {
+      const roll = Math.random() * 100;
+      let cumulative = 0;
+      let rarity = 'N';
+      for (const rate of GEAR_GACHA_RATES) {
+        cumulative += rate.weight;
+        if (roll < cumulative) { rarity = rate.rarity; break; }
+      }
+      const base = pool[Math.floor(Math.random() * pool.length)];
+      const gear = GameState.addGearInstance(base.base_id, rarity);
+      if (gear) results.push({ gear, base, rarity });
+    }
+
+    GameState.save();
+    this.updateResources();
+    this.showGearGachaResult(results);
+    this.renderGearInventory();
+  },
+
+  showGearGachaResult(results) {
+    const overlay = document.createElement('div');
+    overlay.className = 'gacha-result-overlay';
+
+    overlay.innerHTML = `
+      <div class="gacha-multi-title">⚙ 装备抽奖结果</div>
+      <div class="gacha-multi-grid">
+        ${results.map(r => {
+          const color = `var(--rarity-${r.rarity.toLowerCase()})`;
+          const iconPath = `assets/gear/${r.base.base_id}.png`;
+          return `<div class="gear-result-card rarity-${r.rarity}">
+            <img src="${iconPath}" style="width:50px;height:50px;object-fit:contain;border-radius:8px;" onerror="this.outerHTML='<div style=font-size:36px;>⚙</div>'" alt="">
+            <div class="multi-name">${r.base.name}</div>
+            <div class="multi-rarity" style="color:${color};">${r.rarity}</div>
+          </div>`;
+        }).join('')}
+      </div>
+      <button class="btn btn-primary gacha-multi-ok" id="gear-result-ok">确定</button>
+    `;
+
+    document.body.appendChild(overlay);
+    overlay.querySelector('#gear-result-ok').addEventListener('click', () => overlay.remove());
+  },
+
+  /* ---- Tower Screen ---- */
+  renderTowerScreen() {
+    GameState.checkTowerDailyReset();
+    const content = document.getElementById('tower-content');
+    const backBtn = document.querySelector('#screen-tower .tower-back-btn-wrap');
+
+    if (this._activeTower) {
+      // Show floor list for specific tower
+      backBtn.style.display = 'block';
+      this.renderTowerFloorList(this._activeTower);
+    } else {
+      // Show overview of all 4 towers
+      backBtn.style.display = 'none';
+      content.innerHTML = `
+        <div class="section-title">🗼 资源塔</div>
+        <p style="font-size:11px;color:var(--text-muted);margin-bottom:10px;">每座塔25层，每层有强大的BOSS守卫。每日3次免费挑战，首次通关不消耗次数。</p>
+        <div class="tower-overview">
+          ${TOWER_CONFIG.map(tc => {
+            const prog = GameState.getTowerProgress(tc.type);
+            const attempts = GameState.getTowerAttempts(tc.type);
+            return `
+              <div class="tower-card ${tc.cssClass}" onclick="GameUI._activeTower='${tc.type}';GameUI.renderTowerScreen();">
+                <div class="tower-icon">${tc.icon}</div>
+                <div class="tower-name">${tc.name}</div>
+                <div class="tower-reward">${tc.type === 'gold' ? '金币奖励' : tc.type === 'gems' ? '宝石奖励' : tc.type === 'exp' ? '经验奖励' : '体力奖励'}</div>
+                <div class="tower-progress">进度: ${prog.highestCleared}/25</div>
+                <div class="tower-attempts">剩余次数: ${attempts}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+  },
+
+  renderTowerFloorList(towerType) {
+    const config = TOWER_CONFIG.find(t => t.type === towerType);
+    if (!config) return;
+
+    GameState.checkTowerDailyReset();
+    const prog = GameState.getTowerProgress(towerType);
+    const attempts = GameState.getTowerAttempts(towerType);
+    const content = document.getElementById('tower-content');
+
+    let html = `
+      <div class="section-title">${config.icon} ${config.name}</div>
+      <div class="flex-between" style="margin-bottom:8px;">
+        <span style="font-size:11px;color:var(--text-muted);">进度: ${prog.highestCleared}/25</span>
+        <span style="font-size:11px;color:var(--text-muted);">剩余次数: ${attempts}</span>
+      </div>
+    `;
+
+    for (let floor = 1; floor <= TOWER_FLOORS; floor++) {
+      const cleared = GameState.isTowerFloorCleared(towerType, floor);
+      const unlocked = GameState.canChallenge(towerType, floor);
+      const isFirstClear = !cleared;
+      const bossPortrait = getTowerBossPortrait(floor);
+      const bossElement = getTowerBossElement(floor);
+      const reward = config.getReward(floor);
+      const rewardStr = config.rewardType === 'gold' ? `🪙${reward.toLocaleString()}`
+        : config.rewardType === 'gems' ? `💎${reward}`
+        : config.rewardType === 'exp' ? `⭐${reward.toLocaleString()}`
+        : `⚡${reward}`;
+
+      html += `
+        <div class="card tower-floor-card ${cleared ? 'cleared' : ''} ${!unlocked ? 'locked' : ''}"
+             data-floor="${floor}"
+             onclick="${unlocked ? `GameUI._challengeTowerFloor('${towerType}', ${floor})` : ''}">
+          <img src="${bossPortrait}" class="boss-preview" alt="boss" onerror="this.outerHTML='<span style=font-size:24px;>👹</span>'">
+          <div class="floor-info">
+            <div class="floor-name">${floor}F ${cleared ? '✓' : ''}</div>
+            <div class="floor-meta">元素: ${bossElement} | BOSS</div>
+          </div>
+          <div class="floor-reward">${rewardStr}</div>
+          <div class="floor-num">${cleared ? '✓' : floor}</div>
+        </div>
+      `;
+    }
+
+    // Sweep section
+    const canSweep = prog.highestCleared > 0 && attempts > 0;
+    const sweepReward = prog.highestCleared > 0 ? config.getReward(prog.highestCleared) : 0;
+    const sweepRewardStr = config.rewardType === 'gold' ? `🪙${sweepReward.toLocaleString()}`
+      : config.rewardType === 'gems' ? `💎${sweepReward}`
+      : config.rewardType === 'exp' ? `⭐${sweepReward.toLocaleString()}`
+      : `⚡${sweepReward}`;
+    html += `
+      <div class="tower-sweep-section">
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">
+          扫荡最高层 ${prog.highestCleared}F，奖励 ${sweepRewardStr}，消耗1次次数
+        </p>
+        <button class="btn btn-sm btn-warning" ${canSweep ? '' : 'disabled'}
+                onclick="TowerEngine.sweepTower('${towerType}')">
+          ⚡ 扫荡 ${prog.highestCleared}F
+        </button>
+        ${!canSweep && prog.highestCleared <= 0 ? '<p style="font-size:10px;color:var(--text-muted);margin-top:4px;">暂无通关楼层</p>' : ''}
+        ${!canSweep && prog.highestCleared > 0 ? '<p style="font-size:10px;color:var(--danger);margin-top:4px;">挑战次数不足</p>' : ''}
+      </div>
+    `;
+
+    content.innerHTML = html;
+  },
+
+  _challengeTowerFloor(towerType, floor) {
+    TowerEngine.startTowerBattle(towerType, floor);
+  }
+};
+
+/* =================================================================================
+   SECTION: Battle UI
+   ================================================================================= */
+
+const BattleUI = {
+  turnTimer: null,
+
+  render() {
+    const battle = GameState.current_battle;
+    if (!battle) return;
+
+    // Render enemies
+    const enemiesDiv = document.getElementById('battle-enemies');
+    enemiesDiv.innerHTML = battle.enemies.map(e => this.renderUnit(e)).join('');
+
+    // Render allies
+    const alliesDiv = document.getElementById('battle-allies');
+    alliesDiv.innerHTML = battle.allies.map(a => this.renderUnit(a)).join('');
+
+    // Wave indicator
+    document.getElementById('wave-indicator').textContent = `${battle.currentWave + 1}/${battle.enemyWaves.length}`;
+  },
+
+  renderUnit(unit) {
+    const hpPercent = Math.max(0, (unit.currentHp / unit.maxHp) * 100);
+    const hpColor = hpPercent > 50 ? 'var(--success)' : hpPercent > 25 ? 'var(--warning)' : 'var(--danger)';
+    const def = unit.isAlly ? DataLoader.getCharacter(unit.id) : null;
+    const enemyDef = !unit.isAlly ? DataLoader.getEnemy(unit.id.split('_').slice(0, -1).join('_')) : null;
+    const isBoss = unit.isBoss || (enemyDef?.id || '').startsWith('boss_');
+    const portrait = unit.portrait || (unit.isAlly ? def?.portrait : enemyDef?.portrait);
+    const imgClass = isBoss ? 'unit-img boss' : 'unit-img';
+    const placeholderClass = isBoss ? 'unit-placeholder boss' : 'unit-placeholder';
+
+    let imgHtml;
+    if (portrait) {
+      imgHtml = `<img src="${portrait}" alt="${unit.name}" class="${imgClass}" style="border-color:var(--${unit.element});" onerror="this.outerHTML='<div class=\\'${placeholderClass}\\' style=\\'background:var(--${unit.element})22;color:var(--${unit.element});\\'>${unit.name[0]}</div>'">`;
+    } else {
+      imgHtml = `<div class="${placeholderClass}" style="background:var(--${unit.element})22;color:var(--${unit.element});border-color:var(--${unit.element});">${unit.name[0]}</div>`;
+    }
+
+    const effectsHtml = unit.effects.map(e => {
+      const labels = { burn: '🔥', poison: '☠️', bleed: '🩸', stun: '💫', shield: '🛡️', atk_up: '⬆', def_up: '🛡⬆', spd_up: '💨⬆', atk_down: '⬇', def_down: '🛡⬇', spd_down: '💨⬇' };
+      return `<span style="font-size:10px;" title="${e.type}(${e.duration}t)">${labels[e.type] || e.type}</span>`;
+    }).join('');
+
+    const borderColor = `var(--${unit.element})`;
+    return `
+      <div class="battle-unit" data-unit="${unit.id}">
+        ${imgHtml}
+        <div class="unit-name" style="color:${borderColor};">${unit.name}</div>
+        <div style="font-size:9px;color:var(--text-muted);min-height:14px;">${effectsHtml}</div>
+        <div class="hp-bar-outer"><div class="hp-bar-inner ${hpPercent < 25 ? 'low' : hpPercent < 50 ? 'mid' : ''}" style="width:${hpPercent}%;background:${hpColor};"></div></div>
+        <div style="font-size:9px;color:var(--text-muted);">${unit.currentHp}/${unit.maxHp}</div>
+      </div>
+    `;
+  },
+
+  spawnParticles(unit, skillType) {
+    const el = document.querySelector(`.battle-unit[data-unit="${unit.id}"]`);
+    if (!el) return;
+    const scene = document.getElementById('battle-scene');
+    const rect = el.getBoundingClientRect();
+    const sr = scene.getBoundingClientRect();
+    const cx = rect.left - sr.left + rect.width / 2;
+    const cy = rect.top - sr.top + rect.height / 2;
+
+    const elementColors = {
+      fire: ['#ff6b6b', '#ff9f43', '#ff4757', '#ffd32a', '#ff6348'],
+      water: ['#4ecdc4', '#00d2d3', '#54a0ff', '#7bedff', '#0abde3'],
+      wind: ['#7bed9f', '#2ed573', '#a8e6cf', '#55efc4', '#00b894'],
+      light: ['#feca57', '#ffd700', '#fff5b8', '#f9ca24', '#ffeaa7'],
+      dark: ['#a55eea', '#8854d0', '#6c5ce7', '#9b59b6', '#b71540'],
+    };
+    const colors = elementColors[unit.element] || elementColors.fire;
+    const count = skillType === 'damage' ? 14 : skillType === 'heal' ? 10 : 12;
+    const isSlash = skillType === 'damage';
+
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('div');
+      const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.6;
+      const dist = 30 + Math.random() * 50;
+      p.className = 'particle' + (isSlash ? ' slash' : '');
+      p.style.cssText = `
+        left: ${cx}px; top: ${cy}px;
+        width: ${4 + Math.random() * 7}px; height: ${2 + Math.random() * 6}px;
+        background: ${colors[Math.floor(Math.random() * colors.length)]};
+        --dx: ${Math.cos(angle) * dist}px;
+        --dy: ${Math.sin(angle) * dist}px;
+        --rot: ${(Math.random() - 0.5) * 360}deg;
+        box-shadow: 0 0 ${4 + Math.random() * 6}px currentColor;
+      `;
+      p.style.color = p.style.background;
+      scene.appendChild(p);
+      setTimeout(() => p.remove(), 750);
+    }
+  },
+
+  showAction(unit, skill) {
+    const el = document.querySelector(`.battle-unit[data-unit="${unit.id}"]`);
+    if (el) {
+      el.classList.add('attacking');
+      setTimeout(() => el.classList.remove('attacking'), 500);
+    }
+    const stype = (skill && skill.type) || 'damage';
+    this.spawnParticles(unit, stype);
+  },
+
+  showDamage(unit, amount, isCrit, isHeal) {
+    const el = document.querySelector(`.battle-unit[data-unit="${unit.id}"]`);
+    if (el) {
+      el.classList.add('hit');
+      setTimeout(() => el.classList.remove('hit'), 300);
+    }
+
+    // Floating damage number
+    const scene = document.getElementById('battle-scene');
+    const dmgEl = document.createElement('div');
+    dmgEl.className = `damage-number ${isHeal ? 'heal' : ''} ${isCrit ? 'crit' : ''}`;
+    dmgEl.textContent = isHeal ? `+${amount}` : (isCrit ? `${amount}!!` : `${amount}`);
+    dmgEl.style.color = isHeal ? 'var(--success)' : isCrit ? 'var(--warning)' : 'var(--danger)';
+
+    // Position near unit
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      const sceneRect = scene.getBoundingClientRect();
+      dmgEl.style.left = (rect.left - sceneRect.left + rect.width / 2 - 20) + 'px';
+      dmgEl.style.top = (rect.top - sceneRect.top) + 'px';
+    } else {
+      dmgEl.style.left = '50%';
+      dmgEl.style.top = '40%';
+    }
+
+    scene.appendChild(dmgEl);
+    setTimeout(() => dmgEl.remove(), 1300);
+  },
+
+  log(msg, type) {
+    const battle = GameState.current_battle;
+    if (!battle) return;
+    battle.battleLog.push({ msg, type });
+    const logDiv = document.getElementById('battle-log');
+    const entry = document.createElement('div');
+    entry.className = `log-entry ${type}`;
+    entry.textContent = msg;
+    logDiv.appendChild(entry);
+    // Auto-scroll only when expanded
+    if (!logDiv.classList.contains('collapsed')) {
+      logDiv.scrollTop = logDiv.scrollHeight;
+    }
+    // Keep log short
+    while (logDiv.children.length > 80) {
+      logDiv.removeChild(logDiv.firstChild);
+    }
+  },
+
+  toggleLog() {
+    const logDiv = document.getElementById('battle-log');
+    const arrow = document.getElementById('log-arrow');
+    const isCollapsed = logDiv.classList.toggle('collapsed');
+    arrow.classList.toggle('open', !isCollapsed);
+  },
+
+  scheduleTurn() {
+    const battle = GameState.current_battle;
+    if (!battle || battle.phase !== 'battle') return;
+
+    // speed 0 = instant skip (process all turns synchronously)
+    // processTurn/nextWave already calls showResult when battle ends, don't double-call
+    if (battle.speed === 0) {
+      while (battle.phase === 'battle' && !battle.paused) {
+        BattleEngine.processTurn();
+      }
+      return;
+    }
+
+    const delay = battle.speed === 4 ? 150 : battle.speed === 2 ? 600 : 1200;
+
+    this.turnTimer = setTimeout(() => {
+      if (battle.paused) {
+        this.scheduleTurn();
+        return;
+      }
+      // Render first (update HP bars from previous turn), then process next turn
+      this.render();
+      BattleEngine.processTurn();
+      if (battle.phase === 'battle') {
+        this.scheduleTurn();
+      }
+    }, delay);
+  },
+
+  togglePause() {
+    const battle = GameState.current_battle;
+    if (!battle) return;
+    battle.paused = !battle.paused;
+    document.getElementById('btn-pause').textContent = battle.paused ? '继续' : '暂停';
+    if (!battle.paused) this.scheduleTurn();
+  },
+
+  setSpeed(speed) {
+    const battle = GameState.current_battle;
+    if (!battle) return;
+    battle.speed = speed;
+    document.getElementById('speed-badge').textContent = speed === 0 ? '跳过' : `${speed}x`;
+    if (speed === 0) {
+      // Auto-unpause so skip actually runs
+      if (battle.paused) {
+        battle.paused = false;
+        document.getElementById('btn-pause').textContent = '暂停';
+      }
+      clearTimeout(this.turnTimer);
+      this.scheduleTurn();
+    }
+  },
+
+  flee() {
+    if (confirm('确定要逃跑吗？')) {
+      const battle = GameState.current_battle;
+      if (battle) {
+        battle.phase = 'defeat';
+        clearTimeout(this.turnTimer);
+        if (!battle.isTowerBattle) {
+          GameState.stamina = Math.min(GameState.max_stamina, GameState.stamina + 1); // Refund 1 stamina (normal battles only)
+        }
+        this.showResultBody(false, 0, 0, []);
+      }
+    }
+  },
+
+  showResult(victory) {
+    clearTimeout(this.turnTimer);
+    const battle = GameState.current_battle;
+    if (!battle) return;
+    this.showResultBody(victory, battle.goldEarned, battle.expEarned, battle.itemsEarned, battle.allyDeaths || 0);
+  },
+
+  showResultBody(victory, gold, exp, items, allyDeaths = 0) {
+    const battle = GameState.current_battle;
+    const isTower = battle?.isTowerBattle;
+    const stars = victory ? (allyDeaths === 0 ? 3 : allyDeaths === 1 ? 2 : 1) : 0;
+    const starDisplay = victory ? ('★'.repeat(stars) + '☆'.repeat(3 - stars)) : '';
+
+    // Tower reward calculation
+    let towerReward = 0;
+    let towerRewardLabel = '';
+    if (isTower && victory && battle.towerConfig) {
+      towerReward = battle.towerConfig.getReward(battle.towerFloor);
+      const rType = battle.towerConfig.rewardType;
+      if (rType === 'gold') towerRewardLabel = `🪙 金币: +${towerReward.toLocaleString()}`;
+      else if (rType === 'gems') towerRewardLabel = `💎 宝石: +${towerReward}`;
+      else if (rType === 'exp') towerRewardLabel = `⭐ 经验: +${towerReward.toLocaleString()}`;
+      else if (rType === 'stamina') towerRewardLabel = `⚡ 体力: +${towerReward}`;
+    }
+
+    const overlay = document.createElement('div');
+    overlay.className = 'battle-result';
+    overlay.innerHTML = `
+      <div class="result-title ${victory ? 'win' : 'lose'}">${victory ? '胜利！' : '失败...'}</div>
+      ${victory ? `
+        <div class="rewards">
+          ${!isTower ? `<div style="font-size:22px;color:var(--warning);">${starDisplay}</div>` : ''}
+          ${isTower ? `<div style="font-size:16px;font-weight:700;color:var(--warning);">${towerRewardLabel}</div>` : ''}
+          ${!isTower && gold > 0 ? `<div>🪙 金币: +${gold}</div>` : ''}
+          ${!isTower && exp > 0 ? `<div>⭐ 经验: +${exp}</div>` : ''}
+          ${!isTower && items.length > 0 ? `<div>📦 掉落: ${items.map(i => DataLoader.getItem(i.item_id)?.name || i.item_id).join(', ')}</div>` : ''}
+        </div>
+      ` : ''}
+      <button class="btn btn-primary" id="btn-battle-done">确定</button>
+    `;
+    document.getElementById('battle-scene').appendChild(overlay);
+
+    overlay.querySelector('#btn-battle-done').addEventListener('click', () => {
+      overlay.remove();
+      const isTowerBattle = GameState.current_battle?.isTowerBattle;
+      const towerType = GameState.current_battle?.towerType;
+      const towerFloor = GameState.current_battle?.towerFloor;
+      // Capture stageId before hideBattle() nulls current_battle
+      const stageId = GameState.current_battle?.stageId;
+      GameUI.hideBattle();
+
+      if (victory && isTowerBattle && towerType && towerFloor) {
+        // Grant tower reward
+        if (battle?.towerConfig) {
+          const rType = battle.towerConfig.rewardType;
+          const reward = battle.towerConfig.getReward(towerFloor);
+          if (rType === 'gold') GameState.addGold(reward);
+          else if (rType === 'gems') GameState.addGems(reward);
+          else if (rType === 'exp') GameState.addExp(reward);
+          else if (rType === 'stamina') {
+            GameState.stamina = Math.min(GameState.max_stamina, GameState.stamina + reward);
+            GameState.save();
+          }
+        }
+        GameState.clearTowerFloor(towerType, towerFloor);
+        // Navigate to tower screen
+        GameUI.switchScreen('tower');
+      } else if (victory && stageId) {
+        const nextStage = StageManager.getNextStage(stageId);
+        if (nextStage && GameState.stamina >= 5) {
+          setTimeout(() => {
+            if (confirm(`下一关: ${nextStage.name}，要挑战吗？`)) {
+              GameUI._activeChapter = nextStage.chapter;
+              BattleEngine.startBattle(nextStage.id);
+            }
+          }, 300);
+        }
+      }
+    });
+  }
+};
+
+/* =================================================================================
+   SECTION: Initialization
+   ================================================================================= */
+
+// Item category filter
+document.getElementById('item-categories').addEventListener('click', (e) => {
+  if (e.target.classList.contains('item-cat')) {
+    document.querySelectorAll('.item-cat').forEach(c => c.classList.remove('active'));
+    e.target.classList.add('active');
+    const cat = e.target.dataset.cat;
+    const grid = document.getElementById('item-grid');
+    grid.querySelectorAll('.item-card').forEach(card => {
+      const item = DataLoader.getItem(card.dataset.item);
+      if (!item) return;
+      if (cat === 'all' || item.type === cat) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+});
+
+// Boot sequence
+async function boot() {
+  const data = await DataLoader.loadAll();
+  if (!data.characters || !data.enemies || !data.skills || !data.stages || !data.items) {
+    document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#ff4757;font-size:18px;text-align:center;padding:20px;">加载数据失败。<br>请使用 HTTP 服务器打开（如 python -m http.server），<br>或检查内嵌数据是否完整。</div>';
+    return;
+  }
+
+  const saveData = SaveManager.load();
+  GameState.init(saveData);
+  GameState.checkTowerDailyReset();
+
+  // If no characters, give starter
+  if (GameState.owned_characters.length === 0) {
+    const starters = DataLoader.getAllCharacters().filter(c => c.rarity === 'R');
+    if (starters.length > 0) {
+      const starter = starters[Math.floor(Math.random() * starters.length)];
+      GameState.addCharacter(starter.id);
+      GameUI.showToast(`初始角色: ${starter.name}！`, 'success');
+    }
+  }
+
+  GameUI.init();
+}
+
+boot();
+</script>
+
+</body>
+</html>

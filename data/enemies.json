@@ -1,0 +1,733 @@
+{
+  "enemies": [
+    {
+      "id": "slime_fire",
+      "name": "火焰史莱姆",
+      "element": "fire",
+      "stats": {
+        "hp": 500,
+        "atk": 55,
+        "def": 25,
+        "spd": 80,
+        "crit_rate": 0.03,
+        "crit_dmg": 1.3
+      },
+      "skill_ids": [
+        "flame_burst_mini"
+      ],
+      "portrait": "assets/enemies/slime_fire.png",
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "monster, fire slime, cute, simple, chibi, glowing red, game monster",
+        "width": 512,
+        "height": 512
+      },
+      "gold_drop": 40,
+      "exp_drop": 25,
+      "item_drops": [
+        {
+          "item_id": "fire_crystal",
+          "drop_rate": 0.1
+        }
+      ]
+    },
+    {
+      "id": "slime_water",
+      "name": "冰泉史莱姆",
+      "element": "water",
+      "stats": {
+        "hp": 550,
+        "atk": 50,
+        "def": 30,
+        "spd": 75,
+        "crit_rate": 0.03,
+        "crit_dmg": 1.3
+      },
+      "skill_ids": [
+        "water_bubble"
+      ],
+      "portrait": "assets/enemies/slime_water.png",
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "monster, water slime, cute, simple, chibi, blue bubbles, game monster",
+        "width": 512,
+        "height": 512
+      },
+      "gold_drop": 40,
+      "exp_drop": 25,
+      "item_drops": [
+        {
+          "item_id": "water_crystal",
+          "drop_rate": 0.1
+        }
+      ]
+    },
+    {
+      "id": "slime_wind",
+      "name": "旋风史莱姆",
+      "element": "wind",
+      "stats": {
+        "hp": 450,
+        "atk": 60,
+        "def": 20,
+        "spd": 95,
+        "crit_rate": 0.05,
+        "crit_dmg": 1.4
+      },
+      "skill_ids": [
+        "wind_blade"
+      ],
+      "portrait": "assets/enemies/slime_wind.png",
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "monster, wind slime, cute, simple, chibi, green swirl, game monster",
+        "width": 512,
+        "height": 512
+      },
+      "gold_drop": 45,
+      "exp_drop": 28,
+      "item_drops": [
+        {
+          "item_id": "wind_crystal",
+          "drop_rate": 0.1
+        }
+      ]
+    },
+    {
+      "id": "goblin_fire",
+      "name": "烈焰哥布林",
+      "element": "fire",
+      "stats": {
+        "hp": 900,
+        "atk": 85,
+        "def": 45,
+        "spd": 82,
+        "crit_rate": 0.05,
+        "crit_dmg": 1.5
+      },
+      "skill_ids": [
+        "flame_burst_mini",
+        "fire_slash"
+      ],
+      "portrait": "assets/enemies/goblin_fire.png",
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "monster, goblin, fire element, red skin, tusks, holding torch, fierce, game monster",
+        "width": 512,
+        "height": 512
+      },
+      "gold_drop": 80,
+      "exp_drop": 50,
+      "item_drops": [
+        {
+          "item_id": "fire_crystal",
+          "drop_rate": 0.2
+        },
+        {
+          "item_id": "iron_sword",
+          "drop_rate": 0.05
+        }
+      ]
+    },
+    {
+      "id": "shadow_wolf",
+      "name": "暗影狼",
+      "element": "dark",
+      "stats": {
+        "hp": 1200,
+        "atk": 100,
+        "def": 50,
+        "spd": 90,
+        "crit_rate": 0.1,
+        "crit_dmg": 1.6
+      },
+      "skill_ids": [
+        "shadow_strike",
+        "dark_veil"
+      ],
+      "portrait": "assets/enemies/shadow_wolf.png",
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "monster, shadow wolf, dark fur, glowing purple eyes, fierce, game monster",
+        "width": 512,
+        "height": 512
+      },
+      "gold_drop": 120,
+      "exp_drop": 75,
+      "item_drops": [
+        {
+          "item_id": "dark_crystal",
+          "drop_rate": 0.15
+        },
+        {
+          "item_id": "shadow_cloak",
+          "drop_rate": 0.05
+        }
+      ]
+    },
+    {
+      "id": "boss_fire_dragon",
+      "name": "炎龙·拉格纳",
+      "element": "fire",
+      "stats": {
+        "hp": 4500,
+        "atk": 170,
+        "def": 80,
+        "spd": 85,
+        "crit_rate": 0.1,
+        "crit_dmg": 2.0
+      },
+      "skill_ids": [
+        "blazing_aura",
+        "fire_slash"
+      ],
+      "portrait": "assets/enemies/boss_fire_dragon.png",
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "monster, dragon, fire element, huge, scales, breathing fire, epic, boss",
+        "width": 1600,
+        "height": 960
+      },
+      "gold_drop": 500,
+      "exp_drop": 300,
+      "item_drops": [
+        {
+          "item_id": "fire_crystal",
+          "drop_rate": 0.5
+        },
+        {
+          "item_id": "dragon_scale",
+          "drop_rate": 0.15
+        }
+      ]
+    },
+    {
+      "id": "goblin_water",
+      "name": "寒冰哥布林",
+      "element": "water",
+      "stats": {
+        "hp": 850,
+        "atk": 80,
+        "def": 48,
+        "spd": 80,
+        "crit_rate": 0.05,
+        "crit_dmg": 1.5
+      },
+      "skill_ids": [
+        "water_bubble",
+        "ice_lance"
+      ],
+      "portrait": "assets/enemies/goblin_water.png",
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "monster, goblin, water element, blue skin, tusks, holding ice shard, cold mist, game monster",
+        "width": 512,
+        "height": 512
+      },
+      "gold_drop": 80,
+      "exp_drop": 50,
+      "item_drops": [
+        {
+          "item_id": "water_crystal",
+          "drop_rate": 0.2
+        },
+        {
+          "item_id": "iron_armor",
+          "drop_rate": 0.05
+        }
+      ]
+    },
+    {
+      "id": "goblin_wind",
+      "name": "疾风哥布林",
+      "element": "wind",
+      "stats": {
+        "hp": 780,
+        "atk": 90,
+        "def": 38,
+        "spd": 102,
+        "crit_rate": 0.08,
+        "crit_dmg": 1.5
+      },
+      "skill_ids": [
+        "wind_blade",
+        "gale_step"
+      ],
+      "portrait": "assets/enemies/goblin_wind.png",
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "monster, goblin, wind element, green skin, tusks, swirling wind, agile, game monster",
+        "width": 512,
+        "height": 512
+      },
+      "gold_drop": 85,
+      "exp_drop": 52,
+      "item_drops": [
+        {
+          "item_id": "wind_crystal",
+          "drop_rate": 0.2
+        },
+        {
+          "item_id": "iron_sword",
+          "drop_rate": 0.05
+        }
+      ]
+    },
+    {
+      "id": "stone_golem",
+      "name": "岩石魔像",
+      "element": "fire",
+      "stats": {
+        "hp": 2500,
+        "atk": 110,
+        "def": 120,
+        "spd": 50,
+        "crit_rate": 0.02,
+        "crit_dmg": 1.3
+      },
+      "skill_ids": [
+        "fire_slash",
+        "blazing_aura"
+      ],
+      "portrait": "assets/enemies/stone_golem.png",
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "monster, stone golem, magma cracks, huge, tank, fire element, rocky body, ancient, game monster",
+        "width": 512,
+        "height": 512
+      },
+      "gold_drop": 160,
+      "exp_drop": 100,
+      "item_drops": [
+        {
+          "item_id": "fire_crystal",
+          "drop_rate": 0.3
+        },
+        {
+          "item_id": "dragon_scale",
+          "drop_rate": 0.08
+        }
+      ]
+    },
+    {
+      "id": "dark_wraith",
+      "name": "暗影幽灵",
+      "element": "dark",
+      "stats": {
+        "hp": 950,
+        "atk": 140,
+        "def": 40,
+        "spd": 110,
+        "crit_rate": 0.15,
+        "crit_dmg": 1.8
+      },
+      "skill_ids": [
+        "shadow_strike",
+        "dark_veil"
+      ],
+      "portrait": "assets/enemies/dark_wraith.png",
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "monster, dark wraith, ghostly, floating, tattered cloak, purple glow, ethereal, spooky, game monster",
+        "width": 512,
+        "height": 512
+      },
+      "gold_drop": 130,
+      "exp_drop": 85,
+      "item_drops": [
+        {
+          "item_id": "dark_crystal",
+          "drop_rate": 0.25
+        },
+        {
+          "item_id": "shadow_cloak",
+          "drop_rate": 0.08
+        }
+      ]
+    },
+    {
+      "id": "light_elemental",
+      "name": "光之元素",
+      "element": "light",
+      "stats": {
+        "hp": 1100,
+        "atk": 95,
+        "def": 55,
+        "spd": 85,
+        "crit_rate": 0.05,
+        "crit_dmg": 1.5
+      },
+      "skill_ids": [
+        "holy_smite",
+        "divine_shield"
+      ],
+      "portrait": "assets/enemies/light_elemental.png",
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "monster, light elemental, glowing, angelic, floating crystals, holy light, radiant, ethereal, game monster",
+        "width": 512,
+        "height": 512
+      },
+      "gold_drop": 140,
+      "exp_drop": 90,
+      "item_drops": [
+        {
+          "item_id": "light_crystal",
+          "drop_rate": 0.25
+        },
+        {
+          "item_id": "energy_ring",
+          "drop_rate": 0.05
+        }
+      ]
+    },
+    {
+      "id": "boss_ice_serpent",
+      "name": "冰霜巨蟒·斯库拉",
+      "element": "water",
+      "stats": {
+        "hp": 6500,
+        "atk": 190,
+        "def": 90,
+        "spd": 88,
+        "crit_rate": 0.08,
+        "crit_dmg": 1.8
+      },
+      "skill_ids": [
+        "ice_lance",
+        "iron_wall"
+      ],
+      "portrait": "assets/enemies/boss_ice_serpent.png",
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "monster, ice serpent, giant snake, frost scales, ice crystals, cold mist, epic boss, cinematic, masterpiece, 1600x960",
+        "width": 1600,
+        "height": 960
+      },
+      "gold_drop": 600,
+      "exp_drop": 400,
+      "item_drops": [
+        {
+          "item_id": "water_crystal",
+          "drop_rate": 0.5
+        },
+        {
+          "item_id": "dragon_scale",
+          "drop_rate": 0.2
+        }
+      ]
+    },
+    {
+      "id": "boss_storm_eagle",
+      "name": "风暴巨鹰·赛法",
+      "element": "wind",
+      "stats": {
+        "hp": 7000,
+        "atk": 210,
+        "def": 75,
+        "spd": 115,
+        "crit_rate": 0.12,
+        "crit_dmg": 2.0
+      },
+      "skill_ids": [
+        "thunder_clap",
+        "gale_step"
+      ],
+      "portrait": "assets/enemies/boss_storm_eagle.png",
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "monster, storm eagle, giant bird of prey, lightning wings, thunder clouds, epic boss, majestic, fierce, cinematic, masterpiece, 1600x960",
+        "width": 1600,
+        "height": 960
+      },
+      "gold_drop": 700,
+      "exp_drop": 450,
+      "item_drops": [
+        {
+          "item_id": "wind_crystal",
+          "drop_rate": 0.5
+        },
+        {
+          "item_id": "iron_sword",
+          "drop_rate": 0.2
+        }
+      ]
+    },
+    {
+      "id": "boss_shadow_lord",
+      "name": "暗影领主·厄瑞波斯",
+      "element": "dark",
+      "stats": {
+        "hp": 8000,
+        "atk": 230,
+        "def": 85,
+        "spd": 95,
+        "crit_rate": 0.15,
+        "crit_dmg": 2.2
+      },
+      "skill_ids": [
+        "shadow_strike",
+        "dark_veil"
+      ],
+      "portrait": "assets/enemies/boss_shadow_lord.png",
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "monster, shadow lord, dark armored knight, void aura, demonic, massive dark sword, gothic, epic boss, cinematic, masterpiece, 1600x960",
+        "width": 1600,
+        "height": 960
+      },
+      "gold_drop": 800,
+      "exp_drop": 500,
+      "item_drops": [
+        {
+          "item_id": "dark_crystal",
+          "drop_rate": 0.5
+        },
+        {
+          "item_id": "shadow_cloak",
+          "drop_rate": 0.2
+        }
+      ]
+    },
+    {
+      "id": "boss_holy_golem",
+      "name": "圣光巨像·艾瑟伦",
+      "element": "light",
+      "stats": {
+        "hp": 12000,
+        "atk": 200,
+        "def": 150,
+        "spd": 60,
+        "crit_rate": 0.05,
+        "crit_dmg": 1.5
+      },
+      "skill_ids": [
+        "holy_smite",
+        "divine_shield"
+      ],
+      "portrait": "assets/enemies/boss_holy_golem.png",
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "monster, holy golem, giant white-gold construct, angelic runes, divine light, temple guardian, massive, epic boss, cinematic, masterpiece, 1600x960",
+        "width": 1600,
+        "height": 960
+      },
+      "gold_drop": 900,
+      "exp_drop": 600,
+      "item_drops": [
+        {
+          "item_id": "light_crystal",
+          "drop_rate": 0.5
+        },
+        {
+          "item_id": "energy_ring",
+          "drop_rate": 0.2
+        }
+      ]
+    },
+    {
+      "id": "boss_fire_phoenix",
+      "name": "不灭凤凰·伊芙利特",
+      "element": "fire",
+      "stats": {
+        "hp": 9000,
+        "atk": 250,
+        "def": 80,
+        "spd": 110,
+        "crit_rate": 0.15,
+        "crit_dmg": 2.5
+      },
+      "skill_ids": [
+        "fire_slash",
+        "blazing_aura"
+      ],
+      "portrait": "assets/enemies/boss_fire_phoenix.png",
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "monster, fire phoenix, giant flaming bird, reborn from ashes, magma wings, inferno background, epic boss, cinematic, masterpiece, 1600x960",
+        "width": 1600,
+        "height": 960
+      },
+      "gold_drop": 1000,
+      "exp_drop": 650,
+      "item_drops": [
+        {
+          "item_id": "fire_crystal",
+          "drop_rate": 0.5
+        },
+        {
+          "item_id": "dragon_scale",
+          "drop_rate": 0.25
+        }
+      ]
+    },
+    {
+      "id": "boss_water_dragon",
+      "name": "深渊海龙·利维坦",
+      "element": "water",
+      "stats": {
+        "hp": 14000,
+        "atk": 220,
+        "def": 110,
+        "spd": 70,
+        "crit_rate": 0.1,
+        "crit_dmg": 2.0
+      },
+      "skill_ids": [
+        "ice_lance",
+        "healing_rain"
+      ],
+      "portrait": "assets/enemies/boss_water_dragon.png",
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "monster, water dragon, deep sea leviathan, aqua scales, ocean abyss, tentacles, massive, epic boss, cinematic, masterpiece, 1600x960",
+        "width": 1600,
+        "height": 960
+      },
+      "gold_drop": 1200,
+      "exp_drop": 750,
+      "item_drops": [
+        {
+          "item_id": "water_crystal",
+          "drop_rate": 0.5
+        },
+        {
+          "item_id": "dragon_scale",
+          "drop_rate": 0.3
+        }
+      ]
+    },
+    {
+      "id": "boss_wind_tengu",
+      "name": "天狗大妖·崇德",
+      "element": "wind",
+      "stats": {
+        "hp": 10000,
+        "atk": 260,
+        "def": 85,
+        "spd": 130,
+        "crit_rate": 0.18,
+        "crit_dmg": 2.2
+      },
+      "skill_ids": [
+        "thunder_clap",
+        "gale_step"
+      ],
+      "portrait": "assets/enemies/boss_wind_tengu.png",
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "monster, tengu demon, crow wings, japanese yokai, red mask, fan weapon, storm clouds, epic boss, cinematic, masterpiece, 1600x960",
+        "width": 1600,
+        "height": 960
+      },
+      "gold_drop": 1300,
+      "exp_drop": 800,
+      "item_drops": [
+        {
+          "item_id": "wind_crystal",
+          "drop_rate": 0.5
+        },
+        {
+          "item_id": "shadow_cloak",
+          "drop_rate": 0.2
+        }
+      ]
+    },
+    {
+      "id": "boss_dark_lich",
+      "name": "不死巫妖·莫德雷德",
+      "element": "dark",
+      "stats": {
+        "hp": 11000,
+        "atk": 280,
+        "def": 90,
+        "spd": 100,
+        "crit_rate": 0.2,
+        "crit_dmg": 2.5
+      },
+      "skill_ids": [
+        "dark_veil",
+        "shadow_strike"
+      ],
+      "portrait": "assets/enemies/boss_dark_lich.png",
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "monster, dark lich, undead king, skeletal, necromancer robe, dark magic orb, graveyard, eerie green glow, epic boss, cinematic, masterpiece, 1600x960",
+        "width": 1600,
+        "height": 960
+      },
+      "gold_drop": 1500,
+      "exp_drop": 900,
+      "item_drops": [
+        {
+          "item_id": "dark_crystal",
+          "drop_rate": 0.5
+        },
+        {
+          "item_id": "dragon_scale",
+          "drop_rate": 0.3
+        }
+      ]
+    },
+    {
+      "id": "boss_light_titan",
+      "name": "光之泰坦·创世神",
+      "element": "light",
+      "stats": {
+        "hp": 20000,
+        "atk": 300,
+        "def": 130,
+        "spd": 75,
+        "crit_rate": 0.1,
+        "crit_dmg": 2.0
+      },
+      "skill_ids": [
+        "holy_smite",
+        "divine_shield"
+      ],
+      "portrait": "assets/enemies/boss_light_titan.png",
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "monster, light titan, colossal divine being, golden armor, cosmic background, six wings, radiant, ultimate boss, cinematic, masterpiece, 1600x960",
+        "width": 1600,
+        "height": 960
+      },
+      "gold_drop": 2500,
+      "exp_drop": 1500,
+      "item_drops": [
+        {
+          "item_id": "light_crystal",
+          "drop_rate": 0.6
+        },
+        {
+          "item_id": "energy_ring",
+          "drop_rate": 0.3
+        },
+        {
+          "item_id": "dragon_scale",
+          "drop_rate": 0.3
+        }
+      ]
+    }
+  ]
+}

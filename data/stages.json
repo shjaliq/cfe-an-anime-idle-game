@@ -1,0 +1,2520 @@
+{
+  "stages": [
+    {
+      "id": "stage_1_1",
+      "chapter": 1,
+      "stage": 1,
+      "name": "烈焰草原",
+      "unlock_condition": null,
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_fire",
+              "level": 1
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_fire",
+              "level": 1
+            },
+            {
+              "enemy_id": "slime_fire",
+              "level": 1
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_fire",
+              "level": 3
+            }
+          ]
+        }
+      ],
+      "base_gold": 80,
+      "base_exp": 50,
+      "first_clear_bonus": {
+        "gold": 300,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_1_2",
+      "chapter": 1,
+      "stage": 2,
+      "name": "清泉溪流",
+      "unlock_condition": "clear_stage_1_1",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_water",
+              "level": 2
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_water",
+              "level": 2
+            },
+            {
+              "enemy_id": "slime_wind",
+              "level": 2
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_water",
+              "level": 4
+            }
+          ]
+        }
+      ],
+      "base_gold": 90,
+      "base_exp": 55,
+      "first_clear_bonus": {
+        "gold": 350,
+        "items": [
+          {
+            "item_id": "hp_potion_small",
+            "quantity": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_1_3",
+      "chapter": 1,
+      "stage": 3,
+      "name": "狂风山谷",
+      "unlock_condition": "clear_stage_1_2",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_wind",
+              "level": 3
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_wind",
+              "level": 3
+            },
+            {
+              "enemy_id": "slime_fire",
+              "level": 3
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_wind",
+              "level": 5
+            },
+            {
+              "enemy_id": "slime_wind",
+              "level": 5
+            }
+          ]
+        }
+      ],
+      "base_gold": 100,
+      "base_exp": 60,
+      "first_clear_bonus": {
+        "gold": 400,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_1_4",
+      "chapter": 1,
+      "stage": 4,
+      "name": "暗影森林",
+      "unlock_condition": "clear_stage_1_3",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_fire",
+              "level": 4
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_fire",
+              "level": 4
+            },
+            {
+              "enemy_id": "slime_fire",
+              "level": 4
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_fire",
+              "level": 6
+            }
+          ]
+        }
+      ],
+      "base_gold": 120,
+      "base_exp": 75,
+      "first_clear_bonus": {
+        "gold": 500,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_1_5",
+      "chapter": 1,
+      "stage": 5,
+      "name": "龙炎巢穴",
+      "unlock_condition": "clear_stage_1_4",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_fire",
+              "level": 5
+            },
+            {
+              "enemy_id": "slime_fire",
+              "level": 5
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "shadow_wolf",
+              "level": 6
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "boss_fire_dragon",
+              "level": 8
+            }
+          ]
+        }
+      ],
+      "base_gold": 200,
+      "base_exp": 150,
+      "first_clear_bonus": {
+        "gold": 1000,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 3
+          },
+          {
+            "item_id": "dragon_scale",
+            "quantity": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_2_1",
+      "chapter": 2,
+      "stage": 1,
+      "name": "幽暗沼泽",
+      "unlock_condition": "clear_stage_1_5",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_wind",
+              "level": 9
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_wind",
+              "level": 9
+            },
+            {
+              "enemy_id": "slime_water",
+              "level": 9
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_fire",
+              "level": 10
+            }
+          ]
+        }
+      ],
+      "base_gold": 168,
+      "base_exp": 95,
+      "first_clear_bonus": {
+        "gold": 700,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_2_2",
+      "chapter": 2,
+      "stage": 2,
+      "name": "冰晶洞窟",
+      "unlock_condition": "clear_stage_2_1",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_water",
+              "level": 10
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_water",
+              "level": 10
+            },
+            {
+              "enemy_id": "slime_water",
+              "level": 10
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_wind",
+              "level": 11
+            }
+          ]
+        }
+      ],
+      "base_gold": 176,
+      "base_exp": 100,
+      "first_clear_bonus": {
+        "gold": 700,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_2_3",
+      "chapter": 2,
+      "stage": 3,
+      "name": "迷雾湿地",
+      "unlock_condition": "clear_stage_2_2",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_water",
+              "level": 11
+            },
+            {
+              "enemy_id": "slime_wind",
+              "level": 11
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_fire",
+              "level": 12
+            },
+            {
+              "enemy_id": "goblin_fire",
+              "level": 12
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "shadow_wolf",
+              "level": 13
+            }
+          ]
+        }
+      ],
+      "base_gold": 184,
+      "base_exp": 105,
+      "first_clear_bonus": {
+        "gold": 700,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_2_4",
+      "chapter": 2,
+      "stage": 4,
+      "name": "死寂荒地",
+      "unlock_condition": "clear_stage_2_3",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_wind",
+              "level": 12
+            },
+            {
+              "enemy_id": "slime_water",
+              "level": 12
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_water",
+              "level": 13
+            },
+            {
+              "enemy_id": "goblin_fire",
+              "level": 13
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "dark_wraith",
+              "level": 14
+            }
+          ]
+        }
+      ],
+      "base_gold": 192,
+      "base_exp": 110,
+      "first_clear_bonus": {
+        "gold": 700,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_2_5",
+      "chapter": 2,
+      "stage": 5,
+      "name": "极寒深渊",
+      "unlock_condition": "clear_stage_2_4",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "stone_golem",
+              "level": 14
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "shadow_wolf",
+              "level": 15
+            },
+            {
+              "enemy_id": "light_elemental",
+              "level": 15
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "boss_ice_serpent",
+              "level": 16
+            }
+          ]
+        }
+      ],
+      "base_gold": 200,
+      "base_exp": 115,
+      "first_clear_bonus": {
+        "gold": 700,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 2
+          },
+          {
+            "item_id": "dragon_scale",
+            "quantity": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_3_1",
+      "chapter": 3,
+      "stage": 1,
+      "name": "悬崖小径",
+      "unlock_condition": "clear_stage_2_5",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_wind",
+              "level": 13
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_wind",
+              "level": 13
+            },
+            {
+              "enemy_id": "slime_water",
+              "level": 13
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_water",
+              "level": 14
+            }
+          ]
+        }
+      ],
+      "base_gold": 218,
+      "base_exp": 120,
+      "first_clear_bonus": {
+        "gold": 900,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_3_2",
+      "chapter": 3,
+      "stage": 2,
+      "name": "暴风高原",
+      "unlock_condition": "clear_stage_3_1",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_water",
+              "level": 14
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_water",
+              "level": 14
+            },
+            {
+              "enemy_id": "slime_water",
+              "level": 14
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_wind",
+              "level": 15
+            }
+          ]
+        }
+      ],
+      "base_gold": 226,
+      "base_exp": 125,
+      "first_clear_bonus": {
+        "gold": 900,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_3_3",
+      "chapter": 3,
+      "stage": 3,
+      "name": "雷鸣峡谷",
+      "unlock_condition": "clear_stage_3_2",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_fire",
+              "level": 15
+            },
+            {
+              "enemy_id": "slime_water",
+              "level": 15
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_fire",
+              "level": 16
+            },
+            {
+              "enemy_id": "goblin_fire",
+              "level": 16
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "dark_wraith",
+              "level": 17
+            }
+          ]
+        }
+      ],
+      "base_gold": 234,
+      "base_exp": 130,
+      "first_clear_bonus": {
+        "gold": 900,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_3_4",
+      "chapter": 3,
+      "stage": 4,
+      "name": "天空回廊",
+      "unlock_condition": "clear_stage_3_3",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_wind",
+              "level": 16
+            },
+            {
+              "enemy_id": "slime_wind",
+              "level": 16
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_water",
+              "level": 17
+            },
+            {
+              "enemy_id": "goblin_wind",
+              "level": 17
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "dark_wraith",
+              "level": 18
+            }
+          ]
+        }
+      ],
+      "base_gold": 242,
+      "base_exp": 135,
+      "first_clear_bonus": {
+        "gold": 900,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_3_5",
+      "chapter": 3,
+      "stage": 5,
+      "name": "风暴神殿",
+      "unlock_condition": "clear_stage_3_4",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "stone_golem",
+              "level": 18
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "dark_wraith",
+              "level": 19
+            },
+            {
+              "enemy_id": "stone_golem",
+              "level": 19
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "boss_storm_eagle",
+              "level": 20
+            }
+          ]
+        }
+      ],
+      "base_gold": 250,
+      "base_exp": 140,
+      "first_clear_bonus": {
+        "gold": 900,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 2
+          },
+          {
+            "item_id": "dragon_scale",
+            "quantity": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_4_1",
+      "chapter": 4,
+      "stage": 1,
+      "name": "暗影入口",
+      "unlock_condition": "clear_stage_3_5",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_fire",
+              "level": 17
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_water",
+              "level": 17
+            },
+            {
+              "enemy_id": "slime_wind",
+              "level": 17
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_water",
+              "level": 18
+            }
+          ]
+        }
+      ],
+      "base_gold": 268,
+      "base_exp": 145,
+      "first_clear_bonus": {
+        "gold": 1100,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_4_2",
+      "chapter": 4,
+      "stage": 2,
+      "name": "永夜森林",
+      "unlock_condition": "clear_stage_4_1",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_wind",
+              "level": 18
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_wind",
+              "level": 18
+            },
+            {
+              "enemy_id": "slime_wind",
+              "level": 18
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_water",
+              "level": 19
+            }
+          ]
+        }
+      ],
+      "base_gold": 276,
+      "base_exp": 150,
+      "first_clear_bonus": {
+        "gold": 1100,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_4_3",
+      "chapter": 4,
+      "stage": 3,
+      "name": "无光深渊",
+      "unlock_condition": "clear_stage_4_2",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_fire",
+              "level": 19
+            },
+            {
+              "enemy_id": "slime_fire",
+              "level": 19
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_fire",
+              "level": 20
+            },
+            {
+              "enemy_id": "goblin_fire",
+              "level": 20
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "dark_wraith",
+              "level": 21
+            }
+          ]
+        }
+      ],
+      "base_gold": 284,
+      "base_exp": 155,
+      "first_clear_bonus": {
+        "gold": 1100,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_4_4",
+      "chapter": 4,
+      "stage": 4,
+      "name": "暗之迷宫",
+      "unlock_condition": "clear_stage_4_3",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_fire",
+              "level": 20
+            },
+            {
+              "enemy_id": "slime_water",
+              "level": 20
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_water",
+              "level": 21
+            },
+            {
+              "enemy_id": "goblin_wind",
+              "level": 21
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "dark_wraith",
+              "level": 22
+            }
+          ]
+        }
+      ],
+      "base_gold": 292,
+      "base_exp": 160,
+      "first_clear_bonus": {
+        "gold": 1100,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_4_5",
+      "chapter": 4,
+      "stage": 5,
+      "name": "影之城堡",
+      "unlock_condition": "clear_stage_4_4",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "light_elemental",
+              "level": 22
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "dark_wraith",
+              "level": 23
+            },
+            {
+              "enemy_id": "light_elemental",
+              "level": 23
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "boss_shadow_lord",
+              "level": 24
+            }
+          ]
+        }
+      ],
+      "base_gold": 300,
+      "base_exp": 165,
+      "first_clear_bonus": {
+        "gold": 1100,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 3
+          },
+          {
+            "item_id": "dragon_scale",
+            "quantity": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_5_1",
+      "chapter": 5,
+      "stage": 1,
+      "name": "曙光平原",
+      "unlock_condition": "clear_stage_4_5",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_wind",
+              "level": 21
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_wind",
+              "level": 21
+            },
+            {
+              "enemy_id": "slime_fire",
+              "level": 21
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_wind",
+              "level": 22
+            }
+          ]
+        }
+      ],
+      "base_gold": 318,
+      "base_exp": 170,
+      "first_clear_bonus": {
+        "gold": 1300,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_5_2",
+      "chapter": 5,
+      "stage": 2,
+      "name": "圣光之森",
+      "unlock_condition": "clear_stage_5_1",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_wind",
+              "level": 22
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_wind",
+              "level": 22
+            },
+            {
+              "enemy_id": "slime_fire",
+              "level": 22
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_water",
+              "level": 23
+            }
+          ]
+        }
+      ],
+      "base_gold": 326,
+      "base_exp": 175,
+      "first_clear_bonus": {
+        "gold": 1300,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_5_3",
+      "chapter": 5,
+      "stage": 3,
+      "name": "神眷之地",
+      "unlock_condition": "clear_stage_5_2",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_fire",
+              "level": 23
+            },
+            {
+              "enemy_id": "slime_water",
+              "level": 23
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_water",
+              "level": 24
+            },
+            {
+              "enemy_id": "goblin_fire",
+              "level": 24
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "shadow_wolf",
+              "level": 25
+            }
+          ]
+        }
+      ],
+      "base_gold": 334,
+      "base_exp": 180,
+      "first_clear_bonus": {
+        "gold": 1300,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_5_4",
+      "chapter": 5,
+      "stage": 4,
+      "name": "天堂阶梯",
+      "unlock_condition": "clear_stage_5_3",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_wind",
+              "level": 24
+            },
+            {
+              "enemy_id": "slime_water",
+              "level": 24
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_fire",
+              "level": 25
+            },
+            {
+              "enemy_id": "goblin_wind",
+              "level": 25
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "dark_wraith",
+              "level": 26
+            }
+          ]
+        }
+      ],
+      "base_gold": 342,
+      "base_exp": 185,
+      "first_clear_bonus": {
+        "gold": 1300,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_5_5",
+      "chapter": 5,
+      "stage": 5,
+      "name": "圣光神殿",
+      "unlock_condition": "clear_stage_5_4",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "light_elemental",
+              "level": 26
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "shadow_wolf",
+              "level": 27
+            },
+            {
+              "enemy_id": "stone_golem",
+              "level": 27
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "boss_holy_golem",
+              "level": 28
+            }
+          ]
+        }
+      ],
+      "base_gold": 350,
+      "base_exp": 190,
+      "first_clear_bonus": {
+        "gold": 1300,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 3
+          },
+          {
+            "item_id": "dragon_scale",
+            "quantity": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_6_1",
+      "chapter": 6,
+      "stage": 1,
+      "name": "焦土荒野",
+      "unlock_condition": "clear_stage_5_5",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_fire",
+              "level": 25
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_water",
+              "level": 25
+            },
+            {
+              "enemy_id": "slime_wind",
+              "level": 25
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_fire",
+              "level": 26
+            }
+          ]
+        }
+      ],
+      "base_gold": 368,
+      "base_exp": 195,
+      "first_clear_bonus": {
+        "gold": 1500,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_6_2",
+      "chapter": 6,
+      "stage": 2,
+      "name": "活火山口",
+      "unlock_condition": "clear_stage_6_1",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_water",
+              "level": 26
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_fire",
+              "level": 26
+            },
+            {
+              "enemy_id": "slime_water",
+              "level": 26
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_water",
+              "level": 27
+            }
+          ]
+        }
+      ],
+      "base_gold": 376,
+      "base_exp": 200,
+      "first_clear_bonus": {
+        "gold": 1500,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_6_3",
+      "chapter": 6,
+      "stage": 3,
+      "name": "烈焰之河",
+      "unlock_condition": "clear_stage_6_2",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_wind",
+              "level": 27
+            },
+            {
+              "enemy_id": "slime_wind",
+              "level": 27
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_water",
+              "level": 28
+            },
+            {
+              "enemy_id": "goblin_fire",
+              "level": 28
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "shadow_wolf",
+              "level": 29
+            }
+          ]
+        }
+      ],
+      "base_gold": 384,
+      "base_exp": 205,
+      "first_clear_bonus": {
+        "gold": 1500,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_6_4",
+      "chapter": 6,
+      "stage": 4,
+      "name": "灰烬之地",
+      "unlock_condition": "clear_stage_6_3",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_fire",
+              "level": 28
+            },
+            {
+              "enemy_id": "slime_water",
+              "level": 28
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_fire",
+              "level": 29
+            },
+            {
+              "enemy_id": "goblin_wind",
+              "level": 29
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "dark_wraith",
+              "level": 30
+            }
+          ]
+        }
+      ],
+      "base_gold": 392,
+      "base_exp": 210,
+      "first_clear_bonus": {
+        "gold": 1500,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_6_5",
+      "chapter": 6,
+      "stage": 5,
+      "name": "凤凰神域",
+      "unlock_condition": "clear_stage_6_4",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "stone_golem",
+              "level": 30
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "dark_wraith",
+              "level": 31
+            },
+            {
+              "enemy_id": "light_elemental",
+              "level": 31
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "boss_fire_phoenix",
+              "level": 32
+            }
+          ]
+        }
+      ],
+      "base_gold": 400,
+      "base_exp": 215,
+      "first_clear_bonus": {
+        "gold": 1500,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 4
+          },
+          {
+            "item_id": "dragon_scale",
+            "quantity": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_7_1",
+      "chapter": 7,
+      "stage": 1,
+      "name": "浅海之滨",
+      "unlock_condition": "clear_stage_6_5",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_wind",
+              "level": 29
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_fire",
+              "level": 29
+            },
+            {
+              "enemy_id": "slime_fire",
+              "level": 29
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_wind",
+              "level": 30
+            }
+          ]
+        }
+      ],
+      "base_gold": 418,
+      "base_exp": 220,
+      "first_clear_bonus": {
+        "gold": 1700,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_7_2",
+      "chapter": 7,
+      "stage": 2,
+      "name": "深海裂隙",
+      "unlock_condition": "clear_stage_7_1",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_wind",
+              "level": 30
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_fire",
+              "level": 30
+            },
+            {
+              "enemy_id": "slime_wind",
+              "level": 30
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_wind",
+              "level": 31
+            }
+          ]
+        }
+      ],
+      "base_gold": 426,
+      "base_exp": 225,
+      "first_clear_bonus": {
+        "gold": 1700,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_7_3",
+      "chapter": 7,
+      "stage": 3,
+      "name": "珊瑚墓地",
+      "unlock_condition": "clear_stage_7_2",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_water",
+              "level": 31
+            },
+            {
+              "enemy_id": "slime_wind",
+              "level": 31
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_fire",
+              "level": 32
+            },
+            {
+              "enemy_id": "goblin_fire",
+              "level": 32
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "shadow_wolf",
+              "level": 33
+            }
+          ]
+        }
+      ],
+      "base_gold": 434,
+      "base_exp": 230,
+      "first_clear_bonus": {
+        "gold": 1700,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_7_4",
+      "chapter": 7,
+      "stage": 4,
+      "name": "海妖巢穴",
+      "unlock_condition": "clear_stage_7_3",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_wind",
+              "level": 32
+            },
+            {
+              "enemy_id": "slime_water",
+              "level": 32
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_water",
+              "level": 33
+            },
+            {
+              "enemy_id": "goblin_fire",
+              "level": 33
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "shadow_wolf",
+              "level": 34
+            }
+          ]
+        }
+      ],
+      "base_gold": 442,
+      "base_exp": 235,
+      "first_clear_bonus": {
+        "gold": 1700,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_7_5",
+      "chapter": 7,
+      "stage": 5,
+      "name": "深渊祭坛",
+      "unlock_condition": "clear_stage_7_4",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "stone_golem",
+              "level": 34
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "dark_wraith",
+              "level": 35
+            },
+            {
+              "enemy_id": "stone_golem",
+              "level": 35
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "boss_water_dragon",
+              "level": 36
+            }
+          ]
+        }
+      ],
+      "base_gold": 450,
+      "base_exp": 240,
+      "first_clear_bonus": {
+        "gold": 1700,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 4
+          },
+          {
+            "item_id": "dragon_scale",
+            "quantity": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_8_1",
+      "chapter": 8,
+      "stage": 1,
+      "name": "疾风草原",
+      "unlock_condition": "clear_stage_7_5",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_water",
+              "level": 33
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_water",
+              "level": 33
+            },
+            {
+              "enemy_id": "slime_wind",
+              "level": 33
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_water",
+              "level": 34
+            }
+          ]
+        }
+      ],
+      "base_gold": 468,
+      "base_exp": 245,
+      "first_clear_bonus": {
+        "gold": 1900,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_8_2",
+      "chapter": 8,
+      "stage": 2,
+      "name": "天空之岛",
+      "unlock_condition": "clear_stage_8_1",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_water",
+              "level": 34
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_wind",
+              "level": 34
+            },
+            {
+              "enemy_id": "slime_water",
+              "level": 34
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_fire",
+              "level": 35
+            }
+          ]
+        }
+      ],
+      "base_gold": 476,
+      "base_exp": 250,
+      "first_clear_bonus": {
+        "gold": 1900,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_8_3",
+      "chapter": 8,
+      "stage": 3,
+      "name": "雷云之海",
+      "unlock_condition": "clear_stage_8_2",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_wind",
+              "level": 35
+            },
+            {
+              "enemy_id": "slime_wind",
+              "level": 35
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_water",
+              "level": 36
+            },
+            {
+              "enemy_id": "goblin_fire",
+              "level": 36
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "dark_wraith",
+              "level": 37
+            }
+          ]
+        }
+      ],
+      "base_gold": 484,
+      "base_exp": 255,
+      "first_clear_bonus": {
+        "gold": 1900,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_8_4",
+      "chapter": 8,
+      "stage": 4,
+      "name": "暴风回廊",
+      "unlock_condition": "clear_stage_8_3",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_water",
+              "level": 36
+            },
+            {
+              "enemy_id": "slime_fire",
+              "level": 36
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_water",
+              "level": 37
+            },
+            {
+              "enemy_id": "goblin_fire",
+              "level": 37
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "shadow_wolf",
+              "level": 38
+            }
+          ]
+        }
+      ],
+      "base_gold": 492,
+      "base_exp": 260,
+      "first_clear_bonus": {
+        "gold": 1900,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_8_5",
+      "chapter": 8,
+      "stage": 5,
+      "name": "天狗山",
+      "unlock_condition": "clear_stage_8_4",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "light_elemental",
+              "level": 38
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "shadow_wolf",
+              "level": 39
+            },
+            {
+              "enemy_id": "stone_golem",
+              "level": 39
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "boss_wind_tengu",
+              "level": 40
+            }
+          ]
+        }
+      ],
+      "base_gold": 500,
+      "base_exp": 265,
+      "first_clear_bonus": {
+        "gold": 1900,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 5
+          },
+          {
+            "item_id": "dragon_scale",
+            "quantity": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_9_1",
+      "chapter": 9,
+      "stage": 1,
+      "name": "诅咒之地",
+      "unlock_condition": "clear_stage_8_5",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_wind",
+              "level": 37
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_water",
+              "level": 37
+            },
+            {
+              "enemy_id": "slime_water",
+              "level": 37
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_water",
+              "level": 38
+            }
+          ]
+        }
+      ],
+      "base_gold": 518,
+      "base_exp": 270,
+      "first_clear_bonus": {
+        "gold": 2100,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_9_2",
+      "chapter": 9,
+      "stage": 2,
+      "name": "亡者沙漠",
+      "unlock_condition": "clear_stage_9_1",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_water",
+              "level": 38
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_water",
+              "level": 38
+            },
+            {
+              "enemy_id": "slime_water",
+              "level": 38
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_wind",
+              "level": 39
+            }
+          ]
+        }
+      ],
+      "base_gold": 526,
+      "base_exp": 275,
+      "first_clear_bonus": {
+        "gold": 2100,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_9_3",
+      "chapter": 9,
+      "stage": 3,
+      "name": "骸骨要塞",
+      "unlock_condition": "clear_stage_9_2",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_wind",
+              "level": 39
+            },
+            {
+              "enemy_id": "slime_wind",
+              "level": 39
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_water",
+              "level": 40
+            },
+            {
+              "enemy_id": "goblin_water",
+              "level": 40
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "shadow_wolf",
+              "level": 41
+            }
+          ]
+        }
+      ],
+      "base_gold": 534,
+      "base_exp": 280,
+      "first_clear_bonus": {
+        "gold": 2100,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_9_4",
+      "chapter": 9,
+      "stage": 4,
+      "name": "幽魂之塔",
+      "unlock_condition": "clear_stage_9_3",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_water",
+              "level": 40
+            },
+            {
+              "enemy_id": "slime_water",
+              "level": 40
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_water",
+              "level": 41
+            },
+            {
+              "enemy_id": "goblin_fire",
+              "level": 41
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "dark_wraith",
+              "level": 42
+            }
+          ]
+        }
+      ],
+      "base_gold": 542,
+      "base_exp": 285,
+      "first_clear_bonus": {
+        "gold": 2100,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_9_5",
+      "chapter": 9,
+      "stage": 5,
+      "name": "暗黑城",
+      "unlock_condition": "clear_stage_9_4",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "stone_golem",
+              "level": 42
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "shadow_wolf",
+              "level": 43
+            },
+            {
+              "enemy_id": "stone_golem",
+              "level": 43
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "boss_dark_lich",
+              "level": 44
+            }
+          ]
+        }
+      ],
+      "base_gold": 550,
+      "base_exp": 290,
+      "first_clear_bonus": {
+        "gold": 2100,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 5
+          },
+          {
+            "item_id": "dragon_scale",
+            "quantity": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_10_1",
+      "chapter": 10,
+      "stage": 1,
+      "name": "初始之地",
+      "unlock_condition": "clear_stage_9_5",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_fire",
+              "level": 41
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_wind",
+              "level": 41
+            },
+            {
+              "enemy_id": "slime_wind",
+              "level": 41
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_wind",
+              "level": 42
+            }
+          ]
+        }
+      ],
+      "base_gold": 568,
+      "base_exp": 295,
+      "first_clear_bonus": {
+        "gold": 2300,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 6
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_10_2",
+      "chapter": 10,
+      "stage": 2,
+      "name": "试炼之谷",
+      "unlock_condition": "clear_stage_10_1",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_fire",
+              "level": 42
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "slime_wind",
+              "level": 42
+            },
+            {
+              "enemy_id": "slime_fire",
+              "level": 42
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_water",
+              "level": 43
+            }
+          ]
+        }
+      ],
+      "base_gold": 576,
+      "base_exp": 300,
+      "first_clear_bonus": {
+        "gold": 2300,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 6
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_10_3",
+      "chapter": 10,
+      "stage": 3,
+      "name": "英灵殿",
+      "unlock_condition": "clear_stage_10_2",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_water",
+              "level": 43
+            },
+            {
+              "enemy_id": "slime_wind",
+              "level": 43
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_fire",
+              "level": 44
+            },
+            {
+              "enemy_id": "goblin_fire",
+              "level": 44
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "dark_wraith",
+              "level": 45
+            }
+          ]
+        }
+      ],
+      "base_gold": 584,
+      "base_exp": 305,
+      "first_clear_bonus": {
+        "gold": 2300,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 6
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_10_4",
+      "chapter": 10,
+      "stage": 4,
+      "name": "创世回廊",
+      "unlock_condition": "clear_stage_10_3",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_wind",
+              "level": 44
+            },
+            {
+              "enemy_id": "slime_fire",
+              "level": 44
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "goblin_water",
+              "level": 45
+            },
+            {
+              "enemy_id": "goblin_water",
+              "level": 45
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "dark_wraith",
+              "level": 46
+            }
+          ]
+        }
+      ],
+      "base_gold": 592,
+      "base_exp": 310,
+      "first_clear_bonus": {
+        "gold": 2300,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 6
+          }
+        ]
+      }
+    },
+    {
+      "id": "stage_10_5",
+      "chapter": 10,
+      "stage": 5,
+      "name": "光之圣座",
+      "unlock_condition": "clear_stage_10_4",
+      "waves": [
+        {
+          "enemies": [
+            {
+              "enemy_id": "light_elemental",
+              "level": 46
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "dark_wraith",
+              "level": 47
+            },
+            {
+              "enemy_id": "light_elemental",
+              "level": 47
+            }
+          ]
+        },
+        {
+          "enemies": [
+            {
+              "enemy_id": "boss_light_titan",
+              "level": 48
+            }
+          ]
+        }
+      ],
+      "base_gold": 600,
+      "base_exp": 315,
+      "first_clear_bonus": {
+        "gold": 2300,
+        "items": [
+          {
+            "item_id": "gacha_ticket",
+            "quantity": 6
+          },
+          {
+            "item_id": "dragon_scale",
+            "quantity": 5
+          }
+        ]
+      }
+    }
+  ]
+}

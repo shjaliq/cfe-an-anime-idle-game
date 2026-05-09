@@ -1,0 +1,1859 @@
+{
+  "characters": [
+    {
+      "id": "sakura_blade",
+      "name": "樱刃",
+      "rarity": "SSR",
+      "element": "fire",
+      "role": "attacker",
+      "base_stats": {
+        "hp": 1200,
+        "atk": 180,
+        "def": 80,
+        "spd": 110,
+        "crit_rate": 0.12,
+        "crit_dmg": 1.8
+      },
+      "growth_rates": {
+        "hp": 150,
+        "atk": 22,
+        "def": 9,
+        "spd": 3
+      },
+      "skill_ids": [
+        "fire_slash",
+        "blazing_aura"
+      ],
+      "star_bonus": [
+        {
+          "stars": 1,
+          "skill_id": "star_firestorm"
+        },
+        {
+          "stars": 3,
+          "skill_id": "star_inferno"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_berserk"
+        }
+      ],
+      "portrait": "assets/characters/sakura_blade.png",
+      "gacha_weight": 5,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, sakura pink hair, holding katana, cherry blossom garden background, kimono, fierce expression, fire element, cinematic lighting, depth of field, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "执掌樱花之焰的剑士，性格豪爽，剑术精湛。"
+    },
+    {
+      "id": "aqua_mage",
+      "name": "水月法师",
+      "rarity": "SSR",
+      "element": "water",
+      "role": "healer",
+      "base_stats": {
+        "hp": 900,
+        "atk": 140,
+        "def": 70,
+        "spd": 95,
+        "crit_rate": 0.05,
+        "crit_dmg": 1.5
+      },
+      "growth_rates": {
+        "hp": 120,
+        "atk": 18,
+        "def": 8,
+        "spd": 3
+      },
+      "skill_ids": [
+        "healing_rain",
+        "ice_lance"
+      ],
+      "star_bonus": [
+        {
+          "stars": 1,
+          "skill_id": "star_purify"
+        },
+        {
+          "stars": 3,
+          "skill_id": "star_tsunami"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_blessing"
+        }
+      ],
+      "portrait": "assets/characters/aqua_mage.png",
+      "gacha_weight": 5,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, blue hair, water mage, flowing robe, holding crystal staff, underwater palace background, water bubbles, gentle smile, cinematic lighting, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "操控水之力的神秘法师，温柔善良，擅长治愈之术。"
+    },
+    {
+      "id": "storm_ranger",
+      "name": "疾风游侠",
+      "rarity": "SR",
+      "element": "wind",
+      "role": "attacker",
+      "base_stats": {
+        "hp": 950,
+        "atk": 155,
+        "def": 65,
+        "spd": 130,
+        "crit_rate": 0.15,
+        "crit_dmg": 1.7
+      },
+      "growth_rates": {
+        "hp": 110,
+        "atk": 18,
+        "def": 7,
+        "spd": 4
+      },
+      "skill_ids": [
+        "wind_arrow",
+        "gale_step"
+      ],
+      "star_bonus": [
+        {
+          "stars": 1,
+          "skill_id": "star_hurricane"
+        },
+        {
+          "stars": 3,
+          "skill_id": "star_cyclone"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_blessing"
+        }
+      ],
+      "portrait": "assets/characters/storm_ranger.png",
+      "gacha_weight": 15,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, green hair, archer, forest background, wind element, cloak, holding bow, swift dynamic pose, dappled sunlight, cinematic lighting, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "森林中的精灵游侠，箭术百发百中，行动如风。"
+    },
+    {
+      "id": "shadow_assassin",
+      "name": "暗影刺客",
+      "rarity": "SR",
+      "element": "dark",
+      "role": "attacker",
+      "base_stats": {
+        "hp": 800,
+        "atk": 175,
+        "def": 55,
+        "spd": 140,
+        "crit_rate": 0.2,
+        "crit_dmg": 2.0
+      },
+      "growth_rates": {
+        "hp": 95,
+        "atk": 21,
+        "def": 6,
+        "spd": 4
+      },
+      "skill_ids": [
+        "shadow_strike",
+        "dark_veil"
+      ],
+      "star_bonus": [
+        {
+          "stars": 1,
+          "skill_id": "star_execute"
+        },
+        {
+          "stars": 3,
+          "skill_id": "star_berserk"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_hurricane"
+        }
+      ],
+      "portrait": "assets/characters/shadow_assassin.png",
+      "gacha_weight": 15,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, dark purple hair, assassin, ninja outfit, holding dagger, shadow element, moonlit rooftop night background, mysterious cool, cinematic lighting, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "来自暗影之国的刺客，来无影去无踪，一击必杀。"
+    },
+    {
+      "id": "holy_knight",
+      "name": "圣光骑士",
+      "rarity": "SR",
+      "element": "light",
+      "role": "defender",
+      "base_stats": {
+        "hp": 1500,
+        "atk": 100,
+        "def": 140,
+        "spd": 75,
+        "crit_rate": 0.05,
+        "crit_dmg": 1.5
+      },
+      "growth_rates": {
+        "hp": 180,
+        "atk": 12,
+        "def": 16,
+        "spd": 2
+      },
+      "skill_ids": [
+        "holy_smite",
+        "divine_shield"
+      ],
+      "star_bonus": [
+        {
+          "stars": 1,
+          "skill_id": "star_holy_nova"
+        },
+        {
+          "stars": 3,
+          "skill_id": "star_blessing"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_purify"
+        }
+      ],
+      "portrait": "assets/characters/holy_knight.png",
+      "gacha_weight": 15,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, blonde hair, knight, silver armor, holding sword and shield, cathedral background, holy light rays, dignified, cinematic lighting, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "圣光教团的骑士，守护弱小，坚不可摧的盾牌。"
+    },
+    {
+      "id": "flame_novice",
+      "name": "火焰学徒",
+      "rarity": "R",
+      "element": "fire",
+      "role": "attacker",
+      "base_stats": {
+        "hp": 700,
+        "atk": 120,
+        "def": 50,
+        "spd": 85,
+        "crit_rate": 0.08,
+        "crit_dmg": 1.5
+      },
+      "growth_rates": {
+        "hp": 90,
+        "atk": 15,
+        "def": 6,
+        "spd": 2
+      },
+      "skill_ids": [
+        "fire_slash"
+      ],
+      "star_bonus": [
+        {
+          "stars": 2,
+          "skill_id": "star_firestorm"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_inferno"
+        }
+      ],
+      "portrait": "assets/characters/flame_novice.png",
+      "gacha_weight": 35,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, red hair, apprentice mage, simple robe, fire magic in hand, wizard academy background, cute young, warm lighting, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "刚入门的火焰法师学徒，虽然稚嫩但潜力无限。"
+    },
+    {
+      "id": "water_acolyte",
+      "name": "水泉侍僧",
+      "rarity": "R",
+      "element": "water",
+      "role": "support",
+      "base_stats": {
+        "hp": 750,
+        "atk": 90,
+        "def": 60,
+        "spd": 80,
+        "crit_rate": 0.05,
+        "crit_dmg": 1.5
+      },
+      "growth_rates": {
+        "hp": 100,
+        "atk": 11,
+        "def": 7,
+        "spd": 2
+      },
+      "skill_ids": [
+        "healing_rain"
+      ],
+      "star_bonus": [
+        {
+          "stars": 2,
+          "skill_id": "star_purify"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_tsunami"
+        }
+      ],
+      "portrait": "assets/characters/water_acolyte.png",
+      "gacha_weight": 35,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, teal hair, shrine maiden, water shrine background, water element flowing, simple pure, young, serene lighting, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "侍奉水之精灵的见习僧侣，擅长基础的治愈术。"
+    },
+    {
+      "id": "wind_scout",
+      "name": "风之斥候",
+      "rarity": "R",
+      "element": "wind",
+      "role": "support",
+      "base_stats": {
+        "hp": 650,
+        "atk": 100,
+        "def": 45,
+        "spd": 120,
+        "crit_rate": 0.1,
+        "crit_dmg": 1.5
+      },
+      "growth_rates": {
+        "hp": 80,
+        "atk": 13,
+        "def": 5,
+        "spd": 3
+      },
+      "skill_ids": [
+        "gale_step"
+      ],
+      "star_bonus": [
+        {
+          "stars": 2,
+          "skill_id": "star_hurricane"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_cyclone"
+        }
+      ],
+      "portrait": "assets/characters/wind_scout.png",
+      "gacha_weight": 35,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, green short hair, scout, light armor, holding dual daggers, wind element, mountain cliff background, agile dynamic pose, cinematic lighting, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "行动敏捷的森林斥候，擅长侦查和游击战术。"
+    },
+    {
+      "id": "darkling_pup",
+      "name": "暗影幼崽",
+      "rarity": "N",
+      "element": "dark",
+      "role": "attacker",
+      "base_stats": {
+        "hp": 500,
+        "atk": 85,
+        "def": 35,
+        "spd": 90,
+        "crit_rate": 0.08,
+        "crit_dmg": 1.5
+      },
+      "growth_rates": {
+        "hp": 65,
+        "atk": 10,
+        "def": 4,
+        "spd": 2
+      },
+      "skill_ids": [
+        "shadow_strike"
+      ],
+      "star_bonus": [
+        {
+          "stars": 3,
+          "skill_id": "star_execute"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_berserk"
+        }
+      ],
+      "portrait": "assets/characters/darkling_pup.png",
+      "gacha_weight": 50,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, small dark creature, cute, shadow element, chibi, moonlit cave background, simple design, soft rim lighting, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "一只可爱的小暗影生物，虽然弱小但忠心耿耿。"
+    },
+    {
+      "id": "light_sprite",
+      "name": "光之精灵",
+      "rarity": "N",
+      "element": "light",
+      "role": "healer",
+      "base_stats": {
+        "hp": 450,
+        "atk": 55,
+        "def": 40,
+        "spd": 85,
+        "crit_rate": 0.03,
+        "crit_dmg": 1.3
+      },
+      "growth_rates": {
+        "hp": 55,
+        "atk": 7,
+        "def": 5,
+        "spd": 2
+      },
+      "skill_ids": [
+        "holy_smite"
+      ],
+      "star_bonus": [
+        {
+          "stars": 3,
+          "skill_id": "star_holy_nova"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_blessing"
+        }
+      ],
+      "portrait": "assets/characters/light_sprite.png",
+      "gacha_weight": 50,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, floating, tiny light fairy, glowing wings, cute, chibi, heavenly garden background, white gold aura, sparkles, ethereal lighting, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "小小的光之精灵，散播着温暖的光芒。"
+    },
+    {
+      "id": "thunder_lord",
+      "name": "雷帝",
+      "rarity": "SSR",
+      "element": "wind",
+      "role": "attacker",
+      "base_stats": {
+        "hp": 1150,
+        "atk": 185,
+        "def": 75,
+        "spd": 125,
+        "crit_rate": 0.1,
+        "crit_dmg": 1.9
+      },
+      "growth_rates": {
+        "hp": 140,
+        "atk": 23,
+        "def": 8,
+        "spd": 4
+      },
+      "skill_ids": [
+        "wind_arrow",
+        "gale_step"
+      ],
+      "star_bonus": [
+        {
+          "stars": 1,
+          "skill_id": "star_hurricane"
+        },
+        {
+          "stars": 3,
+          "skill_id": "star_cyclone"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_berserk"
+        }
+      ],
+      "portrait": "assets/characters/thunder_lord.png",
+      "gacha_weight": 5,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, silver hair, lightning warrior, ornate armor, holding massive spear, thunderstorm sky background, lightning bolts, fierce, dynamic pose, cinematic lighting, masterpiece, electric sparks",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "驾驭雷霆的战士，一枪之威可撕裂长空。"
+    },
+    {
+      "id": "abyssal_sorceress",
+      "name": "深渊魔女",
+      "rarity": "SSR",
+      "element": "dark",
+      "role": "attacker",
+      "base_stats": {
+        "hp": 1000,
+        "atk": 195,
+        "def": 70,
+        "spd": 105,
+        "crit_rate": 0.15,
+        "crit_dmg": 2.0
+      },
+      "growth_rates": {
+        "hp": 125,
+        "atk": 24,
+        "def": 7,
+        "spd": 3
+      },
+      "skill_ids": [
+        "shadow_strike",
+        "dark_veil"
+      ],
+      "star_bonus": [
+        {
+          "stars": 1,
+          "skill_id": "star_execute"
+        },
+        {
+          "stars": 3,
+          "skill_id": "star_berserk"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_holy_nova"
+        }
+      ],
+      "portrait": "assets/characters/abyssal_sorceress.png",
+      "gacha_weight": 5,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, long dark purple hair, sorceress, elegant black dress, dark magic tome, floating, abyss void background, dark aura, mysterious, cinematic lighting, masterpiece, purple flames",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "来自深渊的魔女，掌控黑暗禁术的强大术士。"
+    },
+    {
+      "id": "celestial_archer",
+      "name": "天弓圣女",
+      "rarity": "SSR",
+      "element": "light",
+      "role": "attacker",
+      "base_stats": {
+        "hp": 1050,
+        "atk": 175,
+        "def": 78,
+        "spd": 115,
+        "crit_rate": 0.15,
+        "crit_dmg": 1.8
+      },
+      "growth_rates": {
+        "hp": 130,
+        "atk": 21,
+        "def": 8,
+        "spd": 3
+      },
+      "skill_ids": [
+        "holy_smite",
+        "divine_shield"
+      ],
+      "star_bonus": [
+        {
+          "stars": 1,
+          "skill_id": "star_holy_nova"
+        },
+        {
+          "stars": 3,
+          "skill_id": "star_blessing"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_execute"
+        }
+      ],
+      "portrait": "assets/characters/celestial_archer.png",
+      "gacha_weight": 5,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, platinum blonde hair, holy archer, white and gold robe, holding divine bow, heavenly clouds background, light rays, angelic wings, pure, cinematic lighting, masterpiece, glowing arrows",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "天界降临的圣弓手，每一箭都蕴含着神圣之力。"
+    },
+    {
+      "id": "phoenix_dancer",
+      "name": "凤凰舞姬",
+      "rarity": "SR",
+      "element": "fire",
+      "role": "support",
+      "base_stats": {
+        "hp": 880,
+        "atk": 110,
+        "def": 70,
+        "spd": 115,
+        "crit_rate": 0.08,
+        "crit_dmg": 1.5
+      },
+      "growth_rates": {
+        "hp": 110,
+        "atk": 14,
+        "def": 8,
+        "spd": 3
+      },
+      "skill_ids": [
+        "blazing_aura",
+        "fire_slash"
+      ],
+      "star_bonus": [
+        {
+          "stars": 1,
+          "skill_id": "star_firestorm"
+        },
+        {
+          "stars": 3,
+          "skill_id": "star_blessing"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_inferno"
+        }
+      ],
+      "portrait": "assets/characters/phoenix_dancer.png",
+      "gacha_weight": 15,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, crimson long hair, dancer, phoenix feather costume, elegant, fire sparks trailing, festival stage background, graceful pose, warm sunset lighting, masterpiece, flowing ribbons",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "以凤凰之舞鼓舞队友的舞者，火焰随舞姿流转。"
+    },
+    {
+      "id": "frost_knight",
+      "name": "冰霜骑士",
+      "rarity": "SR",
+      "element": "water",
+      "role": "defender",
+      "base_stats": {
+        "hp": 1500,
+        "atk": 100,
+        "def": 140,
+        "spd": 75,
+        "crit_rate": 0.05,
+        "crit_dmg": 1.5
+      },
+      "growth_rates": {
+        "hp": 180,
+        "atk": 12,
+        "def": 16,
+        "spd": 2
+      },
+      "skill_ids": [
+        "ice_lance",
+        "healing_rain"
+      ],
+      "star_bonus": [
+        {
+          "stars": 1,
+          "skill_id": "star_tsunami"
+        },
+        {
+          "stars": 3,
+          "skill_id": "star_purify"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_blessing"
+        }
+      ],
+      "portrait": "assets/characters/frost_knight.png",
+      "gacha_weight": 15,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, ice blue hair, knight, heavy ice crystal armor, holding frozen greatsword, snow blizzard background, stoic, frost aura, cool blue lighting, masterpiece, ice shards",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "身披冰晶铠甲的骑士，坚如冰山，守护队友。"
+    },
+    {
+      "id": "tempest_monk",
+      "name": "暴风武僧",
+      "rarity": "SR",
+      "element": "wind",
+      "role": "attacker",
+      "base_stats": {
+        "hp": 900,
+        "atk": 160,
+        "def": 60,
+        "spd": 135,
+        "crit_rate": 0.15,
+        "crit_dmg": 1.6
+      },
+      "growth_rates": {
+        "hp": 105,
+        "atk": 19,
+        "def": 6,
+        "spd": 4
+      },
+      "skill_ids": [
+        "wind_arrow",
+        "gale_step"
+      ],
+      "star_bonus": [
+        {
+          "stars": 1,
+          "skill_id": "star_hurricane"
+        },
+        {
+          "stars": 3,
+          "skill_id": "star_cyclone"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_berserk"
+        }
+      ],
+      "portrait": "assets/characters/tempest_monk.png",
+      "gacha_weight": 15,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, short green hair, martial arts monk, wind element, light training clothes, open palm fighting stance, mountain peak background, wind swirling leaves, dynamic action, overcast lighting, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "修行风之拳法的武僧，拳风所至，摧枯拉朽。"
+    },
+    {
+      "id": "void_blade",
+      "name": "虚空剑士",
+      "rarity": "SR",
+      "element": "dark",
+      "role": "attacker",
+      "base_stats": {
+        "hp": 920,
+        "atk": 158,
+        "def": 62,
+        "spd": 128,
+        "crit_rate": 0.18,
+        "crit_dmg": 1.8
+      },
+      "growth_rates": {
+        "hp": 108,
+        "atk": 19,
+        "def": 7,
+        "spd": 3
+      },
+      "skill_ids": [
+        "shadow_strike",
+        "dark_veil"
+      ],
+      "star_bonus": [
+        {
+          "stars": 1,
+          "skill_id": "star_execute"
+        },
+        {
+          "stars": 3,
+          "skill_id": "star_berserk"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_firestorm"
+        }
+      ],
+      "portrait": "assets/characters/void_blade.png",
+      "gacha_weight": 15,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, white hair with black streaks, swordswoman, void-touched kimono, holding katana with dark aura, dimensional rift background, cold expression, void particles, cinematic lighting, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "游走于虚空边界的剑客，一刀斩断空间。"
+    },
+    {
+      "id": "dawn_priestess",
+      "name": "黎明祭司",
+      "rarity": "SR",
+      "element": "light",
+      "role": "healer",
+      "base_stats": {
+        "hp": 850,
+        "atk": 120,
+        "def": 60,
+        "spd": 95,
+        "crit_rate": 0.05,
+        "crit_dmg": 1.5
+      },
+      "growth_rates": {
+        "hp": 110,
+        "atk": 15,
+        "def": 7,
+        "spd": 3
+      },
+      "skill_ids": [
+        "holy_smite",
+        "divine_shield"
+      ],
+      "star_bonus": [
+        {
+          "stars": 1,
+          "skill_id": "star_blessing"
+        },
+        {
+          "stars": 3,
+          "skill_id": "star_holy_nova"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_purify"
+        }
+      ],
+      "portrait": "assets/characters/dawn_priestess.png",
+      "gacha_weight": 15,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, golden hair, priestess, white gold ceremonial robe, holding sacred staff, cathedral interior sunrise window, gentle smile, warm god rays, soft lighting, masterpiece, divine aura",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "侍奉黎明的祭司，以圣光治愈伤痛、驱散黑暗。"
+    },
+    {
+      "id": "magma_guard",
+      "name": "熔岩守卫",
+      "rarity": "SR",
+      "element": "fire",
+      "role": "defender",
+      "base_stats": {
+        "hp": 1550,
+        "atk": 105,
+        "def": 145,
+        "spd": 70,
+        "crit_rate": 0.05,
+        "crit_dmg": 1.5
+      },
+      "growth_rates": {
+        "hp": 185,
+        "atk": 13,
+        "def": 17,
+        "spd": 2
+      },
+      "skill_ids": [
+        "fire_slash",
+        "blazing_aura"
+      ],
+      "star_bonus": [
+        {
+          "stars": 1,
+          "skill_id": "star_firestorm"
+        },
+        {
+          "stars": 3,
+          "skill_id": "star_inferno"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_blessing"
+        }
+      ],
+      "portrait": "assets/characters/magma_guard.png",
+      "gacha_weight": 15,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, dark skin, silver hair, lava warrior, obsidian armor with magma veins, holding giant shield, active volcano background, stoic, heat haze, fiery orange lighting, masterpiece, ember particles",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "来自火山深处的守卫，熔岩铸就的不灭之盾。"
+    },
+    {
+      "id": "ember_witch",
+      "name": "余烬魔女",
+      "rarity": "R",
+      "element": "fire",
+      "role": "attacker",
+      "base_stats": {
+        "hp": 700,
+        "atk": 120,
+        "def": 50,
+        "spd": 85,
+        "crit_rate": 0.08,
+        "crit_dmg": 1.5
+      },
+      "growth_rates": {
+        "hp": 90,
+        "atk": 15,
+        "def": 6,
+        "spd": 2
+      },
+      "skill_ids": [
+        "flame_burst_mini"
+      ],
+      "star_bonus": [
+        {
+          "stars": 2,
+          "skill_id": "fire_slash"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_firestorm"
+        }
+      ],
+      "portrait": "assets/characters/ember_witch.png",
+      "gacha_weight": 35,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, short orange hair, young witch, simple witch hat and robe, holding small fire staff, cottage at dusk background, cute curious expression, warm firelight glow, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "住在森林小屋的见习魔女，擅长基础的火焰魔法。"
+    },
+    {
+      "id": "tide_hunter",
+      "name": "潮汐猎手",
+      "rarity": "R",
+      "element": "water",
+      "role": "attacker",
+      "base_stats": {
+        "hp": 720,
+        "atk": 118,
+        "def": 52,
+        "spd": 88,
+        "crit_rate": 0.1,
+        "crit_dmg": 1.5
+      },
+      "growth_rates": {
+        "hp": 92,
+        "atk": 14,
+        "def": 6,
+        "spd": 2
+      },
+      "skill_ids": [
+        "water_bubble"
+      ],
+      "star_bonus": [
+        {
+          "stars": 2,
+          "skill_id": "ice_lance"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_tsunami"
+        }
+      ],
+      "portrait": "assets/characters/tide_hunter.png",
+      "gacha_weight": 35,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, blue hair in ponytail, ocean hunter, leather armor, holding trident, seaside cliff background, waves crashing, confident smirk, ocean breeze, overcast coastal lighting, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "海边的年轻猎手，擅长驾驭水流进行战斗。"
+    },
+    {
+      "id": "zephyr_healer",
+      "name": "和风治愈师",
+      "rarity": "R",
+      "element": "wind",
+      "role": "healer",
+      "base_stats": {
+        "hp": 650,
+        "atk": 90,
+        "def": 55,
+        "spd": 80,
+        "crit_rate": 0.03,
+        "crit_dmg": 1.3
+      },
+      "growth_rates": {
+        "hp": 80,
+        "atk": 11,
+        "def": 6,
+        "spd": 2
+      },
+      "skill_ids": [
+        "wind_blade"
+      ],
+      "star_bonus": [
+        {
+          "stars": 2,
+          "skill_id": "gale_step"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_purify"
+        }
+      ],
+      "portrait": "assets/characters/zephyr_healer.png",
+      "gacha_weight": 35,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, mint green hair, gentle healer, flowing dress with leaf patterns, holding wooden staff with vine, flower meadow background, butterflies, soft spring breeze, warm soft lighting, masterpiece, petals floating",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "随风而来的治愈师，以微风之力抚慰伤痛。"
+    },
+    {
+      "id": "gloom_shade",
+      "name": "幽影",
+      "rarity": "R",
+      "element": "dark",
+      "role": "support",
+      "base_stats": {
+        "hp": 650,
+        "atk": 85,
+        "def": 50,
+        "spd": 100,
+        "crit_rate": 0.05,
+        "crit_dmg": 1.4
+      },
+      "growth_rates": {
+        "hp": 80,
+        "atk": 11,
+        "def": 6,
+        "spd": 3
+      },
+      "skill_ids": [
+        "shadow_strike"
+      ],
+      "star_bonus": [
+        {
+          "stars": 2,
+          "skill_id": "dark_veil"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_berserk"
+        }
+      ],
+      "portrait": "assets/characters/gloom_shade.png",
+      "gacha_weight": 35,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, short dark blue hair, shadow spirit, semi-transparent dark cloak, floating, gloomy foggy forest background, mysterious, dim moonlight, cool dark tones, masterpiece, ethereal",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "徘徊于暗影中的幽魂，虽然胆小但会用暗术支援伙伴。"
+    },
+    {
+      "id": "sun_squire",
+      "name": "烈阳侍从",
+      "rarity": "R",
+      "element": "light",
+      "role": "defender",
+      "base_stats": {
+        "hp": 1100,
+        "atk": 80,
+        "def": 110,
+        "spd": 65,
+        "crit_rate": 0.03,
+        "crit_dmg": 1.3
+      },
+      "growth_rates": {
+        "hp": 130,
+        "atk": 10,
+        "def": 13,
+        "spd": 2
+      },
+      "skill_ids": [
+        "holy_smite"
+      ],
+      "star_bonus": [
+        {
+          "stars": 2,
+          "skill_id": "divine_shield"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_holy_nova"
+        }
+      ],
+      "portrait": "assets/characters/sun_squire.png",
+      "gacha_weight": 35,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, short blonde hair, young squire, simple plate armor, holding small shield with sun emblem, castle courtyard background, bright daylight, earnest expression, warm sunlight, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "圣光骑士团的见习侍从，憧憬着成为真正的骑士。"
+    },
+    {
+      "id": "cinder_wolf",
+      "name": "烬狼",
+      "rarity": "R",
+      "element": "fire",
+      "role": "attacker",
+      "base_stats": {
+        "hp": 680,
+        "atk": 125,
+        "def": 48,
+        "spd": 92,
+        "crit_rate": 0.1,
+        "crit_dmg": 1.6
+      },
+      "growth_rates": {
+        "hp": 85,
+        "atk": 16,
+        "def": 5,
+        "spd": 2
+      },
+      "skill_ids": [
+        "flame_burst_mini"
+      ],
+      "star_bonus": [
+        {
+          "stars": 2,
+          "skill_id": "fire_slash"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_firestorm"
+        }
+      ],
+      "portrait": "assets/characters/cinder_wolf.png",
+      "gacha_weight": 35,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, wild red hair with wolf ears, feral fire warrior, tribal fur clothing, claw weapons, bonfire night background, fierce grin, ashes floating, warm dramatic lighting, masterpiece, feral",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "被狼群养大的火之战士，爪刃上燃烧着不灭的余烬。"
+    },
+    {
+      "id": "mist_dancer",
+      "name": "雾舞者",
+      "rarity": "R",
+      "element": "water",
+      "role": "support",
+      "base_stats": {
+        "hp": 660,
+        "atk": 82,
+        "def": 52,
+        "spd": 98,
+        "crit_rate": 0.05,
+        "crit_dmg": 1.4
+      },
+      "growth_rates": {
+        "hp": 82,
+        "atk": 10,
+        "def": 6,
+        "spd": 3
+      },
+      "skill_ids": [
+        "water_bubble"
+      ],
+      "star_bonus": [
+        {
+          "stars": 2,
+          "skill_id": "healing_rain"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_purify"
+        }
+      ],
+      "portrait": "assets/characters/mist_dancer.png",
+      "gacha_weight": 35,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, pale blue hair, mist dancer, flowing translucent silk clothing, elegant, foggy lake background at dawn, water ripples, serene expression, soft diffused lighting, masterpiece, ethereal mist",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "在晨雾中起舞的神秘舞者，以水雾迷惑敌人。"
+    },
+    {
+      "id": "spark_kid",
+      "name": "火花少年",
+      "rarity": "N",
+      "element": "fire",
+      "role": "attacker",
+      "base_stats": {
+        "hp": 480,
+        "atk": 88,
+        "def": 32,
+        "spd": 92,
+        "crit_rate": 0.08,
+        "crit_dmg": 1.5
+      },
+      "growth_rates": {
+        "hp": 60,
+        "atk": 11,
+        "def": 4,
+        "spd": 2
+      },
+      "skill_ids": [
+        "flame_burst_mini"
+      ],
+      "star_bonus": [
+        {
+          "stars": 3,
+          "skill_id": "fire_slash"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_firestorm"
+        }
+      ],
+      "portrait": "assets/characters/spark_kid.png",
+      "gacha_weight": 50,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, short messy red hair, energetic kid, simple tunic, holding small firecracker, village street background, playful grin, warm afternoon sun, simple composition, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "调皮捣蛋的火系少年，手中的火花既是玩具也是武器。"
+    },
+    {
+      "id": "pond_sprite",
+      "name": "池中精灵",
+      "rarity": "N",
+      "element": "water",
+      "role": "healer",
+      "base_stats": {
+        "hp": 460,
+        "atk": 52,
+        "def": 42,
+        "spd": 82,
+        "crit_rate": 0.03,
+        "crit_dmg": 1.3
+      },
+      "growth_rates": {
+        "hp": 58,
+        "atk": 7,
+        "def": 5,
+        "spd": 2
+      },
+      "skill_ids": [
+        "water_bubble"
+      ],
+      "star_bonus": [
+        {
+          "stars": 3,
+          "skill_id": "healing_rain"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_purify"
+        }
+      ],
+      "portrait": "assets/characters/pond_sprite.png",
+      "gacha_weight": 50,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, tiny, small water fairy, sitting on lily pad, pond garden background, dragonflies, cute chibi style, soft blue green tones, gentle ripples, soft natural lighting, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "栖息于池塘的小小精灵，用清澈的水滴治愈伙伴。"
+    },
+    {
+      "id": "breeze_runner",
+      "name": "微风信使",
+      "rarity": "N",
+      "element": "wind",
+      "role": "support",
+      "base_stats": {
+        "hp": 470,
+        "atk": 58,
+        "def": 38,
+        "spd": 95,
+        "crit_rate": 0.05,
+        "crit_dmg": 1.3
+      },
+      "growth_rates": {
+        "hp": 58,
+        "atk": 8,
+        "def": 4,
+        "spd": 3
+      },
+      "skill_ids": [
+        "wind_blade"
+      ],
+      "star_bonus": [
+        {
+          "stars": 3,
+          "skill_id": "gale_step"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_hurricane"
+        }
+      ],
+      "portrait": "assets/characters/breeze_runner.png",
+      "gacha_weight": 50,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, short light green hair, messenger, light scarf and simple travel clothes, running across grassy plain background, wind in hair, cheerful, blue sky, bright sunny day, simple composition, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "风之村庄的信使，跑得飞快，能为队友传递风之加护。"
+    },
+    {
+      "id": "dusk_moth",
+      "name": "暮蛾",
+      "rarity": "N",
+      "element": "dark",
+      "role": "attacker",
+      "base_stats": {
+        "hp": 490,
+        "atk": 82,
+        "def": 34,
+        "spd": 88,
+        "crit_rate": 0.08,
+        "crit_dmg": 1.5
+      },
+      "growth_rates": {
+        "hp": 62,
+        "atk": 10,
+        "def": 4,
+        "spd": 2
+      },
+      "skill_ids": [
+        "shadow_strike"
+      ],
+      "star_bonus": [
+        {
+          "stars": 3,
+          "skill_id": "dark_veil"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_execute"
+        }
+      ],
+      "portrait": "assets/characters/dusk_moth.png",
+      "gacha_weight": 50,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, dark purple pixie cut, moth-themed outfit, small dark wings, twilight forest background, bioluminescent glow, quiet shy expression, dim purple ambient lighting, masterpiece, magical dusk",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "夜幕降临时现身的蛾之精灵，以暗之鳞粉迷惑敌人。"
+    },
+    {
+      "id": "dragon_knight",
+      "name": "龙骑统帅",
+      "rarity": "SSR",
+      "element": "fire",
+      "role": "defender",
+      "base_stats": {
+        "hp": 1650,
+        "atk": 115,
+        "def": 155,
+        "spd": 78,
+        "crit_rate": 0.05,
+        "crit_dmg": 1.5
+      },
+      "growth_rates": {
+        "hp": 195,
+        "atk": 14,
+        "def": 18,
+        "spd": 2
+      },
+      "skill_ids": [
+        "fire_slash",
+        "blazing_aura"
+      ],
+      "star_bonus": [
+        {
+          "stars": 1,
+          "skill_id": "star_meteor"
+        },
+        {
+          "stars": 3,
+          "skill_id": "star_inferno"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_blessing"
+        }
+      ],
+      "portrait": "assets/characters/dragon_knight.png",
+      "gacha_weight": 5,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, crimson hair, dragon knight commander, red heavy plate armor with dragon motifs, holding dragon-shaped shield and lance, dragon lair background with lava, majestic, confident, fiery glow, cinematic lighting, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "驾驭火龙的最强骑士，龙焰铸就的坚盾守护者。"
+    },
+    {
+      "id": "abyss_watcher",
+      "name": "深渊守望者",
+      "rarity": "SSR",
+      "element": "dark",
+      "role": "defender",
+      "base_stats": {
+        "hp": 1580,
+        "atk": 120,
+        "def": 148,
+        "spd": 82,
+        "crit_rate": 0.05,
+        "crit_dmg": 1.5
+      },
+      "growth_rates": {
+        "hp": 188,
+        "atk": 14,
+        "def": 17,
+        "spd": 2
+      },
+      "skill_ids": [
+        "dark_veil",
+        "shadow_strike"
+      ],
+      "star_bonus": [
+        {
+          "stars": 1,
+          "skill_id": "star_berserk"
+        },
+        {
+          "stars": 3,
+          "skill_id": "star_execute"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_blessing"
+        }
+      ],
+      "portrait": "assets/characters/abyss_watcher.png",
+      "gacha_weight": 5,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, silver long hair, abyss watcher, ornate dark gothic armor, massive tower shield with glowing runes, void rift background, solemn, dark ethereal aura, dramatic cinematic lighting, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "守望深渊之门的守护者，以暗之力抵挡一切来犯。"
+    },
+    {
+      "id": "lotus_priestess",
+      "name": "莲华圣女",
+      "rarity": "SR",
+      "element": "water",
+      "role": "healer",
+      "base_stats": {
+        "hp": 870,
+        "atk": 125,
+        "def": 62,
+        "spd": 98,
+        "crit_rate": 0.05,
+        "crit_dmg": 1.5
+      },
+      "growth_rates": {
+        "hp": 112,
+        "atk": 16,
+        "def": 7,
+        "spd": 3
+      },
+      "skill_ids": [
+        "healing_rain",
+        "iron_wall"
+      ],
+      "star_bonus": [
+        {
+          "stars": 1,
+          "skill_id": "star_purify"
+        },
+        {
+          "stars": 3,
+          "skill_id": "star_blizzard"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_blessing"
+        }
+      ],
+      "portrait": "assets/characters/lotus_priestess.png",
+      "gacha_weight": 15,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, aqua blue flowing hair, priestess, white lotus flower robe, holding sacred lotus staff, lotus pond temple background, pure serene expression, water lilies, soft morning light, cinematic lighting, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "莲华寺的圣女，以圣水之力治愈众生。"
+    },
+    {
+      "id": "gale_blade",
+      "name": "岚刃",
+      "rarity": "SR",
+      "element": "wind",
+      "role": "attacker",
+      "base_stats": {
+        "hp": 930,
+        "atk": 158,
+        "def": 63,
+        "spd": 132,
+        "crit_rate": 0.16,
+        "crit_dmg": 1.7
+      },
+      "growth_rates": {
+        "hp": 108,
+        "atk": 19,
+        "def": 7,
+        "spd": 4
+      },
+      "skill_ids": [
+        "thunder_clap",
+        "gale_step"
+      ],
+      "star_bonus": [
+        {
+          "stars": 1,
+          "skill_id": "star_hurricane"
+        },
+        {
+          "stars": 3,
+          "skill_id": "star_tempest"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_berserk"
+        }
+      ],
+      "portrait": "assets/characters/gale_blade.png",
+      "gacha_weight": 15,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, teal short hair, wind swordsman, light agile armor, dual swords with wind aura, canyon windy background, swift battle stance, dust swirl, cool dynamic lighting, masterpiece, wind trails",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "疾风之刃的继承者，双剑挥舞间引动雷霆。"
+    },
+    {
+      "id": "radiant_guard",
+      "name": "光辉守卫",
+      "rarity": "SR",
+      "element": "light",
+      "role": "defender",
+      "base_stats": {
+        "hp": 1480,
+        "atk": 98,
+        "def": 142,
+        "spd": 72,
+        "crit_rate": 0.05,
+        "crit_dmg": 1.5
+      },
+      "growth_rates": {
+        "hp": 178,
+        "atk": 12,
+        "def": 16,
+        "spd": 2
+      },
+      "skill_ids": [
+        "divine_shield",
+        "flash_heal"
+      ],
+      "star_bonus": [
+        {
+          "stars": 1,
+          "skill_id": "star_blessing"
+        },
+        {
+          "stars": 3,
+          "skill_id": "star_holy_nova"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_judgment"
+        }
+      ],
+      "portrait": "assets/characters/radiant_guard.png",
+      "gacha_weight": 15,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, golden blonde hair, radiant paladin, polished gold-white armor, holding blessed tower shield and mace, holy temple background, warm light halo, serene strong, divine rays, cinematic lighting, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "圣殿的光辉卫士，以圣盾庇护所有同伴。"
+    },
+    {
+      "id": "lava_fighter",
+      "name": "熔岩拳士",
+      "rarity": "R",
+      "element": "fire",
+      "role": "attacker",
+      "base_stats": {
+        "hp": 710,
+        "atk": 122,
+        "def": 48,
+        "spd": 86,
+        "crit_rate": 0.08,
+        "crit_dmg": 1.5
+      },
+      "growth_rates": {
+        "hp": 92,
+        "atk": 15,
+        "def": 5,
+        "spd": 2
+      },
+      "skill_ids": [
+        "flame_burst_mini"
+      ],
+      "star_bonus": [
+        {
+          "stars": 2,
+          "skill_id": "fire_slash"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_meteor"
+        }
+      ],
+      "portrait": "assets/characters/lava_fighter.png",
+      "gacha_weight": 35,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, short red hair, brawler, fire element, light leather gloves with flame tattoos, fighting stance, volcanic training ground background, determined expression, heat shimmer, warm bright lighting, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "在火山修炼的格斗家，拳头上缠绕着灼热的熔岩之火。"
+    },
+    {
+      "id": "coral_shaman",
+      "name": "珊瑚萨满",
+      "rarity": "R",
+      "element": "water",
+      "role": "support",
+      "base_stats": {
+        "hp": 670,
+        "atk": 84,
+        "def": 54,
+        "spd": 95,
+        "crit_rate": 0.05,
+        "crit_dmg": 1.4
+      },
+      "growth_rates": {
+        "hp": 84,
+        "atk": 11,
+        "def": 6,
+        "spd": 3
+      },
+      "skill_ids": [
+        "water_bubble"
+      ],
+      "star_bonus": [
+        {
+          "stars": 2,
+          "skill_id": "iron_wall"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_purify"
+        }
+      ],
+      "portrait": "assets/characters/coral_shaman.png",
+      "gacha_weight": 35,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, pink coral hair, shaman, tribal ocean-themed dress with shells and coral jewelry, holding coral staff, underwater reef background, gentle smile, dappled underwater light, vibrant colors, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "守护珊瑚海的年轻萨满，以海之力祝福队友。"
+    },
+    {
+      "id": "thorn_shade",
+      "name": "荆棘暗影",
+      "rarity": "R",
+      "element": "dark",
+      "role": "attacker",
+      "base_stats": {
+        "hp": 690,
+        "atk": 124,
+        "def": 46,
+        "spd": 90,
+        "crit_rate": 0.1,
+        "crit_dmg": 1.6
+      },
+      "growth_rates": {
+        "hp": 86,
+        "atk": 16,
+        "def": 5,
+        "spd": 2
+      },
+      "skill_ids": [
+        "dark_bolt"
+      ],
+      "star_bonus": [
+        {
+          "stars": 2,
+          "skill_id": "venom_sting"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_execute"
+        }
+      ],
+      "portrait": "assets/characters/thorn_shade.png",
+      "gacha_weight": 35,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, standing, dark green hair with thorn vine accessories, assassin, dark leather armor with thorn patterns, holding whip-sword, thorny forest background, sharp eyes, moonlight through leaves, cool green tinted lighting, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "荆棘森林的猎手，暗影与荆棘并用的冷酷战士。"
+    },
+    {
+      "id": "ember_sprite",
+      "name": "余烬精灵",
+      "rarity": "N",
+      "element": "fire",
+      "role": "healer",
+      "base_stats": {
+        "hp": 440,
+        "atk": 58,
+        "def": 38,
+        "spd": 86,
+        "crit_rate": 0.03,
+        "crit_dmg": 1.3
+      },
+      "growth_rates": {
+        "hp": 56,
+        "atk": 8,
+        "def": 4,
+        "spd": 2
+      },
+      "skill_ids": [
+        "flame_burst_mini"
+      ],
+      "star_bonus": [
+        {
+          "stars": 3,
+          "skill_id": "flash_heal"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_blessing"
+        }
+      ],
+      "portrait": "assets/characters/ember_sprite.png",
+      "gacha_weight": 50,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, floating, tiny fire sprite, warm orange glow, small cute chibi, ash-like wings, campfire background, gentle warm expression, embers floating, cozy warm lighting, simple composition, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "从余烬中诞生的温暖精灵，用火焰的温柔治愈伙伴。"
+    },
+    {
+      "id": "night_wisp",
+      "name": "夜火",
+      "rarity": "N",
+      "element": "dark",
+      "role": "support",
+      "base_stats": {
+        "hp": 460,
+        "atk": 56,
+        "def": 40,
+        "spd": 92,
+        "crit_rate": 0.05,
+        "crit_dmg": 1.3
+      },
+      "growth_rates": {
+        "hp": 58,
+        "atk": 7,
+        "def": 5,
+        "spd": 3
+      },
+      "skill_ids": [
+        "dark_bolt"
+      ],
+      "star_bonus": [
+        {
+          "stars": 3,
+          "skill_id": "dark_veil"
+        },
+        {
+          "stars": 5,
+          "skill_id": "star_tempest"
+        }
+      ],
+      "portrait": "assets/characters/night_wisp.png",
+      "gacha_weight": 50,
+      "lora_config": {
+        "lora": "",
+        "lora_strength": 0,
+        "prompt": "1girl, full body, floating, small wisp spirit, dark purple glow, tiny cute chibi, will-o-wisp like, night forest background with fireflies, shy curious expression, dark blue purple ambient lighting, simple magical, masterpiece",
+        "width": 768,
+        "height": 1344
+      },
+      "description": "在黑夜中飘荡的小小鬼火，以暗之力迷惑敌人保护队友。"
+    }
+  ]
+}

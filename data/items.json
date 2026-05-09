@@ -1,0 +1,167 @@
+{
+  "items": [
+    {
+      "id": "gacha_ticket",
+      "name": "召唤券",
+      "type": "consumable",
+      "rarity": "R",
+      "icon": "assets/items/gacha_ticket.png",
+      "description": "用于进行一次角色召唤。",
+      "stackable": true,
+      "sell_price": 500,
+      "effect": { "type": "gacha_pull" }
+    },
+    {
+      "id": "hp_potion_small",
+      "name": "小型生命药水",
+      "type": "consumable",
+      "rarity": "N",
+      "icon": "assets/items/hp_potion_small.png",
+      "description": "恢复一名角色300点生命值。",
+      "stackable": true,
+      "sell_price": 50,
+      "effect": { "type": "heal", "value": 300 }
+    },
+    {
+      "id": "hp_potion_large",
+      "name": "大型生命药水",
+      "type": "consumable",
+      "rarity": "R",
+      "icon": "assets/items/hp_potion_large.png",
+      "description": "恢复一名角色1000点生命值。",
+      "stackable": true,
+      "sell_price": 150,
+      "effect": { "type": "heal", "value": 1000 }
+    },
+    {
+      "id": "fire_crystal",
+      "name": "火焰结晶",
+      "type": "material",
+      "rarity": "SR",
+      "icon": "assets/items/fire_crystal.png",
+      "description": "蕴含火焰能量的晶体，用于角色觉醒。",
+      "stackable": true,
+      "sell_price": 200
+    },
+    {
+      "id": "water_crystal",
+      "name": "冰泉结晶",
+      "type": "material",
+      "rarity": "SR",
+      "icon": "assets/items/water_crystal.png",
+      "description": "蕴含冰泉能量的晶体，用于角色觉醒。",
+      "stackable": true,
+      "sell_price": 200
+    },
+    {
+      "id": "wind_crystal",
+      "name": "疾风结晶",
+      "type": "material",
+      "rarity": "SR",
+      "icon": "assets/items/wind_crystal.png",
+      "description": "蕴含风之能量的晶体，用于角色觉醒。",
+      "stackable": true,
+      "sell_price": 200
+    },
+    {
+      "id": "dark_crystal",
+      "name": "暗影结晶",
+      "type": "material",
+      "rarity": "SR",
+      "icon": "assets/items/dark_crystal.png",
+      "description": "蕴含暗影能量的晶体，用于角色觉醒。",
+      "stackable": true,
+      "sell_price": 200
+    },
+    {
+      "id": "light_crystal",
+      "name": "光之结晶",
+      "type": "material",
+      "rarity": "SR",
+      "icon": "assets/items/light_crystal.png",
+      "description": "蕴含光之能量的晶体，用于角色觉醒。",
+      "stackable": true,
+      "sell_price": 200
+    },
+    {
+      "id": "dragon_scale",
+      "name": "龙鳞",
+      "type": "material",
+      "rarity": "SSR",
+      "icon": "assets/items/dragon_scale.png",
+      "description": "火龙掉落的珍贵鳞片，极其稀有。",
+      "stackable": true,
+      "sell_price": 1000
+    },
+    {
+      "id": "iron_armor",
+      "name": "铁甲",
+      "type": "equipment",
+      "subtype": "armor",
+      "rarity": "R",
+      "icon": "assets/items/iron_armor.png",
+      "description": "一件坚固的铁制铠甲，提升防御力。",
+      "stackable": false,
+      "sell_price": 300,
+      "equip_slot": "armor",
+      "equip_stats": { "def": 30, "hp": 100 },
+      "equip_requirement": { "level": 1 }
+    },
+    {
+      "id": "energy_ring",
+      "name": "能量戒指",
+      "type": "equipment",
+      "subtype": "accessory",
+      "rarity": "SR",
+      "icon": "assets/items/energy_ring.png",
+      "description": "蕴含光之能量的戒指，提升生命和速度。",
+      "stackable": false,
+      "sell_price": 500,
+      "equip_slot": "accessory",
+      "equip_stats": { "hp": 200, "spd": 10 },
+      "equip_requirement": { "level": 5 }
+    },
+    {
+      "id": "iron_sword",
+      "name": "铁剑",
+      "type": "equipment",
+      "subtype": "weapon",
+      "rarity": "R",
+      "icon": "assets/items/iron_sword.png",
+      "description": "一把普通的铁剑，增加攻击力。",
+      "stackable": false,
+      "sell_price": 300,
+      "equip_slot": "weapon",
+      "equip_stats": { "atk": 25, "crit_rate": 0.03 },
+      "equip_requirement": { "level": 1 }
+    },
+    {
+      "id": "shadow_cloak",
+      "name": "暗影斗篷",
+      "type": "equipment",
+      "subtype": "armor",
+      "rarity": "SR",
+      "icon": "assets/items/shadow_cloak.png",
+      "description": "暗影之力织成的斗篷，提升闪避般的防御效果。",
+      "stackable": false,
+      "sell_price": 500,
+      "equip_slot": "armor",
+      "equip_stats": { "def": 40, "spd": 15 },
+      "equip_requirement": { "level": 5 }
+    },
+    {
+      "id": "flame_amulet",
+      "name": "烈焰护符",
+      "type": "equipment",
+      "subtype": "accessory",
+      "rarity": "SR",
+      "icon": "assets/items/flame_amulet.png",
+      "description": "蕴含火焰之力的护符，增强火属性攻击。",
+      "stackable": false,
+      "sell_price": 500,
+      "equip_slot": "accessory",
+      "equip_stats": { "atk": 30, "crit_dmg": 0.15 },
+      "equip_requirement": { "level": 5, "element": "fire" }
+    }
+  ]
+}
