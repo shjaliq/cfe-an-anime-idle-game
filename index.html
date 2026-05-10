@@ -2006,9 +2006,12 @@ const TOWER_CONFIG = [
 ];
 
 const WORLD_BOSS_MAX_TEAMS = 5;
-const WORLD_BOSS_REWARD_BASE = { gold: 500, exp: 300, gems: 2 };
+const WORLD_BOSS_REWARD_BASE = { gold: 2000, exp: 1000, gems: 5 };
 const WORLD_BOSS_KILL_SCALING = 1.25;   // Boss stats *= 1.25 per kill
-const WORLD_BOSS_REWARD_SCALING = 1.15; // Rewards *= 1.15 per kill
+const WORLD_BOSS_REWARD_SCALING = 1.18; // Rewards *= 1.18 per kill
+const WORLD_BOSS_FIRST_BLOOD = { gold: 5000, exp: 2500, gems: 15 };
+const WORLD_BOSS_MILESTONE_INTERVAL = 5;
+const WORLD_BOSS_MILESTONE_MULT = 3;   // Every 5th kill = 3x reward
 
 const WORLD_BOSS_POOL = [
   { id: 'wb_fire_dragon', name: '炎狱龙王', element: 'fire', portrait: 'boss_fire_dragon',
@@ -2823,15 +2826,34 @@ const WorldBossEngine = {
 
   onBossKilled(battle) {
     const kills = (battle.worldBossKills || 0) + 1;
+    let bonusMsg = '';
     if (!battle.isPractice) {
       const r = battle.worldBossRewards || { gold: 0, exp: 0, gems: 0 };
-      r.gold += Math.floor(WORLD_BOSS_REWARD_BASE.gold * Math.pow(WORLD_BOSS_REWARD_SCALING, kills - 1));
-      r.exp += Math.floor(WORLD_BOSS_REWARD_BASE.exp * Math.pow(WORLD_BOSS_REWARD_SCALING, kills - 1));
-      r.gems += Math.floor(WORLD_BOSS_REWARD_BASE.gems * Math.pow(WORLD_BOSS_REWARD_SCALING, kills - 1));
+      const baseG = Math.floor(WORLD_BOSS_REWARD_BASE.gold * Math.pow(WORLD_BOSS_REWARD_SCALING, kills - 1));
+      const baseE = Math.floor(WORLD_BOSS_REWARD_BASE.exp * Math.pow(WORLD_BOSS_REWARD_SCALING, kills - 1));
+      const baseGem = Math.floor(WORLD_BOSS_REWARD_BASE.gems * Math.pow(WORLD_BOSS_REWARD_SCALING, kills - 1));
+      let mult = 1;
+
+      // First blood bonus
+      if (kills === 1) {
+        r.gold += WORLD_BOSS_FIRST_BLOOD.gold;
+        r.exp += WORLD_BOSS_FIRST_BLOOD.exp;
+        r.gems += WORLD_BOSS_FIRST_BLOOD.gems;
+        bonusMsg = ` 🔥首杀奖励！+🪙${WORLD_BOSS_FIRST_BLOOD.gold.toLocaleString()} +💎${WORLD_BOSS_FIRST_BLOOD.gems}`;
+      }
+      // Milestone bonus every N kills
+      if (kills > 0 && kills % WORLD_BOSS_MILESTONE_INTERVAL === 0) {
+        mult = WORLD_BOSS_MILESTONE_MULT;
+        bonusMsg = ` 🎯第${kills}波里程碑！${mult}x奖励！`;
+      }
+
+      r.gold += baseG * mult;
+      r.exp += baseE * mult;
+      r.gems += baseGem * mult;
       battle.worldBossRewards = r;
     }
     battle.worldBossKills = kills;
-    battle.battleLog.push({ msg: `${battle.isPractice ? '🧪' : '🏆'} 第${kills}次击杀！Boss增强复活！`, type: 'info' });
+    battle.battleLog.push({ msg: `${battle.isPractice ? '🧪' : '🏆'} 第${kills}次击杀！Boss增强复活！${bonusMsg}`, type: 'info' });
 
     // Respawn boss stronger with high initial gauge so it acts promptly
     battle.enemies = this._buildBossEnemy(kills, undefined);
@@ -2896,9 +2918,18 @@ const WorldBossEngine = {
   getSweepRewards(kills) {
     let gold = 0, exp = 0, gems = 0;
     for (let k = 0; k < kills; k++) {
-      gold += Math.floor(WORLD_BOSS_REWARD_BASE.gold * Math.pow(WORLD_BOSS_REWARD_SCALING, k));
-      exp += Math.floor(WORLD_BOSS_REWARD_BASE.exp * Math.pow(WORLD_BOSS_REWARD_SCALING, k));
-      gems += Math.floor(WORLD_BOSS_REWARD_BASE.gems * Math.pow(WORLD_BOSS_REWARD_SCALING, k));
+      const kn = k + 1; // 1-indexed kill number
+      let mult = 1;
+      if (kn > 0 && kn % WORLD_BOSS_MILESTONE_INTERVAL === 0) mult = WORLD_BOSS_MILESTONE_MULT;
+      gold += Math.floor(WORLD_BOSS_REWARD_BASE.gold * Math.pow(WORLD_BOSS_REWARD_SCALING, k)) * mult;
+      exp += Math.floor(WORLD_BOSS_REWARD_BASE.exp * Math.pow(WORLD_BOSS_REWARD_SCALING, k)) * mult;
+      gems += Math.floor(WORLD_BOSS_REWARD_BASE.gems * Math.pow(WORLD_BOSS_REWARD_SCALING, k)) * mult;
+    }
+    // First blood bonus
+    if (kills >= 1) {
+      gold += WORLD_BOSS_FIRST_BLOOD.gold;
+      exp += WORLD_BOSS_FIRST_BLOOD.exp;
+      gems += WORLD_BOSS_FIRST_BLOOD.gems;
     }
     return { gold, exp, gems };
   },
@@ -4514,6 +4545,24 @@ const GameUI = {
 
     let html = `
       <div class="section-title">👹 世界BOSS</div>
+      <div class="wb-rules" style="background:var(--bg-tertiary);border-radius:10px;padding:10px 12px;margin-bottom:10px;font-size:10px;color:var(--text-muted);line-height:1.6;">
+        <div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;" onclick="const b=this.nextElementSibling;b.style.display=b.style.display==='none'?'block':'none';this.querySelector('.wb-rules-arrow').textContent=b.style.display==='none'?'▶':'▼';">
+          <span style="font-weight:600;font-size:12px;color:var(--text-secondary);">📋 世界BOSS规则</span>
+          <span class="wb-rules-arrow" style="font-size:10px;">▼</span>
+        </div>
+        <div class="wb-rules-body" style="margin-top:6px;">
+          • 每日随机刷新1个BOSS，提供<strong>1次</strong>免费挑战机会<br>
+          • 可配置<strong>1~5队</strong>角色进行车轮战，每队最多4人<br>
+          • 队伍全灭后下一队接替，BOSS<strong>血量保留</strong><br>
+          • 击败BOSS后其<strong>全属性提升25%</strong>复活，无限波次<br>
+          • 存活队友每次击杀后恢复<strong>20%血量</strong><br>
+          • 奖励随击杀数递增（每波+18%），第<strong>5/10/15...</strong>波触发<strong>${WORLD_BOSS_MILESTONE_MULT}x</strong>里程碑奖励<br>
+          • 首次击杀额外获得<strong>🔥首杀奖励</strong>（🪙${WORLD_BOSS_FIRST_BLOOD.gold.toLocaleString()} 💎${WORLD_BOSS_FIRST_BLOOD.gems}）<br>
+          • 基础奖励: 🪙${WORLD_BOSS_REWARD_BASE.gold.toLocaleString()} ⭐${WORLD_BOSS_REWARD_BASE.exp.toLocaleString()} 💎${WORLD_BOSS_REWARD_BASE.gems} × ${(WORLD_BOSS_REWARD_SCALING*100).toFixed(0)}%ⁿ⁻¹/波<br>
+          • 可基于<strong>历史最佳纪录</strong>直接扫荡领奖<br>
+          • <strong>🧪 模拟战</strong>不消耗次数、不计奖励，随时练习
+        </div>
+      </div>
       <div class="world-boss-header">
         <img src="assets/enemies/${boss.portrait || 'boss_fire_dragon'}.png" class="boss-preview" style="width:56px;height:56px;border-radius:10px;" alt="${boss.name}" onerror="this.outerHTML='<span style=font-size:40px;>👹</span>'">
         <div class="world-boss-info">
