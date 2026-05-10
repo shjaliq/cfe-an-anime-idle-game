@@ -11,13 +11,7 @@
       "cooldown": 2,
       "mana_cost": 25,
       "effects": [
-        {
-          "type": "burn",
-          "chance": 0.4,
-          "duration": 3,
-          "value": 0.08,
-          "scale": "caster_atk"
-        }
+        { "type": "burn", "chance": 0.4, "duration": 3, "value": 0.08, "scale": "caster_atk" }
       ],
       "icon": "assets/skills/fire_slash.png",
       "description": "凝聚火焰之力斩向敌人，有概率造成灼烧效果。"
@@ -33,16 +27,57 @@
       "cooldown": 5,
       "mana_cost": 40,
       "effects": [
-        {
-          "type": "atk_up",
-          "chance": 1.0,
-          "duration": 3,
-          "value": 1.25,
-          "scale": null
-        }
+        { "type": "atk_up", "chance": 1.0, "duration": 3, "value": 1.25, "scale": null }
       ],
       "icon": "assets/skills/blazing_aura.png",
       "description": "释放烈焰光环，提升全体队友攻击力。"
+    },
+    {
+      "id": "firestorm_wave",
+      "name": "烈焰风暴",
+      "type": "damage",
+      "element": "fire",
+      "target": "all_enemies",
+      "base_multiplier": 0.8,
+      "scale_stat": "atk",
+      "cooldown": 4,
+      "mana_cost": 45,
+      "effects": [
+        { "type": "burn", "chance": 0.35, "duration": 2, "value": 0.05, "scale": "caster_atk" }
+      ],
+      "icon": "assets/skills/blazing_aura.png",
+      "description": "以火焰风暴席卷全体敌人，有概率造成灼烧。"
+    },
+    {
+      "id": "cauterize",
+      "name": "灼疗",
+      "type": "heal",
+      "element": "fire",
+      "target": "single",
+      "base_multiplier": 1.3,
+      "scale_stat": "atk",
+      "cooldown": 3,
+      "mana_cost": 25,
+      "effects": [],
+      "icon": "assets/skills/blazing_aura.png",
+      "description": "以火焰灼合伤口，快速治愈单个队友。"
+    },
+    {
+      "id": "magma_shield",
+      "name": "熔岩护甲",
+      "type": "buff",
+      "element": "fire",
+      "target": "self",
+      "base_multiplier": 0,
+      "scale_stat": "atk",
+      "cooldown": 5,
+      "mana_cost": 40,
+      "effects": [
+        { "type": "def_up", "chance": 1.0, "duration": 3, "value": 1.4, "scale": null },
+        { "type": "shield", "chance": 1.0, "duration": 3, "value": 0.2, "scale": "caster_max_hp" }
+      ],
+      "icon": "assets/skills/divine_shield.png",
+      "description": "披覆熔岩护甲，大幅提升自身防御并获得护盾。"
     },
     {
       "id": "healing_rain",
@@ -69,16 +104,56 @@
       "cooldown": 3,
       "mana_cost": 35,
       "effects": [
-        {
-          "type": "spd_down",
-          "chance": 0.5,
-          "duration": 2,
-          "value": 0.7,
-          "scale": null
-        }
+        { "type": "spd_down", "chance": 0.5, "duration": 2, "value": 0.7, "scale": null }
       ],
       "icon": "assets/skills/ice_lance.png",
       "description": "投掷冰晶长枪，有概率降低敌人速度。"
+    },
+    {
+      "id": "frost_shard",
+      "name": "冰霜碎片",
+      "type": "damage",
+      "element": "water",
+      "target": "single",
+      "base_multiplier": 1.8,
+      "scale_stat": "atk",
+      "cooldown": 2,
+      "mana_cost": 25,
+      "effects": [
+        { "type": "def_down", "chance": 0.35, "duration": 2, "value": 0.75, "scale": null }
+      ],
+      "icon": "assets/skills/ice_lance.png",
+      "description": "发射冰霜碎片刺穿敌人，有概率降低防御。"
+    },
+    {
+      "id": "aqua_jet",
+      "name": "水弹连射",
+      "type": "damage",
+      "element": "water",
+      "target": "single",
+      "base_multiplier": 1.25,
+      "scale_stat": "atk",
+      "cooldown": 1,
+      "mana_cost": 18,
+      "effects": [],
+      "icon": "assets/skills/water_bubble.png",
+      "description": "快速连射高压水弹攻击敌人。"
+    },
+    {
+      "id": "tidal_blessing",
+      "name": "潮汐祝福",
+      "type": "buff",
+      "element": "water",
+      "target": "all_allies",
+      "base_multiplier": 0,
+      "scale_stat": "atk",
+      "cooldown": 5,
+      "mana_cost": 35,
+      "effects": [
+        { "type": "spd_up", "chance": 1.0, "duration": 3, "value": 1.3, "scale": null }
+      ],
+      "icon": "assets/skills/gale_step.png",
+      "description": "以潮汐之力祝福全体队友，提升速度。"
     },
     {
       "id": "wind_arrow",
@@ -105,16 +180,72 @@
       "cooldown": 4,
       "mana_cost": 30,
       "effects": [
-        {
-          "type": "spd_up",
-          "chance": 1.0,
-          "duration": 3,
-          "value": 1.4,
-          "scale": null
-        }
+        { "type": "spd_up", "chance": 1.0, "duration": 3, "value": 1.4, "scale": null }
       ],
       "icon": "assets/skills/gale_step.png",
       "description": "以风之力加速，大幅提升自身速度。"
+    },
+    {
+      "id": "thunder_clap",
+      "name": "雷击",
+      "type": "damage",
+      "element": "wind",
+      "target": "single",
+      "base_multiplier": 1.8,
+      "scale_stat": "atk",
+      "cooldown": 3,
+      "mana_cost": 30,
+      "effects": [
+        { "type": "stun", "chance": 0.25, "duration": 1, "value": 0, "scale": null }
+      ],
+      "icon": "assets/skills/thunder_clap.png",
+      "description": "召唤天雷劈向敌人，有概率造成眩晕。"
+    },
+    {
+      "id": "soothing_breeze",
+      "name": "和风愈",
+      "type": "heal",
+      "element": "wind",
+      "target": "single",
+      "base_multiplier": 1.2,
+      "scale_stat": "atk",
+      "cooldown": 3,
+      "mana_cost": 25,
+      "effects": [
+        { "type": "spd_up", "chance": 1.0, "duration": 2, "value": 1.15, "scale": null }
+      ],
+      "icon": "assets/skills/gale_step.png",
+      "description": "以微风之力治愈队友，并小幅提升速度。"
+    },
+    {
+      "id": "wind_wall",
+      "name": "风之壁障",
+      "type": "buff",
+      "element": "wind",
+      "target": "all_allies",
+      "base_multiplier": 0,
+      "scale_stat": "atk",
+      "cooldown": 5,
+      "mana_cost": 35,
+      "effects": [
+        { "type": "def_up", "chance": 1.0, "duration": 3, "value": 1.3, "scale": null }
+      ],
+      "icon": "assets/skills/iron_wall.png",
+      "description": "召唤风之壁障，提升全体队友防御力。"
+    },
+    {
+      "id": "tempest_slash",
+      "name": "暴风斩",
+      "type": "damage",
+      "element": "wind",
+      "target": "all_enemies",
+      "base_multiplier": 0.75,
+      "scale_stat": "atk",
+      "cooldown": 4,
+      "mana_cost": 40,
+      "effects": [],
+      "icon": "assets/skills/wind_arrow.png",
+      "description": "以暴风之刃斩击全体敌人。"
     },
     {
       "id": "shadow_strike",
@@ -127,13 +258,7 @@
       "cooldown": 3,
       "mana_cost": 30,
       "effects": [
-        {
-          "type": "def_down",
-          "chance": 0.3,
-          "duration": 2,
-          "value": 0.75,
-          "scale": null
-        }
+        { "type": "def_down", "chance": 0.3, "duration": 2, "value": 0.75, "scale": null }
       ],
       "icon": "assets/skills/shadow_strike.png",
       "description": "从暗影中突袭敌人，有概率降低敌人防御。"
@@ -149,16 +274,59 @@
       "cooldown": 5,
       "mana_cost": 35,
       "effects": [
-        {
-          "type": "atk_down",
-          "chance": 0.7,
-          "duration": 2,
-          "value": 0.7,
-          "scale": null
-        }
+        { "type": "atk_down", "chance": 0.7, "duration": 2, "value": 0.7, "scale": null }
       ],
       "icon": "assets/skills/dark_veil.png",
       "description": "释放黑暗帷幕，有概率降低全体敌人攻击力。"
+    },
+    {
+      "id": "life_drain",
+      "name": "生命汲取",
+      "type": "damage",
+      "element": "dark",
+      "target": "single",
+      "base_multiplier": 1.6,
+      "scale_stat": "atk",
+      "cooldown": 3,
+      "mana_cost": 28,
+      "effects": [
+        { "type": "bleed", "chance": 0.5, "duration": 3, "value": 0.06, "scale": "caster_atk" }
+      ],
+      "icon": "assets/skills/venom_sting.png",
+      "description": "汲取敌人生命力，造成持续流血伤害。"
+    },
+    {
+      "id": "shadow_cloak",
+      "name": "暗影斗篷",
+      "type": "buff",
+      "element": "dark",
+      "target": "self",
+      "base_multiplier": 0,
+      "scale_stat": "atk",
+      "cooldown": 5,
+      "mana_cost": 35,
+      "effects": [
+        { "type": "spd_up", "chance": 1.0, "duration": 3, "value": 1.3, "scale": null },
+        { "type": "crit_rate_up", "chance": 1.0, "duration": 3, "value": 1.5, "scale": null }
+      ],
+      "icon": "assets/skills/dark_veil.png",
+      "description": "披上暗影斗篷，大幅提升速度与暴击率。"
+    },
+    {
+      "id": "void_burst",
+      "name": "虚空爆发",
+      "type": "damage",
+      "element": "dark",
+      "target": "all_enemies",
+      "base_multiplier": 0.8,
+      "scale_stat": "atk",
+      "cooldown": 4,
+      "mana_cost": 45,
+      "effects": [
+        { "type": "atk_down", "chance": 0.3, "duration": 2, "value": 0.8, "scale": null }
+      ],
+      "icon": "assets/skills/shadow_strike.png",
+      "description": "释放虚空能量冲击全体敌人，有概率降低攻击。"
     },
     {
       "id": "holy_smite",
@@ -171,13 +339,7 @@
       "cooldown": 2,
       "mana_cost": 25,
       "effects": [
-        {
-          "type": "stun",
-          "chance": 0.2,
-          "duration": 1,
-          "value": 0,
-          "scale": null
-        }
+        { "type": "stun", "chance": 0.2, "duration": 1, "value": 0, "scale": null }
       ],
       "icon": "assets/skills/holy_smite.png",
       "description": "降下圣光之力惩戒敌人，有概率造成眩晕。"
@@ -193,16 +355,54 @@
       "cooldown": 5,
       "mana_cost": 45,
       "effects": [
-        {
-          "type": "shield",
-          "chance": 1.0,
-          "duration": 3,
-          "value": 0.3,
-          "scale": "caster_max_hp"
-        }
+        { "type": "shield", "chance": 1.0, "duration": 3, "value": 0.3, "scale": "caster_max_hp" }
       ],
       "icon": "assets/skills/divine_shield.png",
       "description": "为全体队友施加神圣护盾，吸收伤害。"
+    },
+    {
+      "id": "holy_aura",
+      "name": "神圣光环",
+      "type": "buff",
+      "element": "light",
+      "target": "all_allies",
+      "base_multiplier": 0,
+      "scale_stat": "atk",
+      "cooldown": 5,
+      "mana_cost": 40,
+      "effects": [
+        { "type": "atk_up", "chance": 1.0, "duration": 3, "value": 1.25, "scale": null }
+      ],
+      "icon": "assets/skills/blazing_aura.png",
+      "description": "释放神圣光环，提升全体队友攻击力。"
+    },
+    {
+      "id": "radiant_beam",
+      "name": "光辉射线",
+      "type": "damage",
+      "element": "light",
+      "target": "all_enemies",
+      "base_multiplier": 0.75,
+      "scale_stat": "atk",
+      "cooldown": 4,
+      "mana_cost": 40,
+      "effects": [],
+      "icon": "assets/skills/holy_smite.png",
+      "description": "发射圣光射线穿透全体敌人。"
+    },
+    {
+      "id": "cleanse",
+      "name": "净化之光",
+      "type": "heal",
+      "element": "light",
+      "target": "single",
+      "base_multiplier": 2.0,
+      "scale_stat": "atk",
+      "cooldown": 3,
+      "mana_cost": 30,
+      "effects": [],
+      "icon": "assets/skills/flash_heal.png",
+      "description": "以纯净圣光强力治愈单个队友。"
     },
     {
       "id": "flame_burst_mini",
@@ -247,224 +447,6 @@
       "description": "发出风之刃攻击敌人。"
     },
     {
-      "id": "star_firestorm",
-      "name": "★烈焰风暴",
-      "type": "damage",
-      "element": "fire",
-      "target": "all_enemies",
-      "base_multiplier": 1.5,
-      "scale_stat": "atk",
-      "cooldown": 4,
-      "mana_cost": 0,
-      "effects": [
-        {
-          "type": "burn",
-          "chance": 0.5,
-          "duration": 2,
-          "value": 0.06,
-          "scale": "caster_atk"
-        }
-      ],
-      "icon": "assets/skills/star_firestorm.png",
-      "description": "★觉醒特技: 召唤烈焰风暴席卷全体敌人。"
-    },
-    {
-      "id": "star_inferno",
-      "name": "★地狱烈焰",
-      "type": "damage",
-      "element": "fire",
-      "target": "all_enemies",
-      "base_multiplier": 2.0,
-      "scale_stat": "atk",
-      "cooldown": 5,
-      "mana_cost": 0,
-      "effects": [
-        {
-          "type": "burn",
-          "chance": 0.7,
-          "duration": 3,
-          "value": 0.1,
-          "scale": "caster_atk"
-        }
-      ],
-      "icon": "assets/skills/star_inferno.png",
-      "description": "★觉醒特技: 释放地狱烈焰焚烧全体敌人。"
-    },
-    {
-      "id": "star_tsunami",
-      "name": "★怒涛狂澜",
-      "type": "damage",
-      "element": "water",
-      "target": "all_enemies",
-      "base_multiplier": 1.4,
-      "scale_stat": "atk",
-      "cooldown": 4,
-      "mana_cost": 0,
-      "effects": [
-        {
-          "type": "spd_down",
-          "chance": 0.6,
-          "duration": 2,
-          "value": 0.75,
-          "scale": null
-        }
-      ],
-      "icon": "assets/skills/star_tsunami.png",
-      "description": "★觉醒特技: 召唤巨浪冲击全体敌人。"
-    },
-    {
-      "id": "star_purify",
-      "name": "★净化之泉",
-      "type": "heal",
-      "element": "water",
-      "target": "all_allies",
-      "base_multiplier": 0.8,
-      "scale_stat": "atk",
-      "cooldown": 4,
-      "mana_cost": 0,
-      "effects": [
-        {
-          "type": "shield",
-          "chance": 1.0,
-          "duration": 2,
-          "value": 0.15,
-          "scale": "caster_max_hp"
-        }
-      ],
-      "icon": "assets/skills/star_purify.png",
-      "description": "★觉醒特技: 净化并治疗全体队友，附加护盾。"
-    },
-    {
-      "id": "star_hurricane",
-      "name": "★飓风之眼",
-      "type": "damage",
-      "element": "wind",
-      "target": "all_enemies",
-      "base_multiplier": 1.6,
-      "scale_stat": "atk",
-      "cooldown": 3,
-      "mana_cost": 0,
-      "effects": [],
-      "icon": "assets/skills/star_hurricane.png",
-      "description": "★觉醒特技: 以飓风之力撕裂全体敌人。"
-    },
-    {
-      "id": "star_cyclone",
-      "name": "★旋风斩",
-      "type": "damage",
-      "element": "wind",
-      "target": "all_enemies",
-      "base_multiplier": 1.3,
-      "scale_stat": "atk",
-      "cooldown": 3,
-      "mana_cost": 0,
-      "effects": [
-        {
-          "type": "spd_down",
-          "chance": 0.4,
-          "duration": 2,
-          "value": 0.8,
-          "scale": null
-        }
-      ],
-      "icon": "assets/skills/star_cyclone.png",
-      "description": "★觉醒特技: 以旋风斩击全体敌人。"
-    },
-    {
-      "id": "star_execute",
-      "name": "★处决",
-      "type": "damage",
-      "element": "dark",
-      "target": "single",
-      "base_multiplier": 3.0,
-      "scale_stat": "atk",
-      "cooldown": 5,
-      "mana_cost": 0,
-      "effects": [],
-      "icon": "assets/skills/star_execute.png",
-      "description": "★觉醒特技: 对单个敌人造成毁灭性打击。"
-    },
-    {
-      "id": "star_berserk",
-      "name": "★狂暴化",
-      "type": "buff",
-      "element": "dark",
-      "target": "self",
-      "base_multiplier": 0,
-      "scale_stat": "atk",
-      "cooldown": 5,
-      "mana_cost": 0,
-      "effects": [
-        {
-          "type": "atk_up",
-          "chance": 1.0,
-          "duration": 3,
-          "value": 1.5,
-          "scale": null
-        },
-        {
-          "type": "def_down",
-          "chance": 1.0,
-          "duration": 3,
-          "value": 0.7,
-          "scale": null
-        }
-      ],
-      "icon": "assets/skills/star_berserk.png",
-      "description": "★觉醒特技: 以防御为代价大幅提升攻击力。"
-    },
-    {
-      "id": "star_holy_nova",
-      "name": "★圣光新星",
-      "type": "damage",
-      "element": "light",
-      "target": "all_enemies",
-      "base_multiplier": 1.3,
-      "scale_stat": "atk",
-      "cooldown": 4,
-      "mana_cost": 0,
-      "effects": [
-        {
-          "type": "stun",
-          "chance": 0.3,
-          "duration": 1,
-          "value": 0,
-          "scale": null
-        }
-      ],
-      "icon": "assets/skills/star_holy_nova.png",
-      "description": "★觉醒特技: 爆发圣光冲击全体敌人，可造成眩晕。"
-    },
-    {
-      "id": "star_blessing",
-      "name": "★天使祝福",
-      "type": "buff",
-      "element": "light",
-      "target": "all_allies",
-      "base_multiplier": 0,
-      "scale_stat": "atk",
-      "cooldown": 5,
-      "mana_cost": 0,
-      "effects": [
-        {
-          "type": "atk_up",
-          "chance": 1.0,
-          "duration": 3,
-          "value": 1.2,
-          "scale": null
-        },
-        {
-          "type": "shield",
-          "chance": 1.0,
-          "duration": 3,
-          "value": 0.2,
-          "scale": "caster_max_hp"
-        }
-      ],
-      "icon": "assets/skills/star_blessing.png",
-      "description": "★觉醒特技: 祝福全体队友，提升攻击并附加护盾。"
-    },
-    {
       "id": "dark_bolt",
       "name": "暗影弹",
       "type": "damage",
@@ -503,13 +485,7 @@
       "cooldown": 3,
       "mana_cost": 25,
       "effects": [
-        {
-          "type": "burn",
-          "chance": 0.6,
-          "duration": 3,
-          "value": 0.06,
-          "scale": "caster_atk"
-        }
+        { "type": "burn", "chance": 0.6, "duration": 3, "value": 0.06, "scale": "caster_atk" }
       ],
       "icon": "assets/skills/venom_sting.png",
       "description": "注入剧毒的暗之刺击，持续侵蚀敌人生命。"
@@ -539,38 +515,247 @@
       "cooldown": 5,
       "mana_cost": 35,
       "effects": [
-        {
-          "type": "def_up",
-          "chance": 1.0,
-          "duration": 3,
-          "value": 1.35,
-          "scale": null
-        }
+        { "type": "def_up", "chance": 1.0, "duration": 3, "value": 1.35, "scale": null }
       ],
       "icon": "assets/skills/iron_wall.png",
       "description": "以水之坚韧凝聚护壁，提升全体队友防御力。"
     },
     {
-      "id": "thunder_clap",
-      "name": "雷击",
+      "id": "star_firestorm",
+      "name": "★烈焰风暴",
+      "type": "damage",
+      "element": "fire",
+      "target": "all_enemies",
+      "base_multiplier": 1.5,
+      "scale_stat": "atk",
+      "cooldown": 4,
+      "mana_cost": 0,
+      "effects": [
+        { "type": "burn", "chance": 0.5, "duration": 2, "value": 0.06, "scale": "caster_atk" }
+      ],
+      "icon": "assets/skills/star_firestorm.png",
+      "description": "★觉醒特技: 召唤烈焰风暴席卷全体敌人。"
+    },
+    {
+      "id": "star_inferno",
+      "name": "★地狱烈焰",
+      "type": "damage",
+      "element": "fire",
+      "target": "all_enemies",
+      "base_multiplier": 2.0,
+      "scale_stat": "atk",
+      "cooldown": 5,
+      "mana_cost": 0,
+      "effects": [
+        { "type": "burn", "chance": 0.7, "duration": 3, "value": 0.1, "scale": "caster_atk" }
+      ],
+      "icon": "assets/skills/star_inferno.png",
+      "description": "★觉醒特技: 释放地狱烈焰焚烧全体敌人。"
+    },
+    {
+      "id": "star_phoenix",
+      "name": "★凤凰涅槃",
+      "type": "heal",
+      "element": "fire",
+      "target": "all_allies",
+      "base_multiplier": 0.7,
+      "scale_stat": "atk",
+      "cooldown": 6,
+      "mana_cost": 0,
+      "effects": [
+        { "type": "atk_up", "chance": 1.0, "duration": 3, "value": 1.2, "scale": null }
+      ],
+      "icon": "assets/skills/star_purify.png",
+      "description": "★觉醒特技: 凤凰之焰治愈全体队友并提升攻击力。"
+    },
+    {
+      "id": "star_volcano",
+      "name": "★火山爆发",
+      "type": "damage",
+      "element": "fire",
+      "target": "single",
+      "base_multiplier": 3.0,
+      "scale_stat": "atk",
+      "cooldown": 5,
+      "mana_cost": 0,
+      "effects": [
+        { "type": "def_down", "chance": 1.0, "duration": 2, "value": 0.7, "scale": null }
+      ],
+      "icon": "assets/skills/star_execute.png",
+      "description": "★觉醒特技: 火山之力爆发，对单个敌人造成毁灭打击。"
+    },
+    {
+      "id": "star_tsunami",
+      "name": "★怒涛狂澜",
+      "type": "damage",
+      "element": "water",
+      "target": "all_enemies",
+      "base_multiplier": 1.4,
+      "scale_stat": "atk",
+      "cooldown": 4,
+      "mana_cost": 0,
+      "effects": [
+        { "type": "spd_down", "chance": 0.6, "duration": 2, "value": 0.75, "scale": null }
+      ],
+      "icon": "assets/skills/star_tsunami.png",
+      "description": "★觉醒特技: 召唤巨浪冲击全体敌人。"
+    },
+    {
+      "id": "star_purify",
+      "name": "★净化之泉",
+      "type": "heal",
+      "element": "water",
+      "target": "all_allies",
+      "base_multiplier": 0.8,
+      "scale_stat": "atk",
+      "cooldown": 4,
+      "mana_cost": 0,
+      "effects": [
+        { "type": "shield", "chance": 1.0, "duration": 2, "value": 0.15, "scale": "caster_max_hp" }
+      ],
+      "icon": "assets/skills/star_purify.png",
+      "description": "★觉醒特技: 净化并治疗全体队友，附加护盾。"
+    },
+    {
+      "id": "star_torrent",
+      "name": "★激流葬",
+      "type": "damage",
+      "element": "water",
+      "target": "all_enemies",
+      "base_multiplier": 1.3,
+      "scale_stat": "atk",
+      "cooldown": 5,
+      "mana_cost": 0,
+      "effects": [],
+      "icon": "assets/skills/star_tsunami.png",
+      "description": "★觉醒特技: 以狂暴激流席卷全体敌人。"
+    },
+    {
+      "id": "star_hurricane",
+      "name": "★飓风之眼",
       "type": "damage",
       "element": "wind",
-      "target": "single",
-      "base_multiplier": 1.8,
+      "target": "all_enemies",
+      "base_multiplier": 1.6,
       "scale_stat": "atk",
       "cooldown": 3,
-      "mana_cost": 30,
+      "mana_cost": 0,
+      "effects": [],
+      "icon": "assets/skills/star_hurricane.png",
+      "description": "★觉醒特技: 以飓风之力撕裂全体敌人。"
+    },
+    {
+      "id": "star_cyclone",
+      "name": "★旋风斩",
+      "type": "damage",
+      "element": "wind",
+      "target": "all_enemies",
+      "base_multiplier": 1.3,
+      "scale_stat": "atk",
+      "cooldown": 3,
+      "mana_cost": 0,
       "effects": [
-        {
-          "type": "stun",
-          "chance": 0.25,
-          "duration": 1,
-          "value": 0,
-          "scale": null
-        }
+        { "type": "spd_down", "chance": 0.4, "duration": 2, "value": 0.8, "scale": null }
       ],
-      "icon": "assets/skills/thunder_clap.png",
-      "description": "召唤天雷劈向敌人，有概率造成眩晕。"
+      "icon": "assets/skills/star_cyclone.png",
+      "description": "★觉醒特技: 以旋风斩击全体敌人。"
+    },
+    {
+      "id": "star_gale",
+      "name": "★神风加护",
+      "type": "buff",
+      "element": "wind",
+      "target": "all_allies",
+      "base_multiplier": 0,
+      "scale_stat": "atk",
+      "cooldown": 5,
+      "mana_cost": 0,
+      "effects": [
+        { "type": "spd_up", "chance": 1.0, "duration": 3, "value": 1.35, "scale": null },
+        { "type": "crit_rate_up", "chance": 1.0, "duration": 3, "value": 1.4, "scale": null }
+      ],
+      "icon": "assets/skills/star_hurricane.png",
+      "description": "★觉醒特技: 神风加护全体队友，提升速度与暴击率。"
+    },
+    {
+      "id": "star_execute",
+      "name": "★处决",
+      "type": "damage",
+      "element": "dark",
+      "target": "single",
+      "base_multiplier": 3.0,
+      "scale_stat": "atk",
+      "cooldown": 5,
+      "mana_cost": 0,
+      "effects": [],
+      "icon": "assets/skills/star_execute.png",
+      "description": "★觉醒特技: 对单个敌人造成毁灭性打击。"
+    },
+    {
+      "id": "star_berserk",
+      "name": "★狂暴化",
+      "type": "buff",
+      "element": "dark",
+      "target": "self",
+      "base_multiplier": 0,
+      "scale_stat": "atk",
+      "cooldown": 5,
+      "mana_cost": 0,
+      "effects": [
+        { "type": "atk_up", "chance": 1.0, "duration": 3, "value": 1.5, "scale": null },
+        { "type": "def_down", "chance": 1.0, "duration": 3, "value": 0.7, "scale": null }
+      ],
+      "icon": "assets/skills/star_berserk.png",
+      "description": "★觉醒特技: 以防御为代价大幅提升攻击力。"
+    },
+    {
+      "id": "star_void",
+      "name": "★深渊吞噬",
+      "type": "damage",
+      "element": "dark",
+      "target": "all_enemies",
+      "base_multiplier": 1.2,
+      "scale_stat": "atk",
+      "cooldown": 4,
+      "mana_cost": 0,
+      "effects": [
+        { "type": "def_down", "chance": 0.5, "duration": 2, "value": 0.75, "scale": null }
+      ],
+      "icon": "assets/skills/star_execute.png",
+      "description": "★觉醒特技: 深渊之力吞噬全体敌人，粉碎防御。"
+    },
+    {
+      "id": "star_holy_nova",
+      "name": "★圣光新星",
+      "type": "damage",
+      "element": "light",
+      "target": "all_enemies",
+      "base_multiplier": 1.3,
+      "scale_stat": "atk",
+      "cooldown": 4,
+      "mana_cost": 0,
+      "effects": [
+        { "type": "stun", "chance": 0.3, "duration": 1, "value": 0, "scale": null }
+      ],
+      "icon": "assets/skills/star_holy_nova.png",
+      "description": "★觉醒特技: 爆发圣光冲击全体敌人，可造成眩晕。"
+    },
+    {
+      "id": "star_blessing",
+      "name": "★天使祝福",
+      "type": "buff",
+      "element": "light",
+      "target": "all_allies",
+      "base_multiplier": 0,
+      "scale_stat": "atk",
+      "cooldown": 5,
+      "mana_cost": 0,
+      "effects": [
+        { "type": "atk_up", "chance": 1.0, "duration": 3, "value": 1.2, "scale": null },
+        { "type": "shield", "chance": 1.0, "duration": 3, "value": 0.2, "scale": "caster_max_hp" }
+      ],
+      "icon": "assets/skills/star_blessing.png",
+      "description": "★觉醒特技: 祝福全体队友，提升攻击并附加护盾。"
     },
     {
       "id": "star_meteor",
@@ -583,13 +768,7 @@
       "cooldown": 4,
       "mana_cost": 0,
       "effects": [
-        {
-          "type": "def_down",
-          "chance": 0.5,
-          "duration": 2,
-          "value": 0.75,
-          "scale": null
-        }
+        { "type": "def_down", "chance": 0.5, "duration": 2, "value": 0.75, "scale": null }
       ],
       "icon": "assets/skills/star_meteor.png",
       "description": "★觉醒特技: 召唤陨石轰击全体敌人，粉碎防御。"
@@ -605,13 +784,7 @@
       "cooldown": 4,
       "mana_cost": 0,
       "effects": [
-        {
-          "type": "stun",
-          "chance": 0.35,
-          "duration": 1,
-          "value": 0,
-          "scale": null
-        }
+        { "type": "stun", "chance": 0.35, "duration": 1, "value": 0, "scale": null }
       ],
       "icon": "assets/skills/star_blizzard.png",
       "description": "★觉醒特技: 释放极寒风暴冻结全体敌人。"
@@ -627,20 +800,8 @@
       "cooldown": 4,
       "mana_cost": 0,
       "effects": [
-        {
-          "type": "stun",
-          "chance": 0.3,
-          "duration": 1,
-          "value": 0,
-          "scale": null
-        },
-        {
-          "type": "spd_down",
-          "chance": 0.5,
-          "duration": 2,
-          "value": 0.8,
-          "scale": null
-        }
+        { "type": "stun", "chance": 0.3, "duration": 1, "value": 0, "scale": null },
+        { "type": "spd_down", "chance": 0.5, "duration": 2, "value": 0.8, "scale": null }
       ],
       "icon": "assets/skills/star_tempest.png",
       "description": "★觉醒特技: 万雷齐发轰击全体敌人，造成麻痹与减速。"
@@ -656,16 +817,26 @@
       "cooldown": 5,
       "mana_cost": 0,
       "effects": [
-        {
-          "type": "def_down",
-          "chance": 1.0,
-          "duration": 2,
-          "value": 0.7,
-          "scale": null
-        }
+        { "type": "def_down", "chance": 1.0, "duration": 2, "value": 0.7, "scale": null }
       ],
       "icon": "assets/skills/star_judgment.png",
       "description": "★觉醒特技: 对单个敌人降下神之审判，造成毁灭性打击。"
+    },
+    {
+      "id": "star_dawn",
+      "name": "★黎明之光",
+      "type": "heal",
+      "element": "light",
+      "target": "all_allies",
+      "base_multiplier": 1.0,
+      "scale_stat": "atk",
+      "cooldown": 6,
+      "mana_cost": 0,
+      "effects": [
+        { "type": "shield", "chance": 1.0, "duration": 2, "value": 0.25, "scale": "caster_max_hp" }
+      ],
+      "icon": "assets/skills/star_purify.png",
+      "description": "★觉醒特技: 黎明之光照耀全体队友，大幅治愈并附加护盾。"
     }
   ]
 }
