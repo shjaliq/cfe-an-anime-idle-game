@@ -25,7 +25,7 @@ jobs:
 
       - name: Create Cordova Project
         run: |
-          cordova create cfe-app com.shjaliq.cfe "CFE-放置养成"
+          cordova create cfe-app com.shjaliq.cfe "极简放置养成模拟"
 
       - name: Copy game files
         run: |
