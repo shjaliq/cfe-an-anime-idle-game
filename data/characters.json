@@ -738,6 +738,63 @@
       "gacha_weight": 50,
       "lora_config": { "lora": "", "lora_strength": 0, "prompt": "1girl, full body, floating, small wisp spirit, dark purple glow, tiny cute chibi, will-o-wisp like, night forest background with fireflies, shy curious expression, dark blue purple ambient lighting, simple magical, masterpiece", "width": 768, "height": 1344 },
       "description": "在黑夜中飘荡的小小鬼火，以暗之力迷惑敌人保护队友。"
+    },
+    {
+      "id": "soul_devourer",
+      "name": "噬魂使徒",
+      "rarity": "SSR",
+      "element": "dark",
+      "role": "attacker",
+      "base_stats": { "hp": 1100, "atk": 190, "def": 72, "spd": 108, "crit_rate": 0.13, "crit_dmg": 1.9 },
+      "growth_rates": { "hp": 135, "atk": 23, "def": 8, "spd": 3 },
+      "skill_ids": ["soul_reap", "cursed_feast"],
+      "star_bonus": [
+        { "stars": 1, "skill_id": "star_execute" },
+        { "stars": 3, "skill_id": "star_soul_devour" },
+        { "stars": 5, "skill_id": "star_berserk" }
+      ],
+      "portrait": "assets/characters/soul_devourer.webp",
+      "gacha_weight": 5,
+      "lora_config": { "lora": "", "lora_strength": 0, "prompt": "1girl, full body, standing, long silver-white hair, soul reaper, dark elegant gown with ethereal soul wisps, holding cursed scythe, ghostly graveyard background at midnight, cold expression, floating spirit flames, cinematic lighting, masterpiece, dark aura", "width": 768, "height": 1344 },
+      "description": "游走于生死边界的灵魂猎手，每一次收割都让自身更加强大。"
+    },
+    {
+      "id": "tempest_swordmaster",
+      "name": "岚剑圣",
+      "rarity": "SSR",
+      "element": "wind",
+      "role": "attacker",
+      "base_stats": { "hp": 950, "atk": 205, "def": 60, "spd": 140, "crit_rate": 0.18, "crit_dmg": 1.9 },
+      "growth_rates": { "hp": 115, "atk": 25, "def": 6, "spd": 5 },
+      "skill_ids": ["lightning_thrust", "sky_rend"],
+      "star_bonus": [
+        { "stars": 1, "skill_id": "star_hurricane" },
+        { "stars": 3, "skill_id": "star_tempest" },
+        { "stars": 5, "skill_id": "star_god_speed" }
+      ],
+      "portrait": "assets/characters/tempest_swordmaster.webp",
+      "gacha_weight": 5,
+      "lora_config": { "lora": "", "lora_strength": 0, "prompt": "1girl, full body, standing, short silver-blue hair, swordmaster, light wind-element samurai armor, holding odachi with lightning arcing along blade, stormy sky background on mountain peak, intense focused expression, wind vortex, dynamic action pose, cinematic blue lighting, masterpiece, speed lines", "width": 768, "height": 1344 },
+      "description": "追求极致速度的剑圣，每一剑都比上一剑更快、更致命。"
+    },
+    {
+      "id": "oracle",
+      "name": "天启神谕",
+      "rarity": "SSR",
+      "element": "light",
+      "role": "support",
+      "base_stats": { "hp": 950, "atk": 155, "def": 80, "spd": 100, "crit_rate": 0.05, "crit_dmg": 1.5 },
+      "growth_rates": { "hp": 118, "atk": 19, "def": 10, "spd": 3 },
+      "skill_ids": ["oracle_ward", "blessed_restoration"],
+      "star_bonus": [
+        { "stars": 1, "skill_id": "star_blessing" },
+        { "stars": 3, "skill_id": "star_dawn" },
+        { "stars": 5, "skill_id": "star_sanctuary" }
+      ],
+      "portrait": "assets/characters/oracle.webp",
+      "gacha_weight": 5,
+      "lora_config": { "lora": "", "lora_strength": 0, "prompt": "1girl, full body, standing, long platinum blonde hair, oracle priestess, flowing white-gold celestial robe with star patterns, blindfolded, holding crystal orb, starlit temple sanctuary background, serene and knowing expression, divine light pillar, ethereal cinematic lighting, masterpiece, floating runes", "width": 768, "height": 1344 },
+      "description": "洞悉未来的盲眼预言者，以神谕之力铸就不可逾越的守护结界。"
     }
   ]
 }

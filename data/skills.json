@@ -837,6 +837,156 @@
       ],
       "icon": "assets/skills/star_purify.png",
       "description": "★觉醒特技: 黎明之光照耀全体队友，大幅治愈并附加护盾。"
+    },
+    {
+      "id": "soul_reap",
+      "name": "灵魂收割",
+      "type": "damage",
+      "element": "dark",
+      "target": "single",
+      "base_multiplier": 2.0,
+      "scale_stat": "atk",
+      "cooldown": 3,
+      "mana_cost": 30,
+      "effects": [
+        { "type": "atk_up", "chance": 1.0, "duration": 3, "value": 1.2, "scale": null }
+      ],
+      "icon": "assets/skills/shadow_strike.png",
+      "description": "收割敌人的灵魂碎片，汲取其力量提升自身攻击力。"
+    },
+    {
+      "id": "cursed_feast",
+      "name": "诅咒盛宴",
+      "type": "damage",
+      "element": "dark",
+      "target": "single",
+      "base_multiplier": 1.6,
+      "scale_stat": "atk",
+      "cooldown": 4,
+      "mana_cost": 35,
+      "effects": [
+        { "type": "poison", "chance": 0.55, "duration": 3, "value": 0.07, "scale": "caster_atk" },
+        { "type": "def_down", "chance": 0.4, "duration": 2, "value": 0.75, "scale": null }
+      ],
+      "icon": "assets/skills/venom_sting.png",
+      "description": "以深渊诅咒腐蚀敌人，造成中毒并削弱其防御。"
+    },
+    {
+      "id": "lightning_thrust",
+      "name": "闪雷突刺",
+      "type": "damage",
+      "element": "wind",
+      "target": "single",
+      "base_multiplier": 1.7,
+      "scale_stat": "atk",
+      "cooldown": 2,
+      "mana_cost": 22,
+      "effects": [
+        { "type": "spd_up", "chance": 1.0, "duration": 2, "value": 1.15, "scale": null }
+      ],
+      "icon": "assets/skills/wind_arrow.png",
+      "description": "以雷霆之势突刺敌人，残留意念可小幅加速自身。"
+    },
+    {
+      "id": "sky_rend",
+      "name": "裂空斩",
+      "type": "damage",
+      "element": "wind",
+      "target": "single",
+      "base_multiplier": 2.0,
+      "scale_stat": "atk",
+      "cooldown": 3,
+      "mana_cost": 30,
+      "effects": [
+        { "type": "crit_rate_up", "chance": 1.0, "duration": 3, "value": 1.3, "scale": null }
+      ],
+      "icon": "assets/skills/thunder_clap.png",
+      "description": "斩裂长空的致命一击，激发战斗本能，提升暴击率。"
+    },
+    {
+      "id": "oracle_ward",
+      "name": "神谕结界",
+      "type": "buff",
+      "element": "light",
+      "target": "all_allies",
+      "base_multiplier": 0,
+      "scale_stat": "atk",
+      "cooldown": 5,
+      "mana_cost": 45,
+      "effects": [
+        { "type": "shield", "chance": 1.0, "duration": 3, "value": 0.25, "scale": "caster_max_hp" },
+        { "type": "def_up", "chance": 1.0, "duration": 3, "value": 1.3, "scale": null }
+      ],
+      "icon": "assets/skills/divine_shield.png",
+      "description": "展开神谕结界，为全体队友施加护盾并大幅提升防御力。"
+    },
+    {
+      "id": "blessed_restoration",
+      "name": "天惠复原",
+      "type": "heal",
+      "element": "light",
+      "target": "all_allies",
+      "base_multiplier": 0.55,
+      "scale_stat": "atk",
+      "cooldown": 4,
+      "mana_cost": 40,
+      "effects": [
+        { "type": "def_up", "chance": 1.0, "duration": 2, "value": 1.2, "scale": null }
+      ],
+      "icon": "assets/skills/flash_heal.png",
+      "description": "降下天惠之光，治愈全体队友并赋予短暂的防御祝福。"
+    },
+    {
+      "id": "star_soul_devour",
+      "name": "★噬魂盛宴",
+      "type": "damage",
+      "element": "dark",
+      "target": "all_enemies",
+      "base_multiplier": 1.4,
+      "scale_stat": "atk",
+      "cooldown": 5,
+      "mana_cost": 0,
+      "effects": [
+        { "type": "atk_up", "chance": 1.0, "duration": 3, "value": 1.3, "scale": null },
+        { "type": "crit_dmg_up", "chance": 1.0, "duration": 3, "value": 1.3, "scale": null }
+      ],
+      "icon": "assets/skills/star_execute.png",
+      "description": "★觉醒特技: 吞噬全体敌人的灵魂之力，大幅提升攻击力与暴击伤害。"
+    },
+    {
+      "id": "star_god_speed",
+      "name": "★神速领域",
+      "type": "buff",
+      "element": "wind",
+      "target": "self",
+      "base_multiplier": 0,
+      "scale_stat": "atk",
+      "cooldown": 5,
+      "mana_cost": 0,
+      "effects": [
+        { "type": "spd_up", "chance": 1.0, "duration": 3, "value": 1.5, "scale": null },
+        { "type": "crit_rate_up", "chance": 1.0, "duration": 3, "value": 1.5, "scale": null },
+        { "type": "crit_dmg_up", "chance": 1.0, "duration": 3, "value": 1.4, "scale": null }
+      ],
+      "icon": "assets/skills/star_hurricane.png",
+      "description": "★觉醒特技: 展开神速领域，短时间内获得全维度战斗强化。"
+    },
+    {
+      "id": "star_sanctuary",
+      "name": "★圣域降临",
+      "type": "heal",
+      "element": "light",
+      "target": "all_allies",
+      "base_multiplier": 0.7,
+      "scale_stat": "atk",
+      "cooldown": 6,
+      "mana_cost": 0,
+      "effects": [
+        { "type": "shield", "chance": 1.0, "duration": 2, "value": 0.2, "scale": "caster_max_hp" },
+        { "type": "def_up", "chance": 1.0, "duration": 3, "value": 1.25, "scale": null }
+      ],
+      "icon": "assets/skills/star_purify.png",
+      "description": "★觉醒特技: 召唤圣域庇护全体队友，治愈、护盾、防御三重加护。"
     }
   ]
 }

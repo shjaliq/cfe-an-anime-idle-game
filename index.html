@@ -779,6 +779,43 @@ body {
 }
 .tower-back-btn-wrap { margin-bottom: 10px; }
 .tower-floor-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+
+/* World Boss */
+.world-boss-card {
+  border: 2px solid #ff634888; background: linear-gradient(135deg, rgba(255,99,72,0.12), var(--bg-tertiary));
+  border-radius: 12px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s; margin-top: 12px;
+}
+.world-boss-card:active { transform: scale(0.96); }
+.world-boss-card .wb-icon { font-size: 40px; margin-bottom: 4px; }
+.world-boss-card .wb-name { font-size: 15px; font-weight: 700; }
+.world-boss-card .wb-meta { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+.world-boss-section { }
+.world-boss-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.world-boss-avatar { font-size: 48px; }
+.world-boss-info { flex: 1; }
+.world-boss-boss-name { font-size: 16px; font-weight: 700; }
+.world-boss-boss-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.world-boss-boss-stats { font-size: 10px; color: var(--text-secondary); margin-top: 4px; }
+.world-boss-teams { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.world-boss-team-row { display: flex; align-items: center; gap: 6px; padding: 8px; background: var(--bg-tertiary); border-radius: 10px; border: 1px solid var(--border); }
+.world-boss-team-label { font-size: 11px; font-weight: 700; color: var(--text-muted); width: 36px; flex-shrink: 0; text-align: center; }
+.world-boss-team-slots { display: flex; gap: 4px; flex: 1; }
+.world-boss-char-slot {
+  width: 44px; height: 44px; border-radius: 8px; background: var(--bg); border: 2px dashed var(--border);
+  display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; flex-shrink: 0;
+  transition: all 0.15s; position: relative; overflow: hidden;
+}
+.world-boss-char-slot:hover { border-color: var(--accent); background: rgba(98,114,255,0.1); }
+.world-boss-char-slot.has-char { border-style: solid; border-color: var(--accent); }
+.world-boss-char-slot img { width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 6px; }
+.world-boss-char-slot .remove-slot {
+  position: absolute; top: 0; right: 0; width: 16px; height: 16px; border-radius: 0 6px 0 6px;
+  background: var(--danger); color: #fff; font-size: 11px; line-height: 16px; text-align: center;
+  display: none; cursor: pointer;
+}
+.world-boss-char-slot.has-char:hover .remove-slot { display: block; }
+.world-boss-actions { display: flex; gap: 10px; margin-top: 14px; }
+.world-boss-sweep-info { font-size: 11px; color: var(--text-muted); margin-top: 8px; padding: 8px; background: var(--bg-tertiary); border-radius: 8px; }
 </style>
 </head>
 <body>
@@ -833,6 +870,7 @@ body {
         <div class="flex-between" style="margin-bottom:6px;gap:4px;">
           <span style="font-size:11px;color:var(--warning);">🪙<span id="idle-gold">0</span></span>
           <span style="font-size:11px;color:#e8b84b;">⭐<span id="idle-exp">0</span></span>
+          <span style="font-size:11px;color:#69c0ff;">💎<span id="idle-gems">0</span></span>
           <span style="font-size:11px;color:var(--success);">⚡<span id="idle-stamina">0</span></span>
           <button class="btn btn-sm btn-warning" id="btn-claim-idle" onclick="GameUI.claimIdleRewards()">领取</button>
         </div>
@@ -1113,7 +1151,12 @@ const SaveManager = {
       gear_id_counter: 0,
       tower_progress: {},
       tower_attempts: {},
-      tower_last_reset: null
+      tower_last_reset: null,
+      world_boss_last_reset: null,
+      world_boss_today_boss: null,
+      world_boss_attempts: 1,
+      world_boss_best_record: 0,
+      world_boss_teams: [[], [], [], [], []]
     };
   },
 
@@ -1176,6 +1219,12 @@ const GameState = {
     if (!this.tower_progress) this.tower_progress = {};
     if (!this.tower_attempts) this.tower_attempts = {};
     if (!this.tower_last_reset) this.tower_last_reset = null;
+    // Migrate: world boss fields
+    if (!this.world_boss_last_reset) this.world_boss_last_reset = null;
+    if (!this.world_boss_today_boss) this.world_boss_today_boss = null;
+    if (this.world_boss_attempts === undefined) this.world_boss_attempts = 1;
+    if (this.world_boss_best_record === undefined) this.world_boss_best_record = 0;
+    if (!this.world_boss_teams || !Array.isArray(this.world_boss_teams)) this.world_boss_teams = [[], [], [], [], []];
     this.updateMaxStamina();
     this.current_battle = null;
   },
@@ -1203,7 +1252,12 @@ const GameState = {
       gear_id_counter: _gearIdCounter,
       tower_progress: this.tower_progress,
       tower_attempts: this.tower_attempts,
-      tower_last_reset: this.tower_last_reset
+      tower_last_reset: this.tower_last_reset,
+      world_boss_last_reset: this.world_boss_last_reset,
+      world_boss_today_boss: this.world_boss_today_boss,
+      world_boss_attempts: this.world_boss_attempts,
+      world_boss_best_record: this.world_boss_best_record,
+      world_boss_teams: this.world_boss_teams
     });
   },
 
@@ -1314,6 +1368,50 @@ const GameState = {
   isTowerFloorFirstClear(towerType, floor) {
     const prog = this.getTowerProgress(towerType);
     return !prog.cleared.includes(floor);
+  },
+
+  // ---- World Boss Helpers ----
+  checkWorldBossDailyReset() {
+    const today = new Date().toDateString();
+    if (this.world_boss_last_reset !== today) {
+      this.world_boss_attempts = 1;
+      this.world_boss_best_record = 0;
+      this.world_boss_today_boss = WORLD_BOSS_POOL[Math.floor(Math.random() * WORLD_BOSS_POOL.length)].id;
+      this.world_boss_teams = [[], [], [], [], []];
+      this.world_boss_last_reset = today;
+      this.save();
+    }
+    // Also ensure a boss is selected (migration from old saves)
+    if (!this.world_boss_today_boss) {
+      this.world_boss_today_boss = WORLD_BOSS_POOL[Math.floor(Math.random() * WORLD_BOSS_POOL.length)].id;
+      this.save();
+    }
+  },
+
+  getWorldBossAttempts() {
+    return this.world_boss_attempts;
+  },
+
+  useWorldBossAttempt() {
+    if (this.world_boss_attempts <= 0) return false;
+    this.world_boss_attempts--;
+    this.save();
+    return true;
+  },
+
+  getWorldBossBestRecord() {
+    return this.world_boss_best_record || 0;
+  },
+
+  setWorldBossRecord(kills) {
+    if (kills > (this.world_boss_best_record || 0)) {
+      this.world_boss_best_record = kills;
+      this.save();
+    }
+  },
+
+  getWorldBossTodayBoss() {
+    return WORLD_BOSS_POOL.find(b => b.id === this.world_boss_today_boss) || WORLD_BOSS_POOL[0];
   },
 
   getRarityCost(rarity) {
@@ -1674,6 +1772,9 @@ const REDEEM_CODES = {
   'FULLTEAM':     { chars: ['sakura_blade','aqua_mage','storm_ranger','holy_knight'], desc: 'SSR+SR队伍' },
   'LUCKYZERO':    { gold: 3000, gems: 500, exp: 2000, items: [['gacha_ticket',20],['hp_potion_large',10]], desc: '新手豪华包' },
   'DRAGONSLAYER': { gold: 5000, exp: 10000, items: [['dragon_scale',5],['gacha_ticket',10]], desc: '屠龙奖励' },
+  'TESTSOUL':    { chars: ['soul_devourer'], desc: '噬魂使徒' },
+  'TESTORACLE':  { chars: ['oracle'], desc: '天启神谕' },
+  'TESTTEMPEST': { chars: ['tempest_swordmaster'], desc: '岚剑圣' },
 };
 
 const RedeemSystem = {
@@ -1904,6 +2005,44 @@ const TOWER_CONFIG = [
   }
 ];
 
+const WORLD_BOSS_MAX_TEAMS = 5;
+const WORLD_BOSS_REWARD_BASE = { gold: 500, exp: 300, gems: 2 };
+const WORLD_BOSS_KILL_SCALING = 1.25;   // Boss stats *= 1.25 per kill
+const WORLD_BOSS_REWARD_SCALING = 1.15; // Rewards *= 1.15 per kill
+
+const WORLD_BOSS_POOL = [
+  { id: 'wb_fire_dragon', name: '炎狱龙王', element: 'fire', portrait: 'boss_fire_dragon',
+    stats: { hp: 12000, atk: 220, def: 90, spd: 90, crit_rate: 0.12, crit_dmg: 2.0 },
+    skills: ['blazing_aura', 'firestorm_wave', 'magma_shield'], desc: '烈焰焚尽万物' },
+  { id: 'wb_water_serpent', name: '深渊海蛇', element: 'water', portrait: 'boss_ice_serpent',
+    stats: { hp: 14000, atk: 200, def: 100, spd: 75, crit_rate: 0.08, crit_dmg: 1.8 },
+    skills: ['frost_shard', 'healing_rain', 'tidal_blessing'], desc: '深海巨兽苏醒' },
+  { id: 'wb_wind_tengu', name: '天狗大妖', element: 'wind', portrait: 'boss_wind_tengu',
+    stats: { hp: 10000, atk: 260, def: 70, spd: 130, crit_rate: 0.18, crit_dmg: 2.2 },
+    skills: ['tempest_slash', 'gale_step', 'thunder_clap'], desc: '疾风撕裂苍穹' },
+  { id: 'wb_dark_lich', name: '不死巫妖王', element: 'dark', portrait: 'boss_dark_lich',
+    stats: { hp: 11000, atk: 250, def: 85, spd: 100, crit_rate: 0.15, crit_dmg: 2.3 },
+    skills: ['void_burst', 'life_drain', 'shadow_cloak'], desc: '死亡仅是开始' },
+  { id: 'wb_light_titan', name: '圣光泰坦', element: 'light', portrait: 'boss_light_titan',
+    stats: { hp: 18000, atk: 190, def: 130, spd: 65, crit_rate: 0.06, crit_dmg: 1.6 },
+    skills: ['holy_aura', 'radiant_beam', 'divine_shield'], desc: '圣光永不坠落' },
+  { id: 'wb_shadow_lord', name: '暗影领主', element: 'dark', portrait: 'boss_shadow_lord',
+    stats: { hp: 10000, atk: 280, def: 75, spd: 110, crit_rate: 0.20, crit_dmg: 2.5 },
+    skills: ['shadow_strike', 'dark_veil', 'void_burst'], desc: '暗影吞噬一切' },
+  { id: 'wb_fire_phoenix', name: '不死鸟', element: 'fire', portrait: 'boss_fire_phoenix',
+    stats: { hp: 9000, atk: 240, def: 80, spd: 115, crit_rate: 0.15, crit_dmg: 2.5 },
+    skills: ['blazing_aura', 'cauterize', 'firestorm_wave'], desc: '涅槃重生之火' },
+  { id: 'wb_water_dragon', name: '冰霜巨龙', element: 'water', portrait: 'boss_water_dragon',
+    stats: { hp: 15000, atk: 210, def: 110, spd: 70, crit_rate: 0.10, crit_dmg: 1.8 },
+    skills: ['frost_shard', 'aqua_jet', 'healing_rain'], desc: '冻结时空之息' },
+  { id: 'wb_wind_storm', name: '风暴之眼', element: 'wind', portrait: 'boss_storm_eagle',
+    stats: { hp: 9500, atk: 270, def: 65, spd: 140, crit_rate: 0.22, crit_dmg: 2.0 },
+    skills: ['wind_arrow', 'tempest_slash', 'wind_wall'], desc: '风暴中心之眼' },
+  { id: 'wb_light_angel', name: '炽天使', element: 'light', portrait: 'boss_holy_golem',
+    stats: { hp: 13000, atk: 230, def: 95, spd: 95, crit_rate: 0.10, crit_dmg: 2.0 },
+    skills: ['light_arrow', 'cleanse', 'radiant_beam'], desc: '光明审判降临' }
+];
+
 function getTowerBossStats(towerType, floor) {
   return {
     hp: Math.floor(200 * Math.pow(1.33, floor - 1)),
@@ -2104,12 +2243,26 @@ const BattleEngine = {
     const aliveEnemies = battle.enemies.filter(e => e.currentHp > 0);
 
     if (aliveAllies.length === 0) {
+      if (battle.isWorldBoss) {
+        const hasNext = WorldBossEngine.onTeamWiped(battle);
+        if (!hasNext) return false; // All teams dead, challenge finished
+        // Re-render with new team; outer scheduleTurn handles next tick
+        BattleUI.render();
+        return true;
+      }
       battle.phase = 'defeat';
       BattleUI.showResult(false);
       return false;
     }
     if (aliveEnemies.length === 0) {
-      this.nextWave(battle);
+      if (battle.isWorldBoss) {
+        WorldBossEngine.onBossKilled(battle);
+        BattleUI.render();
+        BattleUI.log(battle.battleLog[battle.battleLog.length - 1].msg, 'info');
+        // Don't call scheduleTurn here — the outer scheduleTurn loop handles it
+      } else {
+        this.nextWave(battle);
+      }
     }
 
     // Don't re-render here — scheduleTurn handles it so animations play out
@@ -2524,6 +2677,253 @@ const TowerEngine = {
   }
 };
 
+/* ------------------------------------------------------------------ */
+const WorldBossEngine = {
+  buildAllies(team) {
+    const allies = [];
+    for (const charId of team) {
+      if (!charId) continue;
+      const def = DataLoader.getCharacter(charId);
+      if (!def) continue;
+      const stats = GameState.getCharLevelStats(charId);
+      const owned = GameState.getOwnedChar(charId);
+      allies.push({
+        id: charId, name: def.name, element: def.element, isAlly: true,
+        stats: { ...stats }, maxHp: stats.hp, currentHp: stats.hp,
+        skills: [...(def.skill_ids || []), ...((def.star_bonus || []).filter(b => (owned.stars || 0) >= b.stars).map(b => b.skill_id))],
+        cooldowns: {}, effects: [], actionGauge: 0, died: false
+      });
+    }
+    return allies;
+  },
+
+  getScaledBossStats(kills) {
+    const boss = GameState.getWorldBossTodayBoss();
+    const mult = Math.pow(WORLD_BOSS_KILL_SCALING, kills || 0);
+    const stats = {};
+    for (const [key, val] of Object.entries(boss.stats)) {
+      stats[key] = Math.floor(val * mult);
+    }
+    return stats;
+  },
+
+  _applyTeamPenalty(allies, team) {
+    let teamEnergy = 0;
+    for (const charId of team) {
+      if (!charId) continue;
+      const def = DataLoader.getCharacter(charId);
+      if (def) teamEnergy += GameState.getRarityCost(def.rarity);
+    }
+    const overflow = Math.max(0, teamEnergy - 12);
+    let penalty = 0;
+    if (overflow >= 4) penalty = 0.40;
+    else if (overflow >= 3) penalty = 0.30;
+    else if (overflow >= 2) penalty = 0.24;
+    else if (overflow >= 1) penalty = 0.12;
+    if (penalty > 0) {
+      for (const ally of allies) {
+        for (const key of ['hp', 'atk', 'def', 'spd']) {
+          ally.stats[key] = Math.floor(ally.stats[key] * (1 - penalty));
+        }
+        ally.maxHp = ally.stats.hp;
+        ally.currentHp = ally.maxHp;
+      }
+    }
+  },
+
+  _buildBossEnemy(kills, currentHp) {
+    const boss = GameState.getWorldBossTodayBoss();
+    const bossStats = this.getScaledBossStats(kills);
+    const hp = (currentHp !== undefined && currentHp > 0) ? Math.min(currentHp, bossStats.hp) : bossStats.hp;
+    const portrait = boss.portrait ? `assets/enemies/${boss.portrait}.png` : null;
+    return [{
+      id: `wb_${boss.id}_${kills}_${Date.now()}`,
+      name: boss.name + (kills > 0 ? ` +${kills}` : ''),
+      element: boss.element, isAlly: false, isBoss: true,
+      portrait,
+      stats: { ...bossStats }, maxHp: bossStats.hp, currentHp: hp,
+      skills: [...(boss.skills || [])], cooldowns: {}, effects: [], actionGauge: 0
+    }];
+  },
+
+  createBossBattle(teamIndex) {
+    const teams = GameState.world_boss_teams;
+    if (teamIndex >= teams.length) return null;
+    const team = teams[teamIndex];
+    if (!team || team.every(s => s === null)) return null;
+    const allies = this.buildAllies(team);
+    this._applyTeamPenalty(allies, team);
+    if (allies.length === 0) return null;
+
+    const cur = GameState.current_battle;
+    const kills = (cur && cur.worldBossKills) ? cur.worldBossKills : 0;
+    const bossHp = cur ? (cur.enemies[0]?.currentHp || 0) : undefined;
+
+    return {
+      isWorldBoss: true,
+      allies,
+      enemyWaves: [this._buildBossEnemy(kills, bossHp)],
+      currentWave: 0,
+      enemies: this._buildBossEnemy(kills, bossHp),
+      battleLog: [],
+      phase: 'battle', paused: false, speed: 1,
+      goldEarned: 0, expEarned: 0, itemsEarned: [], allyDeaths: 0,
+      worldBossKills: kills,
+      worldBossRewards: (cur && cur.worldBossRewards) ? { ...cur.worldBossRewards } : { gold: 0, exp: 0, gems: 0 },
+      worldBossTeamIndex: teamIndex,
+      worldBossTeams: teams
+    };
+  },
+
+  startChallenge() {
+    if (GameState.getWorldBossAttempts() <= 0) {
+      GameUI.showToast('今日世界BOSS挑战次数已用完！', 'error'); return;
+    }
+    const teams = GameState.world_boss_teams;
+    if (!teams.some(t => t && t.some(s => s !== null))) {
+      GameUI.showToast('请先配置世界BOSS队伍！', 'error'); return;
+    }
+    let idx = teams.findIndex(t => t && t.some(s => s !== null));
+    if (idx < 0) { GameUI.showToast('请先配置世界BOSS队伍！', 'error'); return; }
+
+    GameState.useWorldBossAttempt();
+    const battle = this.createBossBattle(idx);
+    if (!battle) { GameUI.showToast('创建战斗失败！', 'error'); return; }
+
+    GameState.current_battle = battle;
+    GameUI.showBattle();
+    document.getElementById('speed-badge').textContent = '1x';
+    document.getElementById('btn-pause').textContent = '暂停';
+    BattleUI.render();
+    BattleUI.log(`世界BOSS ${GameState.getWorldBossTodayBoss().name} 挑战开始！第${idx + 1}队出击！`, 'info');
+    BattleUI.scheduleTurn();
+  },
+
+  practiceChallenge() {
+    const teams = GameState.world_boss_teams;
+    if (!teams.some(t => t && t.some(s => s !== null))) {
+      GameUI.showToast('请先配置世界BOSS队伍！', 'error'); return;
+    }
+    let idx = teams.findIndex(t => t && t.some(s => s !== null));
+    if (idx < 0) { GameUI.showToast('请先配置世界BOSS队伍！', 'error'); return; }
+
+    const battle = this.createBossBattle(idx);
+    if (!battle) { GameUI.showToast('创建战斗失败！', 'error'); return; }
+    battle.isPractice = true;
+    battle.worldBossRewards = { gold: 0, exp: 0, gems: 0 };
+
+    GameState.current_battle = battle;
+    GameUI.showBattle();
+    document.getElementById('speed-badge').textContent = '1x';
+    document.getElementById('btn-pause').textContent = '暂停';
+    BattleUI.render();
+    BattleUI.log(`🧪 模拟战开始！${GameState.getWorldBossTodayBoss().name} 第${idx + 1}队出击！`, 'info');
+    BattleUI.scheduleTurn();
+  },
+
+  onBossKilled(battle) {
+    const kills = (battle.worldBossKills || 0) + 1;
+    if (!battle.isPractice) {
+      const r = battle.worldBossRewards || { gold: 0, exp: 0, gems: 0 };
+      r.gold += Math.floor(WORLD_BOSS_REWARD_BASE.gold * Math.pow(WORLD_BOSS_REWARD_SCALING, kills - 1));
+      r.exp += Math.floor(WORLD_BOSS_REWARD_BASE.exp * Math.pow(WORLD_BOSS_REWARD_SCALING, kills - 1));
+      r.gems += Math.floor(WORLD_BOSS_REWARD_BASE.gems * Math.pow(WORLD_BOSS_REWARD_SCALING, kills - 1));
+      battle.worldBossRewards = r;
+    }
+    battle.worldBossKills = kills;
+    battle.battleLog.push({ msg: `${battle.isPractice ? '🧪' : '🏆'} 第${kills}次击杀！Boss增强复活！`, type: 'info' });
+
+    // Respawn boss stronger with high initial gauge so it acts promptly
+    battle.enemies = this._buildBossEnemy(kills, undefined);
+    battle.enemies[0].actionGauge = 75 + Math.floor(Math.random() * 50);
+    // Trim ally gauges so boss doesn't get buried
+    for (const ally of battle.allies) {
+      if (ally.currentHp > 0) ally.actionGauge = Math.floor(ally.actionGauge * 0.4);
+    }
+    battle.currentWave = 0;
+    for (const ally of battle.allies) {
+      if (ally.currentHp > 0) {
+        ally.currentHp = Math.min(ally.maxHp, ally.currentHp + Math.floor(ally.maxHp * 0.2));
+      }
+    }
+  },
+
+  onTeamWiped(battle) {
+    const teams = battle.worldBossTeams || GameState.world_boss_teams;
+    let next = -1;
+    for (let i = (battle.worldBossTeamIndex || 0) + 1; i < WORLD_BOSS_MAX_TEAMS; i++) {
+      if (teams[i] && teams[i].some(s => s !== null)) { next = i; break; }
+    }
+    if (next >= 0) {
+      const bossHp = battle.enemies[0]?.currentHp || 0;
+      const kills = battle.worldBossKills || 0;
+      const newAllies = this.buildAllies(teams[next]);
+      this._applyTeamPenalty(newAllies, teams[next]);
+      battle.allies = newAllies;
+      battle.worldBossTeamIndex = next;
+      battle.enemies = this._buildBossEnemy(kills, bossHp);
+      battle.allyDeaths = 0;
+      battle.battleLog.push({ msg: `⚔️ 第${next + 1}队登场！`, type: 'info' });
+      return true;
+    }
+    // No more teams → finish
+    this.finishChallenge(battle);
+    return false;
+  },
+
+  finishChallenge(battle) {
+    if (battle.isPractice) {
+      this.finishPractice(battle);
+      return;
+    }
+    const kills = battle.worldBossKills || 0;
+    const rewards = battle.worldBossRewards || { gold: 0, exp: 0, gems: 0 };
+    GameState.setWorldBossRecord(kills);
+    if (rewards.gold > 0) GameState.addGold(rewards.gold);
+    if (rewards.exp > 0) GameState.addExp(rewards.exp);
+    if (rewards.gems > 0) GameState.addGems(rewards.gems);
+    battle.phase = 'defeat';
+    BattleUI.showResultWorldBoss(kills, rewards);
+  },
+
+  finishPractice(battle) {
+    const kills = battle.worldBossKills || 0;
+    const best = GameState.getWorldBossBestRecord();
+    battle.phase = 'defeat';
+    BattleUI.showResultPractice(kills, best);
+  },
+
+  getSweepRewards(kills) {
+    let gold = 0, exp = 0, gems = 0;
+    for (let k = 0; k < kills; k++) {
+      gold += Math.floor(WORLD_BOSS_REWARD_BASE.gold * Math.pow(WORLD_BOSS_REWARD_SCALING, k));
+      exp += Math.floor(WORLD_BOSS_REWARD_BASE.exp * Math.pow(WORLD_BOSS_REWARD_SCALING, k));
+      gems += Math.floor(WORLD_BOSS_REWARD_BASE.gems * Math.pow(WORLD_BOSS_REWARD_SCALING, k));
+    }
+    return { gold, exp, gems };
+  },
+
+  sweep() {
+    const best = GameState.getWorldBossBestRecord();
+    if (best <= 0) { GameUI.showToast('暂无最佳纪录可扫荡！', 'warning'); return; }
+    if (GameState.getWorldBossAttempts() <= 0) {
+      GameUI.showToast('今日世界BOSS挑战次数已用完！', 'error'); return;
+    }
+    GameState.useWorldBossAttempt();
+    const rewards = this.getSweepRewards(best);
+    if (rewards.gold > 0) GameState.addGold(rewards.gold);
+    if (rewards.exp > 0) GameState.addExp(rewards.exp);
+    if (rewards.gems > 0) GameState.addGems(rewards.gems);
+    const boss = GameState.getWorldBossTodayBoss();
+    GameUI.showToast(
+      `世界BOSS扫荡完成！最佳${best}次击杀 🪙+${rewards.gold.toLocaleString()} ⭐+${rewards.exp.toLocaleString()} 💎+${rewards.gems}`,
+      'success'
+    );
+    GameUI.updateResources();
+    GameUI.renderTowerScreen();
+  }
+};
+
 const InventoryManager = {
   equipItem(charId, equipId) {
     const owned = GameState.getOwnedChar(charId);
@@ -2704,7 +3104,7 @@ const IdleManager = {
     const staminaRegen = Math.floor(elapsedMs / (this.STAMINA_REGEN_SEC * 1000));
     const stamina = Math.min(staminaRegen, GameState.max_stamina - GameState.stamina);
 
-    let gold = 0, exp = 0, stage = null;
+    let gold = 0, exp = 0, gems = 0, stage = null;
     if (GameState.idle_stage_id) {
       stage = DataLoader.getStage(GameState.idle_stage_id);
       if (stage && elapsedMin >= 0.1) {
@@ -2714,19 +3114,21 @@ const IdleManager = {
         const expPerMin = stage.base_exp * chapterBonus * eff;
         gold = Math.floor(goldPerMin * elapsedMin);
         exp = Math.floor(expPerMin * elapsedMin);
+        gems = Math.floor(elapsedMin * stage.chapter * 0.05);
       }
     }
 
-    return { gold, exp, stamina, minutes: elapsedMin, stage };
+    return { gold, exp, gems, stamina, minutes: elapsedMin, stage };
   },
 
   claimRewards() {
     const rewards = this.getPendingRewards();
-    if (rewards.gold <= 0 && rewards.exp <= 0 && rewards.stamina <= 0) return null;
+    if (rewards.gold <= 0 && rewards.exp <= 0 && rewards.gems <= 0 && rewards.stamina <= 0) return null;
 
     GameState.last_idle_claim = Date.now();
     if (rewards.gold > 0) GameState.addGold(rewards.gold);
     if (rewards.exp > 0) GameState.addExp(rewards.exp);
+    if (rewards.gems > 0) GameState.addGems(rewards.gems);
     if (rewards.stamina > 0) {
       GameState.stamina = Math.min(GameState.max_stamina, GameState.stamina + rewards.stamina);
     }
@@ -3414,13 +3816,14 @@ const GameUI = {
     if (!card || !btn) return;
 
     const rewards = IdleManager.getPendingRewards();
-    const hasAny = rewards.gold > 0 || rewards.exp > 0 || rewards.stamina > 0;
+    const hasAny = rewards.gold > 0 || rewards.exp > 0 || rewards.gems > 0 || rewards.stamina > 0;
     if (!hasAny && !GameState.idle_stage_id) { card.style.display = 'none'; return; }
 
     card.style.display = 'block';
     document.getElementById('idle-timer').textContent = `${Math.floor(rewards.minutes)}分`;
     document.getElementById('idle-gold').textContent = rewards.gold.toLocaleString();
     document.getElementById('idle-exp').textContent = rewards.exp.toLocaleString();
+    document.getElementById('idle-gems').textContent = rewards.gems.toLocaleString();
     document.getElementById('idle-stamina').textContent = rewards.stamina;
     btn.disabled = !hasAny;
   },
@@ -3431,6 +3834,7 @@ const GameUI = {
     const parts = [];
     if (rewards.gold > 0) parts.push(`🪙+${rewards.gold.toLocaleString()}`);
     if (rewards.exp > 0) parts.push(`⭐+${rewards.exp.toLocaleString()}`);
+    if (rewards.gems > 0) parts.push(`💎+${rewards.gems}`);
     if (rewards.stamina > 0) parts.push(`⚡+${rewards.stamina}`);
     this.showToast(`领取成功！${parts.join(' ')}`, 'success');
     this.updateIdleDisplay();
@@ -3977,7 +4381,10 @@ const GameUI = {
     const content = document.getElementById('tower-content');
     const backBtn = document.querySelector('#screen-tower .tower-back-btn-wrap');
 
-    if (this._activeTower) {
+    if (this._activeTower === 'worldboss') {
+      backBtn.style.display = 'block';
+      this.renderWorldBossDetail();
+    } else if (this._activeTower) {
       // Show floor list for specific tower
       backBtn.style.display = 'block';
       this.renderTowerFloorList(this._activeTower);
@@ -4001,6 +4408,18 @@ const GameUI = {
               </div>
             `;
           }).join('')}
+        </div>
+        <div class="world-boss-card" onclick="GameUI._activeTower='worldboss';GameUI.renderTowerScreen();">
+          <div class="wb-icon">👹</div>
+          <div class="wb-name">世界BOSS</div>
+          <div class="wb-meta">${(() => {
+            GameState.checkWorldBossDailyReset();
+            const boss = GameState.getWorldBossTodayBoss();
+            const attempts = GameState.getWorldBossAttempts();
+            const best = GameState.getWorldBossBestRecord();
+            const elemLabel = { fire: '🔥火', water: '💧水', wind: '🌪️风', light: '✨光', dark: '🌑暗' };
+            return `${elemLabel[boss.element] || boss.element} | ${boss.name} | 最佳: ${best}次击杀 | 剩余次数: ${attempts}`;
+          })()}</div>
         </div>
       `;
     }
@@ -4076,6 +4495,185 @@ const GameUI = {
 
   _challengeTowerFloor(towerType, floor) {
     TowerEngine.startTowerBattle(towerType, floor);
+  },
+
+  /* ---- World Boss Detail ---- */
+  renderWorldBossDetail() {
+    GameState.checkWorldBossDailyReset();
+    const boss = GameState.getWorldBossTodayBoss();
+    const attempts = GameState.getWorldBossAttempts();
+    const best = GameState.getWorldBossBestRecord();
+    const teams = GameState.world_boss_teams;
+    const content = document.getElementById('tower-content');
+    const elemLabel = { fire: '🔥火', water: '💧水', wind: '🌪️风', light: '✨光', dark: '🌑暗' };
+    const elemEmoji = { fire: '🔥', water: '💧', wind: '🌪️', light: '✨', dark: '🌑' };
+
+    const canSweep = best > 0 && attempts > 0;
+    const hasTeams = teams.some(t => t && t.some(s => s !== null));
+    const sweepRewards = WorldBossEngine.getSweepRewards(best);
+
+    let html = `
+      <div class="section-title">👹 世界BOSS</div>
+      <div class="world-boss-header">
+        <img src="assets/enemies/${boss.portrait || 'boss_fire_dragon'}.png" class="boss-preview" style="width:56px;height:56px;border-radius:10px;" alt="${boss.name}" onerror="this.outerHTML='<span style=font-size:40px;>👹</span>'">
+        <div class="world-boss-info">
+          <div class="world-boss-boss-name">${boss.name} ${elemLabel[boss.element] || ''}</div>
+          <div class="world-boss-boss-desc">${boss.desc}</div>
+          <div class="world-boss-boss-stats">HP:${boss.stats.hp} ATK:${boss.stats.atk} DEF:${boss.stats.def} SPD:${boss.stats.spd}</div>
+          <div class="world-boss-boss-stats">技能: ${(boss.skills || []).map(s => DataLoader.getSkill(s)?.name || s).join(', ')}</div>
+        </div>
+      </div>
+      <div class="flex-between" style="margin-bottom:6px;">
+        <span style="font-size:11px;color:var(--text-muted);">最佳纪录: ${best}次击杀 | 剩余次数: ${attempts}</span>
+      </div>
+
+      <div style="font-size:12px;font-weight:600;margin-bottom:4px;">⚔️ 出战队伍配置 (最多${WORLD_BOSS_MAX_TEAMS}队车轮战)</div>
+      <div class="world-boss-teams">
+    `;
+
+    for (let ti = 0; ti < WORLD_BOSS_MAX_TEAMS; ti++) {
+      const team = teams[ti] || [];
+      // Calculate team energy
+      let teamEnergy = 0;
+      for (const charId of team) {
+        if (!charId) continue;
+        const def = DataLoader.getCharacter(charId);
+        if (def) teamEnergy += GameState.getRarityCost(def.rarity);
+      }
+      const overflow = Math.max(0, teamEnergy - 12);
+      let penalty = 0;
+      if (overflow >= 4) penalty = 40;
+      else if (overflow >= 3) penalty = 30;
+      else if (overflow >= 2) penalty = 24;
+      else if (overflow >= 1) penalty = 12;
+      const energyPct = Math.min(100, (teamEnergy / 12) * 100);
+      const energyColor = overflow > 0 ? 'var(--danger)' : 'var(--success)';
+
+      html += `<div class="world-boss-team-row">
+        <div class="world-boss-team-label">${ti + 1}队</div>
+        <div class="world-boss-team-slots">`;
+      for (let si = 0; si < 4; si++) {
+        const charId = team[si] || null;
+        const char = charId ? DataLoader.getCharacter(charId) : null;
+        const elemEm = char ? (elemEmoji[char.element] || '') : '';
+        if (char) {
+          html += `
+            <div class="world-boss-char-slot has-char" onclick="GameUI._wbSelectChar(${ti}, ${si})" title="${char.name} (点击更换)">
+              <img src="${char.portrait || ''}" alt="${char.name}" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:14px;>${elemEm}</span>'">
+              <div class="remove-slot" onclick="event.stopPropagation();GameUI._wbRemoveChar(${ti}, ${si})">✕</div>
+            </div>`;
+        } else {
+          html += `
+            <div class="world-boss-char-slot" onclick="GameUI._wbSelectChar(${ti}, ${si})">
+              <span style="color:var(--text-muted);">+</span>
+            </div>`;
+        }
+      }
+      html += `</div>
+        <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;min-width:72px;">
+          <div style="flex:1;height:6px;border-radius:3px;background:var(--bg);overflow:hidden;">
+            <div style="width:${energyPct}%;height:100%;border-radius:3px;background:${energyColor};transition:width 0.3s;"></div>
+          </div>
+          <span style="font-size:10px;font-weight:600;color:${overflow > 0 ? 'var(--danger)' : 'var(--text-secondary)'};">${teamEnergy}/12</span>
+        </div>
+        ${overflow > 0 ? `<span style="font-size:9px;color:var(--danger);flex-shrink:0;" title="全队属性降低${penalty}%">⚠${penalty}%</span>` : ''}
+      </div>`;
+    }
+
+    html += `
+      </div>
+      <div class="world-boss-actions">
+        <button class="btn btn-primary" ${hasTeams && attempts > 0 ? '' : 'disabled'}
+                onclick="WorldBossEngine.startChallenge()">
+          ⚔️ 挑战世界BOSS
+        </button>
+        <button class="btn btn-warning" ${canSweep ? '' : 'disabled'}
+                onclick="WorldBossEngine.sweep()">
+          ⚡ 扫荡 (${best}次)
+        </button>
+        <button class="btn btn-sm btn-secondary" ${hasTeams ? '' : 'disabled'}
+                onclick="WorldBossEngine.practiceChallenge()">
+          🧪 模拟战
+        </button>
+      </div>
+      ${canSweep ? `
+        <div class="world-boss-sweep-info">
+          扫荡奖励预览 (基于最佳${best}次击杀): 🪙${sweepRewards.gold.toLocaleString()} ⭐${sweepRewards.exp.toLocaleString()} 💎${sweepRewards.gems}
+        </div>
+      ` : `
+        <div class="world-boss-sweep-info" style="color:var(--text-muted);">
+          ${best <= 0 ? '尚未挑战过世界BOSS，无扫荡纪录' : '今日挑战次数已用完'}
+        </div>
+      `}
+    `;
+
+    content.innerHTML = html;
+  },
+
+  _wbRemoveChar(teamIdx, slotIdx) {
+    if (!GameState.world_boss_teams[teamIdx]) GameState.world_boss_teams[teamIdx] = [null, null, null, null];
+    GameState.world_boss_teams[teamIdx][slotIdx] = null;
+    GameState.save();
+    this.renderWorldBossDetail();
+  },
+
+  _wbSelectChar(teamIdx, slotIdx) {
+    // Ensure team array exists
+    if (!GameState.world_boss_teams[teamIdx]) GameState.world_boss_teams[teamIdx] = [null, null, null, null];
+
+    // Collect already-used chars across all WB teams
+    const usedIds = new Set();
+    for (const team of GameState.world_boss_teams) {
+      if (!team) continue;
+      for (const cid of team) { if (cid) usedIds.add(cid); }
+    }
+    // Allow re-selecting the currently slotted char
+    const currentInSlot = GameState.world_boss_teams[teamIdx][slotIdx];
+    if (currentInSlot) usedIds.delete(currentInSlot);
+
+    const available = GameState.owned_characters.filter(c => !usedIds.has(c.id));
+    if (available.length === 0) {
+      GameUI.showToast('没有可用角色！', 'warning');
+      return;
+    }
+
+    const emoji = { fire: '🔥', water: '💧', wind: '🌪️', light: '✨', dark: '🌑' };
+
+    // Render a simple modal
+    const overlay = document.createElement('div');
+    overlay.className = 'battle-result';
+    overlay.style.cssText = '';
+    overlay.innerHTML = `
+      <div class="result-title" style="color:var(--accent);">选择第${teamIdx + 1}队角色</div>
+      <div id="wb-char-list" style="max-height:400px;overflow-y:auto;margin:8px 0;">
+        ${available.map(c => {
+          const def = DataLoader.getCharacter(c.id);
+          if (!def) return '';
+          const elemEm = emoji[def.element] || '';
+          const cost = GameState.getRarityCost(def.rarity);
+          return `
+            <div class="card wb-char-option" data-char-id="${c.id}" style="display:flex;align-items:center;gap:8px;padding:8px;margin:4px 0;cursor:pointer;">
+              <span style="font-size:20px;">${elemEm}</span>
+              <span style="flex:1;">${def.name} <span style="font-size:10px;color:var(--text-muted);">Lv${c.level} ⭐${c.stars}</span></span>
+              <span style="font-size:10px;color:var(--text-muted);">费用${cost}</span>
+            </div>`;
+        }).join('')}
+      </div>
+      <button class="btn btn-sm btn-secondary" id="wb-char-cancel">取消</button>
+    `;
+    document.body.appendChild(overlay);
+
+    // Attach event listeners
+    overlay.querySelectorAll('.wb-char-option').forEach(el => {
+      el.addEventListener('click', () => {
+        const charId = el.dataset.charId;
+        GameState.world_boss_teams[teamIdx][slotIdx] = charId;
+        GameState.save();
+        overlay.remove();
+        GameUI.renderWorldBossDetail();
+      });
+    });
+    overlay.querySelector('#wb-char-cancel').addEventListener('click', () => overlay.remove());
   }
 };
 
@@ -4099,7 +4697,12 @@ const BattleUI = {
     alliesDiv.innerHTML = battle.allies.map(a => this.renderUnit(a)).join('');
 
     // Wave indicator
-    document.getElementById('wave-indicator').textContent = `${battle.currentWave + 1}/${battle.enemyWaves.length}`;
+    if (battle.isWorldBoss) {
+      const prefix = battle.isPractice ? '🧪模拟' : '';
+      document.getElementById('wave-indicator').textContent = `${prefix}击杀: ${battle.worldBossKills || 0}`;
+    } else {
+      document.getElementById('wave-indicator').textContent = `${battle.currentWave + 1}/${battle.enemyWaves.length}`;
+    }
   },
 
   renderUnit(unit) {
@@ -4245,12 +4848,9 @@ const BattleUI = {
     const battle = GameState.current_battle;
     if (!battle || battle.phase !== 'battle') return;
 
-    // speed 0 = instant skip (process all turns synchronously)
-    // processTurn/nextWave already calls showResult when battle ends, don't double-call
+    // speed 0 = async batch skip (prevents browser freeze on long/infinite battles)
     if (battle.speed === 0) {
-      while (battle.phase === 'battle' && !battle.paused) {
-        BattleEngine.processTurn();
-      }
+      this._skipBatch();
       return;
     }
 
@@ -4261,13 +4861,31 @@ const BattleUI = {
         this.scheduleTurn();
         return;
       }
-      // Render first (update HP bars from previous turn), then process next turn
       this.render();
       BattleEngine.processTurn();
       if (battle.phase === 'battle') {
         this.scheduleTurn();
       }
     }, delay);
+  },
+
+  _skipBatch() {
+    const battle = GameState.current_battle;
+    if (!battle || battle.phase !== 'battle' || battle.paused) return;
+    // If user switched off skip mode, stop batching
+    if (battle.speed !== 0) { this.scheduleTurn(); return; }
+
+    const BATCH = 20;
+    let i = 0;
+    while (i < BATCH && battle.phase === 'battle' && !battle.paused) {
+      BattleEngine.processTurn();
+      i++;
+    }
+    this.render();
+
+    if (battle.phase === 'battle' && battle.speed === 0) {
+      this.turnTimer = requestAnimationFrame(() => this._skipBatch());
+    }
   },
 
   togglePause() {
@@ -4300,10 +4918,14 @@ const BattleUI = {
       if (battle) {
         battle.phase = 'defeat';
         clearTimeout(this.turnTimer);
-        if (!battle.isTowerBattle) {
+        if (!battle.isTowerBattle && !battle.isWorldBoss) {
           GameState.stamina = Math.min(GameState.max_stamina, GameState.stamina + 1); // Refund 1 stamina (normal battles only)
         }
-        this.showResultBody(false, 0, 0, []);
+        if (battle.isWorldBoss) {
+          WorldBossEngine.finishChallenge(battle);
+        } else {
+          this.showResultBody(false, 0, 0, []);
+        }
       }
     }
   },
@@ -4387,6 +5009,57 @@ const BattleUI = {
         }
       }
     });
+  },
+
+  showResultWorldBoss(kills, rewards) {
+    clearTimeout(this.turnTimer);
+    const battle = GameState.current_battle;
+    if (!battle) return;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'battle-result';
+    overlay.innerHTML = `
+      <div class="result-title" style="color:var(--warning);">世界BOSS挑战结束！</div>
+      <div class="rewards">
+        <div style="font-size:22px;color:var(--warning);">🏆 总击杀: ${kills}次</div>
+        <div>🪙 金币: +${rewards.gold.toLocaleString()}</div>
+        <div>⭐ 经验: +${rewards.exp.toLocaleString()}</div>
+        <div>💎 宝石: +${rewards.gems.toLocaleString()}</div>
+        ${kills > 0 ? `<div style="font-size:11px;color:var(--text-muted);margin-top:4px;">新最佳纪录！</div>` : '<div style="font-size:11px;color:var(--text-muted);margin-top:4px;">未能击杀世界BOSS</div>'}
+      </div>
+      <button class="btn btn-primary" id="btn-battle-done">确定</button>
+    `;
+    document.getElementById('battle-scene').appendChild(overlay);
+
+    overlay.querySelector('#btn-battle-done').addEventListener('click', () => {
+      overlay.remove();
+      GameUI.hideBattle();
+      GameUI._activeTower = 'worldboss';
+      GameUI.switchScreen('tower');
+    });
+  },
+
+  showResultPractice(kills, best) {
+    clearTimeout(this.turnTimer);
+    const overlay = document.createElement('div');
+    overlay.className = 'battle-result';
+    overlay.innerHTML = `
+      <div class="result-title" style="color:var(--accent);">🧪 模拟战结束</div>
+      <div class="rewards">
+        <div style="font-size:22px;color:var(--accent);">击杀: ${kills}次</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">历史最佳: ${best}次击杀</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:8px;">模拟战不消耗次数，不获得奖励</div>
+      </div>
+      <button class="btn btn-primary" id="btn-battle-done">确定</button>
+    `;
+    document.getElementById('battle-scene').appendChild(overlay);
+
+    overlay.querySelector('#btn-battle-done').addEventListener('click', () => {
+      overlay.remove();
+      GameUI.hideBattle();
+      GameUI._activeTower = 'worldboss';
+      GameUI.switchScreen('tower');
+    });
   }
 };
 
@@ -4424,6 +5097,7 @@ async function boot() {
   const saveData = SaveManager.load();
   GameState.init(saveData);
   GameState.checkTowerDailyReset();
+  GameState.checkWorldBossDailyReset();
 
   // If no characters, give starter
   if (GameState.owned_characters.length === 0) {
